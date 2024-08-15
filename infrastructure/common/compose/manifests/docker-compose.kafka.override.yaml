@@ -1,0 +1,156 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.3
+    hostname: zookeeper
+    container_name: zookeeper
+    user: $USER
+    expose:
+      - ${ZOOKEEPER_PORT}/tcp
+    env_file:
+      - path: ./infrastructure/common/compose/env/.env.kafka
+        required: true
+    volumes:
+      - type: bind
+        source: ./.data/common/zookeeper-data
+        target: /var/lib/zookeeper/data
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./.data/common/zookeeper-logs
+        target: /var/lib/zookeeper/log
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z zookeeper ${ZOOKEEPER_PORT} || exit -1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${ZOOKEEPER_CPUS_LIMIT}
+          memory: ${ZOOKEEPER_MEMORY_LIMIT}
+        reservations:
+          cpus: ${ZOOKEEPER_CPUS_RESERVATION}
+          memory: ${ZOOKEEPER_MEMORY_RESERVATION}
+    networks:
+      comnet:
+        ipv4_address: ${ZOOKEEPER_IP_ADDRESS}
+    pull_policy: missing
+    restart: always
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.3
+    hostname: kafka
+    container_name: kafka
+    user: $USER
+    ports:
+      - name: kafka-port
+        target: ${KAFKA_PORT}
+        published: ${KAFKA_PORT}
+        host_ip: ${KAFKA_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/common/compose/env/.env.kafka
+        required: true
+    volumes:
+      - type: bind
+        source: ./.data/common/kafka-data
+        target: /var/lib/kafka/data
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z kafka ${KAFKA_PORT} || exit -1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${KAFKA_CPUS_LIMIT}
+          memory: ${KAFKA_MEMORY_LIMIT}
+        reservations:
+          cpus: ${KAFKA_CPUS_RESERVATION}
+          memory: ${KAFKA_MEMORY_RESERVATION}
+    networks:
+      comnet:
+        ipv4_address: ${KAFKA_IP_ADDRESS}
+    depends_on:
+      zookeeper:
+        restart: true
+        required: true
+        condition: service_healthy
+    pull_policy: missing
+    restart: always
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    hostname: kafka-ui
+    container_name: kafka-ui
+    user: $USER
+    ports:
+      - name: kafka-ui-port
+        target: ${KAFKA_UI_PORT}
+        published: ${KAFKA_UI_PORT}
+        host_ip: ${KAFKA_UI_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/common/compose/env/.env.kafka
+        required: true
+    volumes:
+      - type: bind
+        source: ./.data/common/kafka-ui-data
+        target: /etc/kafkaui
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z kafka-ui ${KAFKA_UI_PORT} || exit -1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${KAFKA_UI_CPUS_LIMIT}
+          memory: ${KAFKA_UI_MEMORY_LIMIT}
+        reservations:
+          cpus: ${KAFKA_UI_CPUS_RESERVATION}
+          memory: ${KAFKA_UI_MEMORY_RESERVATION}
+    networks:
+      comnet:
+        ipv4_address: ${KAFKA_UI_IP_ADDRESS}
+    depends_on:
+      kafka:
+        restart: true
+        required: true
+        condition: service_healthy
+    pull_policy: missing
+    restart: always

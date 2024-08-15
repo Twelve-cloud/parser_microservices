@@ -1,0 +1,80 @@
+services:
+  redis:
+    image: redis:7.4.0-alpine
+    hostname: redis
+    container_name: redis
+    user: redis
+    command:
+      [
+        "redis-server",
+        "/etc/redis/redis.conf",
+        "--user ${REDIS_USERNAME} on >${REDIS_PASSWORD} ~* &* +@all",
+        "--user default off nopass -@all",
+        "--requirepass ${REDIS_PASSWORD}",
+      ]
+    ports:
+      - name: redis-port
+        target: ${REDIS_PORT}
+        published: ${REDIS_PUBLIC_PORT}
+        host_ip: ${REDIS_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/twich_parser_service/compose/env/redis/.env
+        required: true
+    volumes:
+      - type: bind
+        source: ./.compose-data/twich_parser_service/redis-data
+        target: /var/lib/redis/data/redisdata
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/configs/redis
+        target: /etc/redis
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/certs/redis
+        target: /var/lib/redis/data/ssl
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/ca/client-ca.crt
+        target: /var/lib/redis/data/ca/ssl/client-ca.crt
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --user ${REDIS_USERNAME} --pass ${REDIS_PASSWORD} ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${REDIS_CPUS_LIMIT}
+          memory: ${REDIS_MEMORY_LIMIT}
+        reservations:
+          cpus: ${REDIS_CPUS_RESERVATION}
+          memory: ${REDIS_MEMORY_RESERVATION}
+    networks:
+      twtparsnet:
+        ipv4_address: ${REDIS_IP_ADDRESS}
+    pull_policy: missing
+    restart: always

@@ -1,0 +1,14 @@
+networks:
+  comnet:
+    name: comnet
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${COMMON_NETWORK_SUBNET}
+          ip_range: ${COMMON_NETWORK_IP_RANGE}
+          gateway: ${COMMON_NETWORK_GATEWAY}

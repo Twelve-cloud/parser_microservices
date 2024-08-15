@@ -1,0 +1,68 @@
+services:
+  pgadmin:
+    image: dpage/pgadmin4:8.9
+    hostname: pgadmin
+    container_name: pgadmin
+    ports:
+      - name: pgadmin-port
+        target: ${PGADMIN_PORT}
+        published: ${PGADMIN_PORT}
+        host_ip: ${PGADMIN_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/twich_parser_service/compose/env/.env.postgres
+        required: true
+    volumes:
+      - type: bind
+        source: ./.data/twich_parser_service/pgadmin-data
+        target: /var/lib/pgadmin
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/configs/pgadmin.py
+        target: /pgadmin4/config_local.py
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/certs/pgadmin
+        target: /certs
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z pgadmin ${PGADMIN_PORT} || exit -1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${PGADMIN_CPUS_LIMIT}
+          memory: ${PGADMIN_MEMORY_LIMIT}
+        reservations:
+          cpus: ${PGADMIN_CPUS_RESERVATION}
+          memory: ${PGADMIN_MEMORY_RESERVATION}
+    networks:
+      twtparsnet:
+        ipv4_address: ${PGADMIN_IP_ADDRESS}
+    depends_on:
+      postgres:
+        restart: true
+        required: true
+        condition: service_healthy
+    pull_policy: missing
+    restart: always

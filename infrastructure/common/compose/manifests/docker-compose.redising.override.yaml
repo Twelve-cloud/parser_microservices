@@ -1,0 +1,26 @@
+services:
+  redis-insight:
+    user: root
+    image: redis/redisinsight:2.52.0
+    hostname: redis-insight
+    container_name: redis-insight
+    ports:
+      - 8004:${REDIS_INSIGHT_PORT}
+    env_file:
+      - ./env/.env.redis
+    volumes:
+      - ./.data/redis-insight-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z redis-insight ${REDIS_INSIGHT_PORT} || exit -1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      parsnet:
+        ipv4_address: 192.168.10.10
+    links:
+      - redis
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: always

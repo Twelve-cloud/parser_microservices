@@ -1,0 +1,14 @@
+networks:
+  twtparsnet:
+    name: twtparsnet
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${TWT_PARSER_NETWORK_SUBNET}
+          ip_range: ${TWT_PARSER_NETWORK_IP_RANGE}
+          gateway: ${TWT_PARSER_NETWORK_GATEWAY}

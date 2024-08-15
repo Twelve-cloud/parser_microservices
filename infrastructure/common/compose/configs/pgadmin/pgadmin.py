@@ -1,0 +1,4 @@
+# MAIN
+SERVER_MODE = True
+WEB_SERVER = 'Python'
+ALLOW_SAVE_PASSWORD = True

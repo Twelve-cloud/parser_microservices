@@ -1,7 +1,19 @@
+# COMMON
 .vscode
-.data
-.env
-env/*
-!env/*example*
-certs/*
-!certs/*example*
+.compose-data
+
+# CERTS
+**/*.crt
+**/*.key
+**/*.srl
+**/*.csr
+**/*.pem
+!**/*.example.crt
+!**/*.example.key
+!**/*.example.srl
+!**/*.example.csr
+!**/*.example.pem
+
+# ENV
+**/.env
+!**/.env.example

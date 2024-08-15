@@ -1,9 +1,0 @@
-version: '3.7'
-
-networks:
-  parsnet:
-    driver: bridge
-    internal: false
-    ipam:
-     config:
-       - subnet: 192.168.10.0/24

@@ -1,27 +1,4 @@
-version: '3.7'
-
 services:
-  mongo:
-    user: root
-    image: mongo:7.0-rc-jammy
-    hostname: mongo
-    container_name: mongo
-    expose:
-      - ${MONGO_PORT}
-    env_file:
-      - ./env/.env.mongo
-    volumes:
-      - ./.data/mongo-data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-    networks:
-      parsnet:
-        ipv4_address: 192.168.10.5
-    restart: always
-
   mongo-express:
     user: root
     image: mongo-express:1.0-20-alpine3.19

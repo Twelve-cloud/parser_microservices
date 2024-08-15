@@ -1,0 +1,73 @@
+services:
+  mongo:
+    image: mongo:7.0-rc-jammy
+    hostname: mongo
+    container_name: mongo
+    user: mongodb
+    command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    ports:
+      - name: mongo-port
+        target: ${MONGO_PORT}
+        published: ${MONGO_PUBLIC_PORT}
+        host_ip: ${MONGO_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/twich_parser_service/compose/env/mongo/.env
+        required: true
+    volumes:
+      - type: bind
+        source: ./.compose-data/twich_parser_service/mongo-data
+        target: /var/lib/mongodb/data/mongodata
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/configs/mongo
+        target: /etc/mongo
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/certs/mongo
+        target: /var/lib/mongodb/data/ssl
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/ca/client-ca.pem
+        target: /var/lib/mongodb/data/ca/ssl/client-ca.pem
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${MONGO_CPUS_LIMIT}
+          memory: ${MONGO_MEMORY_LIMIT}
+        reservations:
+          cpus: ${MONGO_CPUS_RESERVATION}
+          memory: ${MONGO_MEMORY_RESERVATION}
+    networks:
+      twtparsnet:
+        ipv4_address: ${MONGO_IP_ADDRESS}
+    pull_policy: missing
+    restart: always
