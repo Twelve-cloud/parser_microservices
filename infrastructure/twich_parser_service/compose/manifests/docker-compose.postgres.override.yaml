@@ -67,7 +67,22 @@ services:
           cpus: ${POSTGRES_CPUS_RESERVATION}
           memory: ${POSTGRES_MEMORY_RESERVATION}
     networks:
-      twtparsnet:
+      postgres-network:
         ipv4_address: ${POSTGRES_IP_ADDRESS}
     pull_policy: missing
     restart: always
+
+networks:
+  postgres-network:
+    name: postgres-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${POSTGRES_NETWORK_SUBNET}
+          ip_range: ${POSTGRES_NETWORK_IP_RANGE}
+          gateway: ${POSTGRES_NETWORK_GATEWAY}

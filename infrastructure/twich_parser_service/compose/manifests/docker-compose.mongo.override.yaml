@@ -67,7 +67,22 @@ services:
           cpus: ${MONGO_CPUS_RESERVATION}
           memory: ${MONGO_MEMORY_RESERVATION}
     networks:
-      twtparsnet:
+      mongo-network:
         ipv4_address: ${MONGO_IP_ADDRESS}
     pull_policy: missing
     restart: always
+
+networks:
+  mongo-network:
+    name: mongo-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${MONGO_NETWORK_SUBNET}
+          ip_range: ${MONGO_NETWORK_IP_RANGE}
+          gateway: ${MONGO_NETWORK_GATEWAY}

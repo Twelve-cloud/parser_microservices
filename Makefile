@@ -8,14 +8,13 @@ SHELL := bash -O extglob
 
 COMPOSE :=                                                                                                   \
     -f docker-compose.yaml                                                                                   \
-    -f ${COMPOSE_TWT_PARSER_NETWORK}                                                                         \
     -f ${COMPOSE_TWT_PARSER_POSTGRES}                                                                        \
     -f ${COMPOSE_TWT_PARSER_MONGO}                                                                           \
     -f ${COMPOSE_TWT_PARSER_REDIS}
 
 COMPOSE_ENV :=                                                                                               \
     --env-file=.env                                                                                          \
-    --env-file=infrastructure/twich_parser_service/compose/env/.env.compose                                  \
+    --env-file=infrastructure/twich_parser_service/compose/env/compose/.env                                  \
 
 # ------------------------------------- APP ------------------------------------------------------------------
 
@@ -23,13 +22,13 @@ cbuild: docker-compose.yaml
     sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} up --build
 
 cstart: docker-compose.yaml
-    sudo docker compose -p parserparser-microservices ${COMPOSE_ENV} ${COMPOSE} up
+    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} up
 
 cstart_detach: docker-compose.yaml
-    sudo docker compose -p parserparser-microservices ${COMPOSE_ENV} ${COMPOSE} up --detach
+    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} up --detach
 
 cstop: docker-compose.yaml
-    sudo docker compose -p parserparser-microservices ${COMPOSE_ENV} ${COMPOSE} down
+    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} down
 
 # ---------------------------------- CONFIGURATION -----------------------------------------------------------
 
@@ -140,7 +139,7 @@ cinit:
 # Remove all certificates and data folders.
 cclear:
     sudo rm -rf .compose-data
-    sudo rm -rf infrastructure/common/compose/certs/ca/!(*example*)
+    sudo rm -f infrastructure/common/compose/certs/ca/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/postgres/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/mongo/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
