@@ -143,23 +143,3 @@ cclear:
     sudo rm -f infrastructure/twich_parser_service/compose/certs/postgres/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/mongo/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
-
-
-
-####
-cparser_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=parser"                                                   \
-    -out infrastructure/twich_parser_service/compose/certs/parser/server.csr                                  \
-    -keyout infrastructure/twich_parser_service/compose/certs/parser/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/twich_parser_service/compose/certs/parser/server.csr                                   \
-    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
-    -out infrastructure/twich_parser_service/compose/certs/parser/server.crt
-
-    sudo cat infrastructure/twich_parser_service/compose/certs/parser/server.crt                              \
-    infrastructure/twich_parser_service/compose/certs/parser/server.key                                       \
-    > infrastructure/twich_parser_service/compose/certs/parser/server.pem
-
-    sudo chmod a+r infrastructure/twich_parser_service/compose/certs/parser/*
