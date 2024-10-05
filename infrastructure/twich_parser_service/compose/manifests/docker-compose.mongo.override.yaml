@@ -4,7 +4,7 @@ services:
     hostname: mongo
     container_name: mongo
     user: mongodb
-    command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
     ports:
       - name: mongo-port
         target: ${MONGO_PORT}
@@ -18,7 +18,7 @@ services:
     volumes:
       - type: bind
         source: ./.compose-data/twich_parser_service/mongo-data
-        target: /var/lib/mongodb/data/mongodata
+        target: /var/lib/mongo/data
         bind:
           propagation: rprivate
           create_host_path: true
@@ -33,7 +33,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/certs/mongo
-        target: /var/lib/mongodb/data/ssl
+        target: /etc/ssl/mongo
         read_only: true
         bind:
           propagation: rprivate
@@ -41,7 +41,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/certs/ca/client-ca.pem
-        target: /var/lib/mongodb/data/ca/ssl/client-ca.pem
+        target: /etc/ssl/ca/client-ca.pem
         read_only: true
         bind:
           propagation: rprivate

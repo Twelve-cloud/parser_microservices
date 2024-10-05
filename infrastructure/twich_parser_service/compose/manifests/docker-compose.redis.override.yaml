@@ -25,7 +25,7 @@ services:
     volumes:
       - type: bind
         source: ./.compose-data/twich_parser_service/redis-data
-        target: /var/lib/redis/data/redisdata
+        target: /var/lib/redis/data
         bind:
           propagation: rprivate
           create_host_path: true
@@ -40,7 +40,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/certs/redis
-        target: /var/lib/redis/data/ssl
+        target: /etc/ssl/redis
         read_only: true
         bind:
           propagation: rprivate
@@ -48,7 +48,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/certs/ca/client-ca.crt
-        target: /var/lib/redis/data/ca/ssl/client-ca.crt
+        target: /etc/ssl/ca/client-ca.crt
         read_only: true
         bind:
           propagation: rprivate

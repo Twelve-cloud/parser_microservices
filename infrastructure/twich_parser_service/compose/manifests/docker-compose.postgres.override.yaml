@@ -4,7 +4,7 @@ services:
     hostname: postgres
     container_name: postgres
     user: postgres
-    command: ["postgres", "-c", "config_file=/etc/postgresql/postgresql.conf"]
+    command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
     ports:
       - name: postgres-port
         target: ${POSTGRES_PORT}
@@ -18,14 +18,14 @@ services:
     volumes:
       - type: bind
         source: ./.compose-data/twich_parser_service/postgres-data
-        target: /var/lib/postgresql/data/pgdata
+        target: /var/lib/postgres/data
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/postgres
-        target: /etc/postgresql
+        target: /etc/postgres
         read_only: true
         bind:
           propagation: rprivate
@@ -33,7 +33,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/certs/postgres
-        target: /var/lib/postgresql/data/ssl
+        target: /etc/ssl/postgres
         read_only: true
         bind:
           propagation: rprivate
@@ -41,7 +41,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/certs/ca/client-ca.crt
-        target: /var/lib/postgresql/data/ca/ssl/client-ca.crt
+        target: /etc/ssl/ca/client-ca.crt
         read_only: true
         bind:
           propagation: rprivate
