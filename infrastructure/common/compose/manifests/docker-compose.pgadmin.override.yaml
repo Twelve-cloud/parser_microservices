@@ -3,26 +3,28 @@ services:
     image: dpage/pgadmin4:8.9
     hostname: pgadmin
     container_name: pgadmin
+    user: pgadmin
+    command: ["./entrypoint.sh"]
     ports:
       - name: pgadmin-port
         target: ${PGADMIN_PORT}
-        published: ${PGADMIN_PORT}
+        published: ${PGADMIN_PUBLIC_PORT}
         host_ip: ${PGADMIN_HOST_IP}
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/twich_parser_service/compose/env/.env.postgres
+      - path: ./infrastructure/common/compose/env/pgadmin/.env
         required: true
     volumes:
       - type: bind
-        source: ./.data/twich_parser_service/pgadmin-data
-        target: /var/lib/pgadmin
+        source: ./.compose-data/common/pgadmin-data
+        target: /var/lib/pgadmin/data
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/configs/pgadmin.py
+        source: ./infrastructure/common/compose/configs/pgadmin/pgadmin.py
         target: /pgadmin4/config_local.py
         read_only: true
         bind:
@@ -30,8 +32,48 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/certs/pgadmin
-        target: /certs
+        source: ./infrastructure/common/compose/configs/pgadmin/servers.json
+        target: /pgadmin4/servers.json
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/pgadmin/server.crt
+        target: /certs/server.cert
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/pgadmin/server.key
+        target: /certs/server.key
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/ca/server-ca.crt
+        target: /home/pgadmin/.postgresql/root.crt
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/pgadmin/server.crt
+        target: /home/pgadmin/.postgresql/postgresql.crt
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/pgadmin/server.key
+        target: /home/pgadmin/.postgresql/postgresql.key
         read_only: true
         bind:
           propagation: rprivate
@@ -57,12 +99,25 @@ services:
           cpus: ${PGADMIN_CPUS_RESERVATION}
           memory: ${PGADMIN_MEMORY_RESERVATION}
     networks:
-      twtparsnet:
+      pgadmin-network:
         ipv4_address: ${PGADMIN_IP_ADDRESS}
-    depends_on:
-      postgres:
-        restart: true
-        required: true
-        condition: service_healthy
+      postgres-network:
     pull_policy: missing
     restart: always
+
+networks:
+  pgadmin-network:
+    name: pgadmin-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${PGADMIN_NETWORK_SUBNET}
+          ip_range: ${PGADMIN_NETWORK_IP_RANGE}
+          gateway: ${PGADMIN_NETWORK_GATEWAY}
+  postgres-network:
+    external: true

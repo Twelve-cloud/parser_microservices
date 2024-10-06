@@ -8,12 +8,14 @@ SHELL := bash -O extglob
 
 COMPOSE :=                                                                                                   \
     -f docker-compose.yaml                                                                                   \
+    -f ${COMPOSE_COMMON_PGADMIN}                                                                             \
     -f ${COMPOSE_TWT_PARSER_POSTGRES}                                                                        \
     -f ${COMPOSE_TWT_PARSER_MONGO}                                                                           \
     -f ${COMPOSE_TWT_PARSER_REDIS}
 
 COMPOSE_ENV :=                                                                                               \
     --env-file=.env                                                                                          \
+    --env-file=infrastructure/common/compose/env/compose/.env                                                \
     --env-file=infrastructure/twich_parser_service/compose/env/compose/.env                                  \
 
 # ------------------------------------- APP ------------------------------------------------------------------
@@ -126,6 +128,31 @@ credis_certificates_update:
     sudo chown -R 999:1000 infrastructure/twich_parser_service/compose/certs/redis/server.key
     sudo chown -R 999:1000 infrastructure/twich_parser_service/compose/certs/redis/server.crt
 
+# Create folder to store pgadmin data and give access to this folder to pgadmin user in container.
+# pgAdmin runs as the pgadmin user (UID: 5050) in the pgadmin group (GID: 5050) in the container.
+cpgadmin_init:
+    sudo mkdir -p .compose-data/common/pgadmin-data
+    sudo chown -R 5050:5050 .compose-data/common/pgadmin-data
+
+# Update pgadmin server certificates (10 years).
+cpgadmin_certificates_update:
+    sudo openssl req -sha256 -new -nodes -subj "/CN=pgadmin"                                                 \
+    -out infrastructure/common/compose/certs/pgadmin/server.csr                                              \
+    -keyout infrastructure/common/compose/certs/pgadmin/server.key
+
+    sudo openssl x509 -req -sha256 -days 3650                                                                \
+    -in infrastructure/common/compose/certs/pgadmin/server.csr                                               \
+    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
+    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
+    -out infrastructure/common/compose/certs/pgadmin/server.crt
+
+    sudo cat infrastructure/common/compose/certs/pgadmin/server.crt                                          \
+    infrastructure/common/compose/certs/pgadmin/server.key                                                   \
+    > infrastructure/common/compose/certs/pgadmin/server.pem
+
+    sudo chown -R 5050:5050 infrastructure/common/compose/certs/pgadmin/server.key
+    sudo chown -R 5050:5050 infrastructure/common/compose/certs/pgadmin/server.crt
+
 # Initialization.
 cinit:
     $(MAKE) ca_certificates_update
@@ -135,11 +162,14 @@ cinit:
     $(MAKE) cmongo_certificates_update
     $(MAKE) credis_init
     $(MAKE) credis_certificates_update
+    $(MAKE) cpgadmin_init
+    $(MAKE) cpgadmin_certificates_update
 
 # Remove all certificates and data folders.
 cclear:
     sudo rm -rf .compose-data
     sudo rm -f infrastructure/common/compose/certs/ca/!(*example*)
+    sudo rm -f infrastructure/common/compose/certs/pgadmin/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/postgres/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/mongo/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
