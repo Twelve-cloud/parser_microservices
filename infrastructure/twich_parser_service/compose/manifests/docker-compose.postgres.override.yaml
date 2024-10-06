@@ -5,13 +5,7 @@ services:
     container_name: postgres
     user: postgres
     command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
-    ports:
-      - name: postgres-port
-        target: ${POSTGRES_PORT}
-        published: ${POSTGRES_PUBLIC_PORT}
-        host_ip: ${POSTGRES_HOST_IP}
-        protocol: tcp
-        mode: host
+    expose: ["${POSTGRES_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/postgres/.env
         required: true

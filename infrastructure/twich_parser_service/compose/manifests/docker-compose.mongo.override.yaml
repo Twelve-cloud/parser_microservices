@@ -5,13 +5,7 @@ services:
     container_name: mongo
     user: mongodb
     command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
-    ports:
-      - name: mongo-port
-        target: ${MONGO_PORT}
-        published: ${MONGO_PUBLIC_PORT}
-        host_ip: ${MONGO_HOST_IP}
-        protocol: tcp
-        mode: host
+    expose: ["${MONGO_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/mongo/.env
         required: true

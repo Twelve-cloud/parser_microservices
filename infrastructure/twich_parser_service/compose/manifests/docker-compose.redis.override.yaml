@@ -12,13 +12,7 @@ services:
         "--user default off nopass -@all",
         "--requirepass ${REDIS_PASSWORD}",
       ]
-    ports:
-      - name: redis-port
-        target: ${REDIS_PORT}
-        published: ${REDIS_PUBLIC_PORT}
-        host_ip: ${REDIS_HOST_IP}
-        protocol: tcp
-        mode: host
+    expose: ["${REDIS_PORT}/tcp", "${REDIS_TLS_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/redis/.env
         required: true
