@@ -1,8 +1,8 @@
 services:
   redis:
     image: redis:7.4.0-alpine
-    hostname: redis
-    container_name: redis
+    hostname: parser-redis
+    container_name: parser-redis
     user: redis
     command:
       [
@@ -68,14 +68,14 @@ services:
           cpus: ${REDIS_CPUS_RESERVATION}
           memory: ${REDIS_MEMORY_RESERVATION}
     networks:
-      redis-network:
+      parser-redis-network:
         ipv4_address: ${REDIS_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
 networks:
-  redis-network:
-    name: redis-network
+  parser-redis-network:
+    name: parser-redis-network
     driver: bridge
     internal: false
     external: false

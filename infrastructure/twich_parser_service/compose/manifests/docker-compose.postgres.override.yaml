@@ -1,8 +1,8 @@
 services:
   postgres:
     image: postgres:16.3-alpine3.20
-    hostname: postgres
-    container_name: postgres
+    hostname: parser-postgres
+    container_name: parser-postgres
     user: postgres
     command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
     expose: ["${POSTGRES_PORT}/tcp"]
@@ -61,14 +61,14 @@ services:
           cpus: ${POSTGRES_CPUS_RESERVATION}
           memory: ${POSTGRES_MEMORY_RESERVATION}
     networks:
-      postgres-network:
+      parser-postgres-network:
         ipv4_address: ${POSTGRES_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
 networks:
-  postgres-network:
-    name: postgres-network
+  parser-postgres-network:
+    name: parser-postgres-network
     driver: bridge
     internal: false
     external: false

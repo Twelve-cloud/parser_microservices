@@ -21,6 +21,3 @@ WTF_CSRF_ENABLED = 0
 
 # Allow save password
 ALLOW_SAVE_PASSWORD = True
-
-# Data directory
-DATA_DIR = '/var/lib/pgadmin/data'

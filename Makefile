@@ -62,7 +62,7 @@ cpostgres_init:
 
 # Update postgres server certificates (10 years).
 cpostgres_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=postgres"                                                \
+    sudo openssl req -sha256 -new -nodes -subj "/CN=parser-postgres"                                         \
     -out infrastructure/twich_parser_service/compose/certs/postgres/server.csr                               \
     -keyout infrastructure/twich_parser_service/compose/certs/postgres/server.key
 
@@ -87,7 +87,7 @@ cmongo_init:
 
 # Update mongo server certificates (10 years).
 cmongo_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=mongo"                                                   \
+    sudo openssl req -sha256 -new -nodes -subj "/CN=parser-mongo"                                            \
     -out infrastructure/twich_parser_service/compose/certs/mongo/server.csr                                  \
     -keyout infrastructure/twich_parser_service/compose/certs/mongo/server.key
 
@@ -111,7 +111,7 @@ credis_init:
 
 # Update redis server certificates (10 years).
 credis_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=redis"                                                   \
+    sudo openssl req -sha256 -new -nodes -subj "/CN=parser-redis"                                            \
     -out infrastructure/twich_parser_service/compose/certs/redis/server.csr                                  \
     -keyout infrastructure/twich_parser_service/compose/certs/redis/server.key
 
@@ -127,12 +127,6 @@ credis_certificates_update:
 
     sudo chown -R 999:1000 infrastructure/twich_parser_service/compose/certs/redis/server.key
     sudo chown -R 999:1000 infrastructure/twich_parser_service/compose/certs/redis/server.crt
-
-# Create folder to store pgadmin data and give access to this folder to pgadmin user in container.
-# pgAdmin runs as the pgadmin user (UID: 5050) in the pgadmin group (GID: 5050) in the container.
-cpgadmin_init:
-    sudo mkdir -p .compose-data/common/pgadmin-data
-    sudo chown -R 5050:5050 .compose-data/common/pgadmin-data
 
 # Update pgadmin server certificates (10 years).
 cpgadmin_certificates_update:
@@ -162,7 +156,6 @@ cinit:
     $(MAKE) cmongo_certificates_update
     $(MAKE) credis_init
     $(MAKE) credis_certificates_update
-    $(MAKE) cpgadmin_init
     $(MAKE) cpgadmin_certificates_update
 
 # Remove all certificates and data folders.

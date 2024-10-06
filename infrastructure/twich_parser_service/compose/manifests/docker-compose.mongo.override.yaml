@@ -1,8 +1,8 @@
 services:
   mongo:
     image: mongo:7.0-rc-jammy
-    hostname: mongo
-    container_name: mongo
+    hostname: parser-mongo
+    container_name: parser-mongo
     user: mongodb
     command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
     expose: ["${MONGO_PORT}/tcp"]
@@ -61,14 +61,14 @@ services:
           cpus: ${MONGO_CPUS_RESERVATION}
           memory: ${MONGO_MEMORY_RESERVATION}
     networks:
-      mongo-network:
+      parser-mongo-network:
         ipv4_address: ${MONGO_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
 networks:
-  mongo-network:
-    name: mongo-network
+  parser-mongo-network:
+    name: parser-mongo-network
     driver: bridge
     internal: false
     external: false

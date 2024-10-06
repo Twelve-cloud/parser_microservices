@@ -17,13 +17,6 @@ services:
         required: true
     volumes:
       - type: bind
-        source: ./.compose-data/common/pgadmin-data
-        target: /var/lib/pgadmin/data
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
         source: ./infrastructure/common/compose/configs/pgadmin/pgadmin.py
         target: /pgadmin4/config_local.py
         read_only: true
@@ -101,7 +94,7 @@ services:
     networks:
       pgadmin-network:
         ipv4_address: ${PGADMIN_IP_ADDRESS}
-      postgres-network:
+      parser-postgres-network:
     pull_policy: missing
     restart: always
 
@@ -119,5 +112,5 @@ networks:
         - subnet: ${PGADMIN_NETWORK_SUBNET}
           ip_range: ${PGADMIN_NETWORK_IP_RANGE}
           gateway: ${PGADMIN_NETWORK_GATEWAY}
-  postgres-network:
+  parser-postgres-network:
     external: true
