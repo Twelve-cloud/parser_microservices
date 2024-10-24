@@ -11,7 +11,7 @@ DEFAULT_SERVER = '0.0.0.0'
 DEFAULT_SERVER_PORT = 5400
 
 # Hosts that can access pgadmin
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'pgadmin']
 
 # WTF CSRF check default
 WTF_CSRF_CHECK_DEFAULT = 0
