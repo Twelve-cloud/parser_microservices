@@ -73,7 +73,15 @@ services:
           create_host_path: true
           selinux: Z
     healthcheck:
-      test: ["CMD-SHELL", "nc -z pgadmin ${PGADMIN_PORT} || exit -1"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-check-certificate",
+          "--quiet",
+          "--spider",
+          "https://pgadmin:${PGADMIN_PORT}/misc/ping",
+        ]
       interval: 30s
       timeout: 30s
       retries: 3
