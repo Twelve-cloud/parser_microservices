@@ -56,35 +56,19 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
-      - type: bind
-        source: ./infrastructure/common/compose/certs/pgadmin/server.crt
-        target: /home/pgadmin/.postgresql/postgresql.crt
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ./infrastructure/common/compose/certs/pgadmin/server.key
-        target: /home/pgadmin/.postgresql/postgresql.key
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
     healthcheck:
       test:
         [
           "CMD",
           "wget",
-          "--no-check-certificate",
           "--quiet",
           "--spider",
-          "https://pgadmin:${PGADMIN_PORT}/misc/ping",
+          "--no-check-certificate",
+          "https://${PGADMIN_HOST}:${PGADMIN_PORT}/misc/ping",
         ]
       interval: 30s
       timeout: 30s
-      retries: 3
+      retries: 10
       start_period: 30s
       start_interval: 10s
     logging:
@@ -103,6 +87,11 @@ services:
       pgadmin-network:
         ipv4_address: ${PGADMIN_IP_ADDRESS}
       parser-postgres-network:
+    depends_on:
+      parser-postgres:
+        restart: true
+        condition: service_healthy
+        required: true
     pull_policy: missing
     restart: always
 
