@@ -1,5 +1,5 @@
 services:
-  mongo:
+  parser-mongo:
     image: mongo:7.0-rc-jammy
     hostname: parser-mongo
     container_name: parser-mongo
@@ -45,7 +45,7 @@ services:
       test: ["CMD-SHELL", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
       timeout: 30s
-      retries: 3
+      retries: 10
       start_period: 30s
       start_interval: 10s
     logging:

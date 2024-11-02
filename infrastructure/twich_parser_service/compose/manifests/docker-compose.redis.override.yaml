@@ -1,5 +1,5 @@
 services:
-  redis:
+  parser-redis:
     image: redis:7.4.0-alpine
     hostname: parser-redis
     container_name: parser-redis
@@ -52,7 +52,7 @@ services:
       test: ["CMD-SHELL", "redis-cli --user ${REDIS_USERNAME} --pass ${REDIS_PASSWORD} ping"]
       interval: 30s
       timeout: 30s
-      retries: 3
+      retries: 10
       start_period: 30s
       start_interval: 10s
     logging:

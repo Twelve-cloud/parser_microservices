@@ -1,24 +1,105 @@
 services:
   mongo-express:
-    user: root
     image: mongo-express:1.0-20-alpine3.19
     hostname: mongo-express
     container_name: mongo-express
+    user: node
+    command: ["node", "app"]
     ports:
-      - 8002:${MONGO_EXPRESS_PORT}
+      - name: mongo-express-port
+        target: ${MONGO_EXPRESS_PORT}
+        published: ${MONGO_EXPRESS_PUBLIC_PORT}
+        host_ip: ${MONGO_EXPRESS_HOST_IP}
+        protocol: tcp
+        mode: host
     env_file:
-      - ./env/.env.mongo
+      - path: ./infrastructure/common/compose/env/mongoexpress/.env
+        required: true
+    volumes:
+      - type: bind
+        source: ./infrastructure/common/compose/configs/mongoexpress/mongoexpress.js
+        target: /app/config.default.js
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/configs/mongoexpress/connect.js
+        target: /app/lib/db.js
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/mongoexpress
+        target: /etc/ssl/mongoexpress
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/ca/server-ca.pem
+        target: /etc/ssl/ca/server-ca.pem
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
     healthcheck:
-      test: ["CMD-SHELL", "nc -z mongo-express ${MONGO_EXPRESS_PORT} || exit -1"]
-      interval: 5s
-      timeout: 10s
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--spider",
+          "--no-check-certificate",
+          "https://${MONGO_EXPRESS_HOST}:${MONGO_EXPRESS_PORT}/health",
+        ]
+      interval: 30s
+      timeout: 30s
       retries: 10
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${MONGO_EXPRESS_CPUS_LIMIT}
+          memory: ${MONGO_EXPRESS_MEMORY_LIMIT}
+        reservations:
+          cpus: ${MONGO_EXPRESS_CPUS_RESERVATION}
+          memory: ${MONGO_EXPRESS_MEMORY_RESERVATION}
     networks:
-      parsnet:
-        ipv4_address: 192.168.10.6
-    links:
-      - mongo
+      mongo-express-network:
+        ipv4_address: ${MONGO_EXPRESS_IP_ADDRESS}
+      parser-mongo-network:
     depends_on:
-      mongo:
+      parser-mongo:
+        restart: true
         condition: service_healthy
+        required: true
+    pull_policy: missing
     restart: always
+
+networks:
+  mongo-express-network:
+    name: mongo-express-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${MONGO_EXPRESS_NETWORK_SUBNET}
+          ip_range: ${MONGO_EXPRESS_NETWORK_IP_RANGE}
+          gateway: ${MONGO_EXPRESS_NETWORK_GATEWAY}
+  parser-mongo-network:
+    external: true

@@ -9,6 +9,7 @@ SHELL := bash -O extglob
 COMPOSE :=                                                                                                   \
     -f docker-compose.yaml                                                                                   \
     -f ${COMPOSE_COMMON_PGADMIN}                                                                             \
+    -f ${COMPOSE_COMMON_MONGO_EXPRESS}                                                                       \
     -f ${COMPOSE_TWT_PARSER_POSTGRES}                                                                        \
     -f ${COMPOSE_TWT_PARSER_MONGO}                                                                           \
     -f ${COMPOSE_TWT_PARSER_REDIS}
@@ -147,6 +148,25 @@ cpgadmin_certificates_update:
     sudo chown -R 5050:5050 infrastructure/common/compose/certs/pgadmin/server.key
     sudo chown -R 5050:5050 infrastructure/common/compose/certs/pgadmin/server.crt
 
+# Update mongoexpress server certificates (10 years).
+cmongoexpress_certificates_update:
+    sudo openssl req -sha256 -new -nodes -subj "/CN=mongo-express"                                           \
+    -out infrastructure/common/compose/certs/mongoexpress/server.csr                                         \
+    -keyout infrastructure/common/compose/certs/mongoexpress/server.key
+
+    sudo openssl x509 -req -sha256 -days 3650                                                                \
+    -in infrastructure/common/compose/certs/mongoexpress/server.csr                                          \
+    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
+    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
+    -out infrastructure/common/compose/certs/mongoexpress/server.crt
+
+    sudo cat infrastructure/common/compose/certs/mongoexpress/server.crt                                     \
+    infrastructure/common/compose/certs/mongoexpress/server.key                                              \
+    > infrastructure/common/compose/certs/mongoexpress/server.pem
+
+    sudo chown -R 1000:1000 infrastructure/common/compose/certs/mongoexpress/server.key
+    sudo chown -R 1000:1000 infrastructure/common/compose/certs/mongoexpress/server.crt
+
 # Initialization.
 cinit:
     $(MAKE) ca_certificates_update
@@ -157,12 +177,14 @@ cinit:
     $(MAKE) credis_init
     $(MAKE) credis_certificates_update
     $(MAKE) cpgadmin_certificates_update
+    $(MAKE) cmongoexpress_certificates_update
 
 # Remove all certificates and data folders.
 cclear:
     sudo rm -rf .compose-data
     sudo rm -f infrastructure/common/compose/certs/ca/!(*example*)
     sudo rm -f infrastructure/common/compose/certs/pgadmin/!(*example*)
+    sudo rm -f infrastructure/common/compose/certs/mongoexpress/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/postgres/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/mongo/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
