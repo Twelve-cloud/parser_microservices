@@ -9,7 +9,7 @@ export default {
       allowDiskUse: false,
 
       // If a connection string options such as server/port/etc are ignored
-      connectionString: "mongodb://Twelve:Annieleo1@parser-mongo:27017/Twitch?authSource=admin",
+      connectionString: `mongodb://Twelve:${process.env.PARSER_MONGO_PASSWORD}@parser-mongo:27017/Twitch?authSource=admin`,
 
       connectionName: 'TwitchParser',
 
@@ -47,7 +47,7 @@ export default {
       allowDiskUse: false,
 
       // If a connection string options such as server/port/etc are ignored
-      connectionString: "mongodb://Twelve:Annieleo1@parser-mongo:27017/Twitch?authSource=admin",
+      connectionString: `mongodb://Twelve:${process.env.PARSER_MONGO_PASSWORD}@parser-mongo:27017/Twitch?authSource=admin`,
 
       connectionName: 'TwitchParser#2',
 
