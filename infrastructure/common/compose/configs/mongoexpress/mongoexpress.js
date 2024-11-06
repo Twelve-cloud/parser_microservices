@@ -11,45 +11,7 @@ export default {
       // If a connection string options such as server/port/etc are ignored
       connectionString: `mongodb://Twelve:${process.env.PARSER_MONGO_PASSWORD}@parser-mongo:27017/Twitch?authSource=admin`,
 
-      connectionName: 'TwitchParser',
-
-      connectionOptions: {
-        // Enable ssl
-        ssl: true,
-
-        // Enable tls
-        tls: true,
-
-        // Validate mongod server certificate against CA
-        tlsAllowInvalidCertificates: false,
-
-        // Single PEM file on disk
-        tlsCAFile: '/etc/ssl/ca/server-ca.pem',
-
-        // Client key PEM file on disk
-        tlsCertificateKeyFile: '/etc/ssl/mongoexpress/server.pem',
-
-        // Size of connection pool (number of connections to use)
-        //maxPoolSize: 4,
-      },
-
-      // Set admin to true if you want to turn on admin features
-      admin: true,
-
-      // Hide all databases except the ones in this list  (empty list for no whitelist)
-      whitelist: [],
-
-      // Hide databases listed in the blacklist (empty list for no blacklist)
-      blacklist: [],
-    },
-    {
-      // If set to true to remove the limit of 100 MB of RAM on each aggregation pipeline stage
-      allowDiskUse: false,
-
-      // If a connection string options such as server/port/etc are ignored
-      connectionString: `mongodb://Twelve:${process.env.PARSER_MONGO_PASSWORD}@parser-mongo:27017/Twitch?authSource=admin`,
-
-      connectionName: 'TwitchParser#2',
+      connectionName: 'Server #1',
 
       connectionOptions: {
         // Enable ssl
