@@ -1,7 +1,7 @@
 {
     "Servers": {
         "1": {
-            "Name": "Server #1",
+            "Name": "TwitchParser #1",
             "Group": "Servers",
             "Host": "parser-postgres",
             "Port": 5432,

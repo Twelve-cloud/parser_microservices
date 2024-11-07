@@ -11,7 +11,7 @@ export default {
       // If a connection string options such as server/port/etc are ignored
       connectionString: `mongodb://Twelve:${process.env.PARSER_MONGO_PASSWORD}@parser-mongo:27017/Twitch?authSource=admin`,
 
-      connectionName: 'Server #1',
+      connectionName: 'TwitchParser #1',
 
       connectionOptions: {
         // Enable ssl
