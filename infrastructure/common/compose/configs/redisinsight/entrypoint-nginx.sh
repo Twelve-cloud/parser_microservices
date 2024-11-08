@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Running redis insight nginx-docker-entry.sh to setup basic auth"
+echo "Running redis insight nginx entrypoint to setup basic auth"
 
 echo "Creating htpasswd file"
 

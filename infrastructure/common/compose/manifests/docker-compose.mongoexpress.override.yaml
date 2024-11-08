@@ -4,6 +4,7 @@ services:
     hostname: mongo-express
     container_name: mongo-express
     user: node
+    entrypoint: ["/docker-entrypoint.sh"]
     command: ["node", "app"]
     ports:
       - name: mongo-express-port

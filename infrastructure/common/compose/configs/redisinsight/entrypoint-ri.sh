@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Running redis insight docker-entry.sh"
+echo "Running redis insight entrypoint"
 
 echo "Exporting environment variables"
 

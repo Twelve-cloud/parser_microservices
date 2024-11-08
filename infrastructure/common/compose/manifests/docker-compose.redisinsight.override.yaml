@@ -4,7 +4,7 @@ services:
     hostname: redis-insight
     container_name: redis-insight
     user: node
-    entrypoint: ["/docker-entry.sh"]
+    entrypoint: ["/entrypoint.sh"]
     command: ["node", "redisinsight/api/dist/src/main"]
     expose: ["${REDIS_INSIGHT_PORT}/tcp"]
     env_file:
@@ -20,8 +20,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/ri-docker-entry.sh
-        target: /docker-entry.sh
+        source: ./infrastructure/common/compose/configs/redisinsight/entrypoint-ri.sh
+        target: /entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
@@ -79,15 +79,15 @@ services:
     hostname: ri-curl
     container_name: ri-curl
     user: curl_user
-    entrypoint: ["/docker-entry.sh"]
+    entrypoint: ["/entrypoint.sh"]
     command: ["true"]
     env_file:
       - path: ./infrastructure/common/compose/env/redisinsight/.env
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/curl-docker-entry.sh
-        target: /docker-entry.sh
+        source: ./infrastructure/common/compose/configs/redisinsight/entrypoint-curl.sh
+        target: /entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
@@ -137,7 +137,7 @@ services:
     hostname: ri-nginx
     container_name: ri-nginx
     user: nginx
-    entrypoint: ["/docker-entry.sh"]
+    entrypoint: ["/entrypoint.sh"]
     command: ["nginx", "-g", "daemon off;"]
     ports:
       - name: redis-insight-port
@@ -159,8 +159,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/nginx-docker-entry.sh
-        target: /docker-entry.sh
+        source: ./infrastructure/common/compose/configs/redisinsight/entrypoint-nginx.sh
+        target: /entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate

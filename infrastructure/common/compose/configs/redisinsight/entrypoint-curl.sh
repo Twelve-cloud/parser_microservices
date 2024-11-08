@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Running redis insight curl docker-entry.sh to setup predefined servers"
+echo "Running redis insight curl entrypoint to setup predefined servers"
 
 tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.key)
 tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.crt)
