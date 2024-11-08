@@ -4,7 +4,8 @@ services:
     hostname: pgadmin
     container_name: pgadmin
     user: pgadmin
-    command: ["./entrypoint.sh"]
+    entrypoint: ["/entrypoint.sh"]
+    command: ["true"]
     ports:
       - name: pgadmin-port
         target: ${PGADMIN_PORT}
