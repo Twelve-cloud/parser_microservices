@@ -4,6 +4,7 @@ services:
     hostname: parser-postgres
     container_name: parser-postgres
     user: postgres
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
     command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
     expose: ["${POSTGRES_PORT}/tcp"]
     env_file:

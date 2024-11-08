@@ -4,6 +4,7 @@ services:
     hostname: parser-mongo
     container_name: parser-mongo
     user: mongodb
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
     command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
     expose: ["${MONGO_PORT}/tcp"]
     env_file:

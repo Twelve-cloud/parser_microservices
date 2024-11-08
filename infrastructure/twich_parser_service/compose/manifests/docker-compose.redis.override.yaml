@@ -4,6 +4,7 @@ services:
     hostname: parser-redis
     container_name: parser-redis
     user: redis
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
     command:
       [
         "redis-server",
