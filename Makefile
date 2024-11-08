@@ -10,6 +10,7 @@ COMPOSE :=                                                                      
     -f docker-compose.yaml                                                                                   \
     -f ${COMPOSE_COMMON_PGADMIN}                                                                             \
     -f ${COMPOSE_COMMON_MONGO_EXPRESS}                                                                       \
+    -f ${COMPOSE_COMMON_REDIS_INSIGHT}                                                                     \
     -f ${COMPOSE_TWT_PARSER_POSTGRES}                                                                        \
     -f ${COMPOSE_TWT_PARSER_MONGO}                                                                           \
     -f ${COMPOSE_TWT_PARSER_REDIS}
@@ -167,6 +168,26 @@ cmongoexpress_certificates_update:
     sudo chown -R 1000:1000 infrastructure/common/compose/certs/mongoexpress/server.key
     sudo chown -R 1000:1000 infrastructure/common/compose/certs/mongoexpress/server.crt
 
+credisinsight_certificates_update:
+    sudo openssl req -sha256 -new -nodes -subj "/CN=redis-insight"                                           \
+    -out infrastructure/common/compose/certs/redisinsight/server.csr                                         \
+    -keyout infrastructure/common/compose/certs/redisinsight/server.key
+
+    sudo openssl x509 -req -sha256 -days 3650                                                                \
+    -in infrastructure/common/compose/certs/redisinsight/server.csr                                          \
+    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
+    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
+    -out infrastructure/common/compose/certs/redisinsight/server.crt
+
+    sudo cat infrastructure/common/compose/certs/redisinsight/server.crt                                     \
+    infrastructure/common/compose/certs/redisinsight/server.key                                              \
+    > infrastructure/common/compose/certs/redisinsight/server.pem
+
+    sudo chmod a+x infrastructure/common/compose/configs/redisinsight/curl-docker-entry.sh
+    sudo chmod a+x infrastructure/common/compose/configs/redisinsight/ri-docker-entry.sh
+    sudo chmod a+x infrastructure/common/compose/configs/redisinsight/nginx-docker-entry.sh
+    sudo chmod a+r infrastructure/common/compose/certs/redisinsight/*
+
 # Initialization.
 cinit:
     $(MAKE) ca_certificates_update
@@ -178,6 +199,7 @@ cinit:
     $(MAKE) credis_certificates_update
     $(MAKE) cpgadmin_certificates_update
     $(MAKE) cmongoexpress_certificates_update
+    $(MAKE) credisinsight_certificates_update
 
 # Remove all certificates and data folders.
 cclear:
@@ -185,6 +207,7 @@ cclear:
     sudo rm -f infrastructure/common/compose/certs/ca/!(*example*)
     sudo rm -f infrastructure/common/compose/certs/pgadmin/!(*example*)
     sudo rm -f infrastructure/common/compose/certs/mongoexpress/!(*example*)
+    sudo rm -f infrastructure/common/compose/certs/redisinsight/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/postgres/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/mongo/!(*example*)
     sudo rm -f infrastructure/twich_parser_service/compose/certs/redis/!(*example*)

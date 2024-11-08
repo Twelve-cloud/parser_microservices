@@ -1,0 +1,231 @@
+services:
+  redis-insight:
+    image: redis/redisinsight:2.60.0
+    hostname: redis-insight
+    container_name: redis-insight
+    user: node
+    entrypoint: ["/docker-entry.sh"]
+    command: ["node", "redisinsight/api/dist/src/main"]
+    expose: ["${REDIS_INSIGHT_PORT}/tcp"]
+    env_file:
+      - path: ./infrastructure/common/compose/env/redisinsight/.env
+        required: true
+    volumes:
+      - type: bind
+        source: ./infrastructure/common/compose/configs/redisinsight/redisinsight.conf
+        target: /usr/src/app/config/default.conf
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/configs/redisinsight/ri-docker-entry.sh
+        target: /docker-entry.sh
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/redisinsight
+        target: /etc/ssl/redisinsight
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--spider",
+          "--no-check-certificate",
+          "https://${REDIS_INSIGHT_HOST}:${REDIS_INSIGHT_PORT}/api/health",
+        ]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${REDIS_INSIGHT_CPUS_LIMIT}
+          memory: ${REDIS_INSIGHT_MEMORY_LIMIT}
+        reservations:
+          cpus: ${REDIS_INSIGHT_CPUS_RESERVATION}
+          memory: ${REDIS_INSIGHT_MEMORY_RESERVATION}
+    networks:
+      redis-insight-network:
+        ipv4_address: ${REDIS_INSIGHT_IP_ADDRESS}
+      parser-redis-network:
+    depends_on:
+      parser-redis:
+        restart: true
+        condition: service_healthy
+        required: true
+    pull_policy: missing
+    restart: always
+
+  redis-insight-setup:
+    image: curlimages/curl:8.10.1
+    hostname: ri-curl
+    container_name: ri-curl
+    user: curl_user
+    entrypoint: ["/docker-entry.sh"]
+    command: ["true"]
+    env_file:
+      - path: ./infrastructure/common/compose/env/redisinsight/.env
+        required: true
+    volumes:
+      - type: bind
+        source: ./infrastructure/common/compose/configs/redisinsight/curl-docker-entry.sh
+        target: /docker-entry.sh
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/redisinsight
+        target: /etc/ssl/redisinsight
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/ca/server-ca.crt
+        target: /etc/ssl/ca/server-ca.crt
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${RI_CURL_CPUS_LIMIT}
+          memory: ${RI_CURL_MEMORY_LIMIT}
+        reservations:
+          cpus: ${RI_CURL_CPUS_RESERVATION}
+          memory: ${RI_CURL_MEMORY_RESERVATION}
+    networks:
+      redis-insight-network:
+        ipv4_address: ${RI_CURL_IP_ADDRESS}
+    depends_on:
+      redis-insight:
+        restart: true
+        condition: service_healthy
+        required: true
+    pull_policy: missing
+    restart: on-failure:3
+
+  redis-insight-proxy:
+    image: nginx:1.27.1-alpine3.20
+    hostname: ri-nginx
+    container_name: ri-nginx
+    user: nginx
+    entrypoint: ["/docker-entry.sh"]
+    command: ["nginx", "-g", "daemon off;"]
+    ports:
+      - name: redis-insight-port
+        target: ${RI_NGINX_PORT}
+        published: ${RI_NGINX_PUBLIC_PORT}
+        host_ip: ${RI_NGINX_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/common/compose/env/redisinsight/.env
+        required: true
+    volumes:
+      - type: bind
+        source: ./infrastructure/common/compose/configs/redisinsight/nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/configs/redisinsight/nginx-docker-entry.sh
+        target: /docker-entry.sh
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/redisinsight
+        target: /etc/nginx/ssl
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--silent",
+          "--insecure",
+          "--user",
+          "${RI_DEFAULT_EMAIL}:${RI_DEFAULT_PASSWORD}",
+          "https://${REDIS_INSIGHT_HOST}:${REDIS_INSIGHT_PORT}/api/health",
+        ]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${RI_NGINX_CPUS_LIMIT}
+          memory: ${RI_NGINX_MEMORY_LIMIT}
+        reservations:
+          cpus: ${RI_NGINX_CPUS_RESERVATION}
+          memory: ${RI_NGINX_MEMORY_RESERVATION}
+    networks:
+      redis-insight-network:
+        ipv4_address: ${RI_NGINX_IP_ADDRESS}
+    depends_on:
+      redis-insight:
+        restart: true
+        condition: service_healthy
+        required: true
+    pull_policy: missing
+    restart: always
+
+networks:
+  redis-insight-network:
+    name: redis-insight-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${REDIS_INSIGHT_NETWORK_SUBNET}
+          ip_range: ${REDIS_INSIGHT_NETWORK_IP_RANGE}
+          gateway: ${REDIS_INSIGHT_NETWORK_GATEWAY}
+  parser-redis-network:
+    external: true
