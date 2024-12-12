@@ -4,6 +4,7 @@ set -e
 
 echo "Running redis insight curl entrypoint to setup predefined servers"
 
+# Get certificates and key filenames
 tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.key)
 tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.crt)
 tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/ca/server-ca.crt)
@@ -22,6 +23,7 @@ change_encryption_agreement_json=$(cat << EOF
 EOF
 )
 
+# Change encryption agreement
 response=$(curl --silent --insecure                                          \
   -X "PATCH" https://redis-insight:5540/api/settings                         \
   -H "Content-Type: application/json; charset=utf-8"                         \
@@ -55,6 +57,7 @@ parser_redis_connection_options_json=$(cat << EOF
 EOF
 )
 
+# Create predefined servers
 response=$(curl --silent --insecure                                          \
  -X "POST" https://redis-insight:5540/api/databases                          \
  -H "Content-Type: application/json; charset=utf-8"                          \
