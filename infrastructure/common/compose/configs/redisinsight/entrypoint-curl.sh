@@ -7,7 +7,7 @@ echo "Running redis insight curl entrypoint to setup predefined servers"
 # Get certificates and key filenames
 tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.key)
 tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.crt)
-tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/ca/server-ca.crt)
+tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/ca/ca.crt)
 
 echo "Changing encryption agreement"
 
@@ -44,12 +44,12 @@ parser_redis_connection_options_json=$(cat << EOF
   "tls": true,
   "caCert": {
     "certificate": "${tls_ca_crt}",
-    "name": "parser_redis_server_ca_cert"
+    "name": "parser_redis_ca_cert"
   },
   "clientCert": {
     "certificate": "${tls_crt}",
     "key": "${tls_key}",
-    "name": "parser_redis_client_cert"
+    "name": "redis_insight_cert"
   },
   "verifyServerCert": true,
   "ssh": false

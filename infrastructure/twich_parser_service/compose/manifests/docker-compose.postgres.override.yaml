@@ -12,13 +12,6 @@ services:
         required: true
     volumes:
       - type: bind
-        source: ./.compose-data/twich_parser_service/postgres-data
-        target: /var/lib/postgres/data
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/postgres
         target: /etc/postgres
         read_only: true
@@ -35,8 +28,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/client-ca.crt
-        target: /etc/ssl/ca/client-ca.crt
+        source: ./infrastructure/common/compose/certs/ca/ca.crt
+        target: /etc/ssl/ca/ca.crt
         read_only: true
         bind:
           propagation: rprivate

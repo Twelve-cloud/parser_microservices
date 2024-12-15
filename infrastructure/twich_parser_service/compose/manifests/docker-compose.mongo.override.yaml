@@ -12,13 +12,6 @@ services:
         required: true
     volumes:
       - type: bind
-        source: ./.compose-data/twich_parser_service/mongo-data
-        target: /var/lib/mongo/data
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/mongo
         target: /etc/mongo
         read_only: true
@@ -35,8 +28,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/client-ca.pem
-        target: /etc/ssl/ca/client-ca.pem
+        source: ./infrastructure/common/compose/certs/ca/ca.pem
+        target: /etc/ssl/ca/ca.pem
         read_only: true
         bind:
           propagation: rprivate

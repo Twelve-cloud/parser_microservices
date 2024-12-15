@@ -24,7 +24,7 @@ export default {
         tlsAllowInvalidCertificates: false,
 
         // Single PEM file on disk
-        tlsCAFile: '/etc/ssl/ca/server-ca.pem',
+        tlsCAFile: '/etc/ssl/ca/ca.pem',
 
         // Client key PEM file on disk
         tlsCertificateKeyFile: '/etc/ssl/mongoexpress/server.pem',

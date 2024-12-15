@@ -50,7 +50,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/server-ca.crt
+        source: ./infrastructure/common/compose/certs/ca/ca.crt
         target: /home/pgadmin/.postgresql/root.crt
         read_only: true
         bind:

@@ -1,213 +1,188 @@
 include .env
 export
 
-# ------------------------------------- ENV ------------------------------------------------------------------
-
 .RECIPEPREFIX := $() $()
 SHELL := bash -O extglob
 
-COMPOSE :=                                                                                                   \
-    -f docker-compose.yaml                                                                                   \
-    -f ${COMPOSE_COMMON_PGADMIN}                                                                             \
-    -f ${COMPOSE_COMMON_MONGO_EXPRESS}                                                                       \
-    -f ${COMPOSE_COMMON_REDIS_INSIGHT}                                                                     \
-    -f ${COMPOSE_TWT_PARSER_POSTGRES}                                                                        \
-    -f ${COMPOSE_TWT_PARSER_MONGO}                                                                           \
-    -f ${COMPOSE_TWT_PARSER_REDIS}
+# ----------------------------------------- COMMON ------------------------------------------------------
+# ----------------------------------------- SCRIPTS -----------------------------------------------------
 
-COMPOSE_ENV :=                                                                                               \
-    --env-file=.env                                                                                          \
-    --env-file=infrastructure/common/compose/env/compose/.env                                                \
-    --env-file=infrastructure/twich_parser_service/compose/env/compose/.env                                  \
+_c_set_cert_scripts_permissions:
+    @sudo chmod a+x ${CERT_SCRIPTS_PATH}
 
-# ------------------------------------- APP ------------------------------------------------------------------
+_c_configure_scripts:
+    @$(MAKE) --no-print-directory _c_set_cert_scripts_permissions
+
+# ----------------------------------------- COMPOSE ------------------------------------------------------
+# ------------------------------------------- ENV --------------------------------------------------------
+
+COMPOSE_FILE_PATHS :=                                                                                    \
+    -f docker-compose.yaml                                                                               \
+    -f ${COMPOSE_COMMON_PGADMIN_PATH}                                                                    \
+    -f ${COMPOSE_COMMON_MONGO_EXPRESS_PATH}                                                              \
+    -f ${COMPOSE_COMMON_REDIS_INSIGHT_PATH}                                                              \
+    -f ${COMPOSE_TWT_PARSER_POSTGRES_PATH}                                                               \
+    -f ${COMPOSE_TWT_PARSER_MONGO_PATH}                                                                  \
+    -f ${COMPOSE_TWT_PARSER_REDIS_PATH}                                                                  \
+
+COMPOSE_ENV_FILE_PATHS :=                                                                                \
+    --env-file=${COMPOSE_ENV_FILE_PATH}                                                                  \
+    --env-file=${COMPOSE_COMMON_ENV_FILE_PATH}                                                           \
+    --env-file=${COMPOSE_TWT_PARSER_ENV_FILE_PATH}                                                       \
+
+# ---------------------------------------- CERTIFICATES --------------------------------------------------
+
+_c_generate_ca_certificate:
+    @./scripts/certificates/generate_ca_certificate.sh                                                   \
+    CN=CA                                                                                                \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+    CA_PEM_PATH=${COMPOSE_CA_PEM_PATH}                                                                   \
+
+_c_generate_pgadmin_certificate:
+    @./scripts/certificates/generate_certificate.sh                                                      \
+    CN=pgadmin                                                                                           \
+    CSR_PATH=${COMPOSE_PGADMIN_CSR_PATH}                                                                 \
+    CRT_PATH=${COMPOSE_PGADMIN_CRT_PATH}                                                                 \
+    KEY_PATH=${COMPOSE_PGADMIN_KEY_PATH}                                                                 \
+    PEM_PATH=${COMPOSE_PGADMIN_PEM_PATH}                                                                 \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+
+_c_generate_mongo_express_certificate:
+    @./scripts/certificates/generate_certificate.sh                                                      \
+    CN=mongo-express                                                                                     \
+    CSR_PATH=${COMPOSE_MONGO_EXPRESS_CSR_PATH}                                                           \
+    CRT_PATH=${COMPOSE_MONGO_EXPRESS_CRT_PATH}                                                           \
+    KEY_PATH=${COMPOSE_MONGO_EXPRESS_KEY_PATH}                                                           \
+    PEM_PATH=${COMPOSE_MONGO_EXPRESS_PEM_PATH}                                                           \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+
+_c_generate_redis_insight_certificate:
+    @./scripts/certificates/generate_certificate.sh                                                      \
+    CN=redis-insight                                                                                     \
+    CSR_PATH=${COMPOSE_REDIS_INSIGHT_CSR_PATH}                                                           \
+    CRT_PATH=${COMPOSE_REDIS_INSIGHT_CRT_PATH}                                                           \
+    KEY_PATH=${COMPOSE_REDIS_INSIGHT_KEY_PATH}                                                           \
+    PEM_PATH=${COMPOSE_REDIS_INSIGHT_PEM_PATH}                                                           \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+
+_c_generate_twt_parser_postgres_certificate:
+    @./scripts/certificates/generate_certificate.sh                                                      \
+    CN=parser-postgres                                                                                   \
+    CSR_PATH=${COMPOSE_TWT_PARSER_POSTGRES_CSR_PATH}                                                     \
+    CRT_PATH=${COMPOSE_TWT_PARSER_POSTGRES_CRT_PATH}                                                     \
+    KEY_PATH=${COMPOSE_TWT_PARSER_POSTGRES_KEY_PATH}                                                     \
+    PEM_PATH=${COMPOSE_TWT_PARSER_POSTGRES_PEM_PATH}                                                     \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+
+_c_generate_twt_parser_mongo_certificate:
+    @./scripts/certificates/generate_certificate.sh                                                      \
+    CN=parser-mongo                                                                                      \
+    CSR_PATH=${COMPOSE_TWT_PARSER_MONGO_CSR_PATH}                                                        \
+    CRT_PATH=${COMPOSE_TWT_PARSER_MONGO_CRT_PATH}                                                        \
+    KEY_PATH=${COMPOSE_TWT_PARSER_MONGO_KEY_PATH}                                                        \
+    PEM_PATH=${COMPOSE_TWT_PARSER_MONGO_PEM_PATH}                                                        \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+
+_c_generate_twt_parser_redis_certificate:
+    @./scripts/certificates/generate_certificate.sh                                                      \
+    CN=parser-redis                                                                                      \
+    CSR_PATH=${COMPOSE_TWT_PARSER_REDIS_CSR_PATH}                                                        \
+    CRT_PATH=${COMPOSE_TWT_PARSER_REDIS_CRT_PATH}                                                        \
+    KEY_PATH=${COMPOSE_TWT_PARSER_REDIS_KEY_PATH}                                                        \
+    PEM_PATH=${COMPOSE_TWT_PARSER_REDIS_PEM_PATH}                                                        \
+    CA_CRT_PATH=${COMPOSE_CA_CRT_PATH}                                                                   \
+    CA_KEY_PATH=${COMPOSE_CA_KEY_PATH}                                                                   \
+
+# ----------------------------------------- PERMISSIONS --------------------------------------------------
+
+_c_set_ca_permissions:
+    @sudo chmod a+r ${COMPOSE_CA_CERTS_PATH}
+
+_c_set_pgadmin_permissions:
+    @sudo chown 5050:5050 ${COMPOSE_PGADMIN_CERTS_PATH}
+
+_c_set_mongo_express_permissions:
+    @sudo chown 1000:1000 ${COMPOSE_MONGO_EXPRESS_CERTS_PATH}
+
+_c_set_redis_insight_permissions:
+    @sudo chown 1000:1000 ${COMPOSE_REDIS_INSIGHT_CERTS_PATH}
+    @sudo chmod a+r ${COMPOSE_REDIS_INSIGHT_CERTS_PATH}
+    @sudo chmod a+x ${COMPOSE_REDIS_INSIGHT_SCRIPTS_PATH}
+
+_c_set_twt_parser_postgres_permissions:
+    @sudo chown 70:70 ${COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH}
+
+_c_set_twt_parser_mongo_permissions:
+    @sudo chown 999:999 ${COMPOSE_TWT_PARSER_MONGO_CERTS_PATH}
+
+_c_set_twt_parser_redis_permissions:
+    @sudo chown 999:1000 ${COMPOSE_TWT_PARSER_REDIS_CERTS_PATH}
+
+# ----------------------------------------- CONFIGURATION ------------------------------------------------
+
+_c_configure_ca:
+    @$(MAKE) --no-print-directory _c_generate_ca_certificate
+    @$(MAKE) --no-print-directory _c_set_ca_permissions
+
+_c_configure_pgadmin:
+    @$(MAKE) --no-print-directory _c_generate_pgadmin_certificate
+    @$(MAKE) --no-print-directory _c_set_pgadmin_permissions
+
+_c_configure_mongo_express:
+    @$(MAKE) --no-print-directory _c_generate_mongo_express_certificate
+    @$(MAKE) --no-print-directory _c_set_mongo_express_permissions
+
+_c_configure_redis_insight:
+    @$(MAKE) --no-print-directory _c_generate_redis_insight_certificate
+    @$(MAKE) --no-print-directory _c_set_redis_insight_permissions
+
+_c_configure_twt_parser_postgres:
+    @$(MAKE) --no-print-directory _c_generate_twt_parser_postgres_certificate
+    @$(MAKE) --no-print-directory _c_set_twt_parser_postgres_permissions
+
+_c_configure_twt_parser_mongo:
+    @$(MAKE) --no-print-directory _c_generate_twt_parser_mongo_certificate
+    @$(MAKE) --no-print-directory _c_set_twt_parser_mongo_permissions
+
+_c_configure_twt_parser_redis:
+    @$(MAKE) --no-print-directory _c_generate_twt_parser_redis_certificate
+    @$(MAKE) --no-print-directory _c_set_twt_parser_redis_permissions
+
+# ------------------------------------------- COMMANDS ---------------------------------------------------
 
 cbuild: docker-compose.yaml
-    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} up --build
+    @docker compose -p parser-microservices ${COMPOSE_ENV_FILE_PATHS} ${COMPOSE_FILE_PATHS} up --build
 
 cstart: docker-compose.yaml
-    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} up
+    @docker compose -p parser-microservices ${COMPOSE_ENV_FILE_PATHS} ${COMPOSE_FILE_PATHS} up
 
-cstart_detach: docker-compose.yaml
-    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} up --detach
+cstartd: docker-compose.yaml
+    @docker compose -p parser-microservices ${COMPOSE_ENV_FILE_PATHS} ${COMPOSE_FILE_PATHS} up --detach
 
 cstop: docker-compose.yaml
-    sudo docker compose -p parser-microservices ${COMPOSE_ENV} ${COMPOSE} down
+    @docker compose -p parser-microservices ${COMPOSE_ENV_FILE_PATHS} ${COMPOSE_FILE_PATHS} down
 
-# ---------------------------------- CONFIGURATION -----------------------------------------------------------
+cclean:
+    @sudo rm -f ${COMPOSE_CA_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_PGADMIN_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_MONGO_EXPRESS_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_REDIS_INSIGHT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CERTS_PATH}
 
-# Update CA certificates for server and client (10 years).
-ca_certificates_update:
-    sudo openssl req -sha256 -new -x509 -days 3650 -nodes -subj "/CN=CA"                                     \
-    -out infrastructure/common/compose/certs/ca/server-ca.crt                                                \
-    -keyout infrastructure/common/compose/certs/ca/server-ca.key
-
-    sudo cat infrastructure/common/compose/certs/ca/server-ca.crt                                            \
-    infrastructure/common/compose/certs/ca/server-ca.key                                                     \
-    > infrastructure/common/compose/certs/ca/server-ca.pem
-
-    sudo openssl req -sha256 -new -x509 -days 3650 -nodes -subj "/CN=CA"                                     \
-    -out infrastructure/common/compose/certs/ca/client-ca.crt                                                \
-    -keyout infrastructure/common/compose/certs/ca/client-ca.key
-
-    sudo cat infrastructure/common/compose/certs/ca/client-ca.crt                                            \
-    infrastructure/common/compose/certs/ca/client-ca.key                                                     \
-    > infrastructure/common/compose/certs/ca/client-ca.pem
-
-    sudo chmod a+r infrastructure/common/compose/certs/ca/*
-
-# Create folder to store postgres data and give access to this folder to postgres user in container.
-# You must use postgres alpine image instead of debian because debian image has different PID/GID.
-cpostgres_init:
-    sudo mkdir -p .compose-data/twich_parser_service/postgres-data
-    sudo chown -R 70:70 .compose-data/twich_parser_service/postgres-data
-
-# Update postgres server certificates (10 years).
-cpostgres_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=parser-postgres"                                         \
-    -out infrastructure/twich_parser_service/compose/certs/postgres/server.csr                               \
-    -keyout infrastructure/twich_parser_service/compose/certs/postgres/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/twich_parser_service/compose/certs/postgres/server.csr                                \
-    -CA infrastructure/common/compose/certs/ca/server-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/server-ca.key                                              \
-    -out infrastructure/twich_parser_service/compose/certs/postgres/server.crt
-
-    sudo cat infrastructure/twich_parser_service/compose/certs/postgres/server.crt                           \
-    infrastructure/twich_parser_service/compose/certs/postgres/server.key                                    \
-    > infrastructure/twich_parser_service/compose/certs/postgres/server.pem
-
-    sudo chown -R 70:70 infrastructure/twich_parser_service/compose/certs/postgres/server.key
-    sudo chown -R 70:70 infrastructure/twich_parser_service/compose/certs/postgres/server.crt
-
-# Create folder to store mongo data and give access to this folder to mongo user in container.
-# You must use mongo jammy image instead of nano image because nano image has different PID/GID.
-cmongo_init:
-    sudo mkdir -p .compose-data/twich_parser_service/mongo-data
-    sudo chown -R 999:999 .compose-data/twich_parser_service/mongo-data
-
-# Update mongo server certificates (10 years).
-cmongo_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=parser-mongo"                                            \
-    -out infrastructure/twich_parser_service/compose/certs/mongo/server.csr                                  \
-    -keyout infrastructure/twich_parser_service/compose/certs/mongo/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/twich_parser_service/compose/certs/mongo/server.csr                                   \
-    -CA infrastructure/common/compose/certs/ca/server-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/server-ca.key                                              \
-    -out infrastructure/twich_parser_service/compose/certs/mongo/server.crt
-
-    sudo cat infrastructure/twich_parser_service/compose/certs/mongo/server.crt                              \
-    infrastructure/twich_parser_service/compose/certs/mongo/server.key                                       \
-    > infrastructure/twich_parser_service/compose/certs/mongo/server.pem
-
-    sudo chown -R 999:999 infrastructure/twich_parser_service/compose/certs/mongo/server.pem
-
-# Create folder to store redis data and give access to this folder to redis user in container.
-# You must use redis alpine image instead of debian image because debian image has different PID/GID.
-credis_init:
-    sudo mkdir -p .compose-data/twich_parser_service/redis-data
-    sudo chown -R 999:1000 .compose-data/twich_parser_service/redis-data
-
-# Update redis server certificates (10 years).
-credis_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=parser-redis"                                            \
-    -out infrastructure/twich_parser_service/compose/certs/redis/server.csr                                  \
-    -keyout infrastructure/twich_parser_service/compose/certs/redis/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/twich_parser_service/compose/certs/redis/server.csr                                   \
-    -CA infrastructure/common/compose/certs/ca/server-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/server-ca.key                                              \
-    -out infrastructure/twich_parser_service/compose/certs/redis/server.crt
-
-    sudo cat infrastructure/twich_parser_service/compose/certs/redis/server.crt                              \
-    infrastructure/twich_parser_service/compose/certs/redis/server.key                                       \
-    > infrastructure/twich_parser_service/compose/certs/redis/server.pem
-
-    sudo chown -R 999:1000 infrastructure/twich_parser_service/compose/certs/redis/server.key
-    sudo chown -R 999:1000 infrastructure/twich_parser_service/compose/certs/redis/server.crt
-
-# Update pgadmin server certificates (10 years).
-cpgadmin_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=pgadmin"                                                 \
-    -out infrastructure/common/compose/certs/pgadmin/server.csr                                              \
-    -keyout infrastructure/common/compose/certs/pgadmin/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/common/compose/certs/pgadmin/server.csr                                               \
-    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
-    -out infrastructure/common/compose/certs/pgadmin/server.crt
-
-    sudo cat infrastructure/common/compose/certs/pgadmin/server.crt                                          \
-    infrastructure/common/compose/certs/pgadmin/server.key                                                   \
-    > infrastructure/common/compose/certs/pgadmin/server.pem
-
-    sudo chown -R 5050:5050 infrastructure/common/compose/certs/pgadmin/server.key
-    sudo chown -R 5050:5050 infrastructure/common/compose/certs/pgadmin/server.crt
-
-# Update mongoexpress server certificates (10 years).
-cmongoexpress_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=mongo-express"                                           \
-    -out infrastructure/common/compose/certs/mongoexpress/server.csr                                         \
-    -keyout infrastructure/common/compose/certs/mongoexpress/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/common/compose/certs/mongoexpress/server.csr                                          \
-    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
-    -out infrastructure/common/compose/certs/mongoexpress/server.crt
-
-    sudo cat infrastructure/common/compose/certs/mongoexpress/server.crt                                     \
-    infrastructure/common/compose/certs/mongoexpress/server.key                                              \
-    > infrastructure/common/compose/certs/mongoexpress/server.pem
-
-    sudo chown -R 1000:1000 infrastructure/common/compose/certs/mongoexpress/server.key
-    sudo chown -R 1000:1000 infrastructure/common/compose/certs/mongoexpress/server.crt
-
-credisinsight_certificates_update:
-    sudo openssl req -sha256 -new -nodes -subj "/CN=redis-insight"                                           \
-    -out infrastructure/common/compose/certs/redisinsight/server.csr                                         \
-    -keyout infrastructure/common/compose/certs/redisinsight/server.key
-
-    sudo openssl x509 -req -sha256 -days 3650                                                                \
-    -in infrastructure/common/compose/certs/redisinsight/server.csr                                          \
-    -CA infrastructure/common/compose/certs/ca/client-ca.crt                                                 \
-    -CAkey infrastructure/common/compose/certs/ca/client-ca.key                                              \
-    -out infrastructure/common/compose/certs/redisinsight/server.crt
-
-    sudo cat infrastructure/common/compose/certs/redisinsight/server.crt                                     \
-    infrastructure/common/compose/certs/redisinsight/server.key                                              \
-    > infrastructure/common/compose/certs/redisinsight/server.pem
-
-    sudo chmod a+x infrastructure/common/compose/configs/redisinsight/curl-docker-entry.sh
-    sudo chmod a+x infrastructure/common/compose/configs/redisinsight/ri-docker-entry.sh
-    sudo chmod a+x infrastructure/common/compose/configs/redisinsight/nginx-docker-entry.sh
-    sudo chmod a+r infrastructure/common/compose/certs/redisinsight/*
-
-# Initialization.
 cinit:
-    $(MAKE) ca_certificates_update
-    $(MAKE) cpostgres_init
-    $(MAKE) cpostgres_certificates_update
-    $(MAKE) cmongo_init
-    $(MAKE) cmongo_certificates_update
-    $(MAKE) credis_init
-    $(MAKE) credis_certificates_update
-    $(MAKE) cpgadmin_certificates_update
-    $(MAKE) cmongoexpress_certificates_update
-    $(MAKE) credisinsight_certificates_update
-
-# Remove all certificates and data folders.
-cclear:
-    sudo rm -rf .compose-data
-    sudo rm -f infrastructure/common/compose/certs/ca/!(*example*)
-    sudo rm -f infrastructure/common/compose/certs/pgadmin/!(*example*)
-    sudo rm -f infrastructure/common/compose/certs/mongoexpress/!(*example*)
-    sudo rm -f infrastructure/common/compose/certs/redisinsight/!(*example*)
-    sudo rm -f infrastructure/twich_parser_service/compose/certs/postgres/!(*example*)
-    sudo rm -f infrastructure/twich_parser_service/compose/certs/mongo/!(*example*)
-    sudo rm -f infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
+    @$(MAKE) --no-print-directory _c_configure_scripts
+    @$(MAKE) --no-print-directory _c_configure_ca
+    @$(MAKE) --no-print-directory _c_configure_pgadmin
+    @$(MAKE) --no-print-directory _c_configure_mongo_express
+    @$(MAKE) --no-print-directory _c_configure_redis_insight
+    @$(MAKE) --no-print-directory _c_configure_twt_parser_postgres
+    @$(MAKE) --no-print-directory _c_configure_twt_parser_mongo
+    @$(MAKE) --no-print-directory _c_configure_twt_parser_redis

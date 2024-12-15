@@ -102,8 +102,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/server-ca.crt
-        target: /etc/ssl/ca/server-ca.crt
+        source: ./infrastructure/common/compose/certs/ca/ca.crt
+        target: /etc/ssl/ca/ca.crt
         read_only: true
         bind:
           propagation: rprivate

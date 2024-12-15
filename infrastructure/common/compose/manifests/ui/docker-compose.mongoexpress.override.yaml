@@ -42,8 +42,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/server-ca.pem
-        target: /etc/ssl/ca/server-ca.pem
+        source: ./infrastructure/common/compose/certs/ca/ca.pem
+        target: /etc/ssl/ca/ca.pem
         read_only: true
         bind:
           propagation: rprivate
