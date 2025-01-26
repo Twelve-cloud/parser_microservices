@@ -1,6 +1,5 @@
 # COMMON
 .vscode
-.compose-data
 
 # CERTS
 **/*.crt
