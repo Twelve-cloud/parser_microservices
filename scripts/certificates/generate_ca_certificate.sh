@@ -30,21 +30,8 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Function to execute a command
-function execute_command() {
-
-    # Execute the command
-    "$@" &> /dev/null
-
-    # Check if the command failed
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Command '$*' failed."
-        exit 1
-    fi
-}
-
 # Generate CA certificate
-execute_command openssl req -sha256 -new -x509 -days 3650 -nodes -subj "/CN=${CN}" -out ${CA_CRT_PATH} -keyout ${CA_KEY_PATH}
+source scripts/common/execute_command.sh openssl req -sha256 -new -x509 -days 3650 -nodes -subj "/CN=${CN}" -out ${CA_CRT_PATH} -keyout ${CA_KEY_PATH}
 
 # Create CA certificate in PEM format
-execute_command bash -c "cat ${CA_CRT_PATH} ${CA_KEY_PATH} > ${CA_PEM_PATH}"
+source scripts/common/execute_command.sh bash -c "cat ${CA_CRT_PATH} ${CA_KEY_PATH} > ${CA_PEM_PATH}"

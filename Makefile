@@ -10,6 +10,8 @@ SHELL := bash -O extglob
 # ----------------------------------------------------------- ENV -----------------------------------------------------------------------
 
 CERT_SCRIPTS_PATH := scripts/certificates/*
+GENERATE_CA_CERTIFICATE_PATH := scripts/certificates/generate_ca_certificate.sh
+GENERATE_CERTIFICATE_PATH := scripts/certificates/generate_certificate.sh
 
 # ---------------------------------------------------------- SCRIPTS --------------------------------------------------------------------
 
@@ -89,14 +91,14 @@ COMPOSE_ENV_FILE_PATHS :=                                                       
 # ------------------------------------------------------- CERTIFICATES ------------------------------------------------------------------
 
 _c_generate_ca_certificate:
-    @./scripts/certificates/generate_ca_certificate.sh                                                                                  \
+    @source $(GENERATE_CA_CERTIFICATE_PATH)                                                                                             \
     CN=CA                                                                                                                               \
     CA_CRT_PATH=$(COMPOSE_COMMON_CA_CRT_PATH)                                                                                           \
     CA_KEY_PATH=$(COMPOSE_COMMON_CA_KEY_PATH)                                                                                           \
     CA_PEM_PATH=$(COMPOSE_COMMON_CA_PEM_PATH)                                                                                           \
 
 _c_generate_pgadmin_certificate:
-    @./scripts/certificates/generate_certificate.sh                                                                                     \
+    @source $(GENERATE_CERTIFICATE_PATH)                                                                                                \
     CN=pgadmin                                                                                                                          \
     CSR_PATH=$(COMPOSE_COMMON_PGADMIN_CSR_PATH)                                                                                         \
     CRT_PATH=$(COMPOSE_COMMON_PGADMIN_CRT_PATH)                                                                                         \
@@ -106,7 +108,7 @@ _c_generate_pgadmin_certificate:
     CA_KEY_PATH=$(COMPOSE_COMMON_CA_KEY_PATH)                                                                                           \
 
 _c_generate_mongo_express_certificate:
-    @./scripts/certificates/generate_certificate.sh                                                                                     \
+    @source $(GENERATE_CERTIFICATE_PATH)                                                                                                \
     CN=mongo-express                                                                                                                    \
     CSR_PATH=$(COMPOSE_COMMON_MONGO_EXPRESS_CSR_PATH)                                                                                   \
     CRT_PATH=$(COMPOSE_COMMON_MONGO_EXPRESS_CRT_PATH)                                                                                   \
@@ -116,7 +118,7 @@ _c_generate_mongo_express_certificate:
     CA_KEY_PATH=$(COMPOSE_COMMON_CA_KEY_PATH)                                                                                           \
 
 _c_generate_redis_insight_certificate:
-    @./scripts/certificates/generate_certificate.sh                                                                                     \
+    @source $(GENERATE_CERTIFICATE_PATH)                                                                                                \
     CN=redis-insight                                                                                                                    \
     CSR_PATH=$(COMPOSE_COMMON_REDIS_INSIGHT_CSR_PATH)                                                                                   \
     CRT_PATH=$(COMPOSE_COMMON_REDIS_INSIGHT_CRT_PATH)                                                                                   \
@@ -126,7 +128,7 @@ _c_generate_redis_insight_certificate:
     CA_KEY_PATH=$(COMPOSE_COMMON_CA_KEY_PATH)                                                                                           \
 
 _c_generate_twt_parser_postgres_certificate:
-    @./scripts/certificates/generate_certificate.sh                                                                                     \
+    @source $(GENERATE_CERTIFICATE_PATH)                                                                                                \
     CN=parser-postgres                                                                                                                  \
     CSR_PATH=$(COMPOSE_TWT_PARSER_POSTGRES_CSR_PATH)                                                                                    \
     CRT_PATH=$(COMPOSE_TWT_PARSER_POSTGRES_CRT_PATH)                                                                                    \
@@ -136,7 +138,7 @@ _c_generate_twt_parser_postgres_certificate:
     CA_KEY_PATH=$(COMPOSE_COMMON_CA_KEY_PATH)                                                                                           \
 
 _c_generate_twt_parser_mongo_certificate:
-    @./scripts/certificates/generate_certificate.sh                                                                                     \
+    @source $(GENERATE_CERTIFICATE_PATH)                                                                                                \
     CN=parser-mongo                                                                                                                     \
     CSR_PATH=$(COMPOSE_TWT_PARSER_MONGO_CSR_PATH)                                                                                       \
     CRT_PATH=$(COMPOSE_TWT_PARSER_MONGO_CRT_PATH)                                                                                       \
@@ -146,7 +148,7 @@ _c_generate_twt_parser_mongo_certificate:
     CA_KEY_PATH=$(COMPOSE_COMMON_CA_KEY_PATH)                                                                                           \
 
 _c_generate_twt_parser_redis_certificate:
-    @./scripts/certificates/generate_certificate.sh                                                                                     \
+    @source $(GENERATE_CERTIFICATE_PATH)                                                                                                \
     CN=parser-redis                                                                                                                     \
     CSR_PATH=$(COMPOSE_TWT_PARSER_REDIS_CSR_PATH)                                                                                       \
     CRT_PATH=$(COMPOSE_TWT_PARSER_REDIS_CRT_PATH)                                                                                       \
