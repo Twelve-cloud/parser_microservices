@@ -29,6 +29,9 @@ repos:
       - id: destroyed-symlinks
         name: destroyed-symlinks
 
+      - id: fix-byte-order-marker
+        name: fix-byte-order-marker
+
       - id: check-toml
         name: check-toml
 
@@ -40,3 +43,10 @@ repos:
 
       - id: check-xml
         name: check-xml
+
+      - id: pretty-format-json
+        name: pretty-format-json
+        args:
+          - --indent
+          - "4"
+          - --no-sort-keys
