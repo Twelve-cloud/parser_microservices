@@ -14,11 +14,11 @@ services:
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/common/compose/env/mongoexpress/.env
+      - path: ./infrastructure/common/compose/env/ui/mongoexpress/.env
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/mongoexpress/mongoexpress.js
+        source: ./infrastructure/common/compose/configs/ui/mongoexpress/mongoexpress.js
         target: /app/config.default.js
         read_only: true
         bind:
@@ -26,7 +26,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/mongoexpress/connect.js
+        source: ./infrastructure/common/compose/configs/ui/mongoexpress/connect.js
         target: /app/lib/db.js
         read_only: true
         bind:
@@ -34,7 +34,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/mongoexpress
+        source: ./infrastructure/common/compose/certs/ui/mongoexpress
         target: /etc/ssl/mongoexpress
         read_only: true
         bind:

@@ -8,11 +8,11 @@ services:
     command: ["node", "redisinsight/api/dist/src/main"]
     expose: ["${REDIS_INSIGHT_PORT}/tcp"]
     env_file:
-      - path: ./infrastructure/common/compose/env/redisinsight/.env
+      - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/redisinsight.conf
+        source: ./infrastructure/common/compose/configs/ui/redisinsight/redisinsight.conf
         target: /usr/src/app/config/default.conf
         read_only: true
         bind:
@@ -20,7 +20,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/entrypoint-ri.sh
+        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
         target: /entrypoint.sh
         read_only: true
         bind:
@@ -28,7 +28,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/redisinsight
+        source: ./infrastructure/common/compose/certs/ui/redisinsight
         target: /etc/ssl/redisinsight
         read_only: true
         bind:
@@ -82,11 +82,11 @@ services:
     entrypoint: ["/entrypoint.sh"]
     command: ["true"]
     env_file:
-      - path: ./infrastructure/common/compose/env/redisinsight/.env
+      - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/entrypoint-curl.sh
+        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-curl.sh
         target: /entrypoint.sh
         read_only: true
         bind:
@@ -94,7 +94,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/redisinsight
+        source: ./infrastructure/common/compose/certs/ui/redisinsight
         target: /etc/ssl/redisinsight
         read_only: true
         bind:
@@ -147,11 +147,11 @@ services:
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/common/compose/env/redisinsight/.env
+      - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/nginx.conf
+        source: ./infrastructure/common/compose/configs/ui/redisinsight/nginx.conf
         target: /etc/nginx/nginx.conf
         read_only: true
         bind:
@@ -159,7 +159,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/redisinsight/entrypoint-nginx.sh
+        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
         target: /entrypoint.sh
         read_only: true
         bind:
@@ -167,7 +167,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/redisinsight
+        source: ./infrastructure/common/compose/certs/ui/redisinsight
         target: /etc/nginx/ssl
         read_only: true
         bind:

@@ -14,11 +14,11 @@ services:
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/common/compose/env/pgadmin/.env
+      - path: ./infrastructure/common/compose/env/ui/pgadmin/.env
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/pgadmin/pgadmin.py
+        source: ./infrastructure/common/compose/configs/ui/pgadmin/pgadmin.py
         target: /pgadmin4/config_local.py
         read_only: true
         bind:
@@ -26,7 +26,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/pgadmin/servers.json
+        source: ./infrastructure/common/compose/configs/ui/pgadmin/servers.json
         target: /pgadmin4/servers.json
         read_only: true
         bind:
@@ -34,7 +34,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/pgadmin/server.crt
+        source: ./infrastructure/common/compose/certs/ui/pgadmin/server.crt
         target: /certs/server.cert
         read_only: true
         bind:
@@ -42,7 +42,7 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/pgadmin/server.key
+        source: ./infrastructure/common/compose/certs/ui/pgadmin/server.key
         target: /certs/server.key
         read_only: true
         bind:
