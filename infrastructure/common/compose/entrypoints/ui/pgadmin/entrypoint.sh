@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Exit if any command here fails
+set -e
+
+# Running pgadmin entrypoint
+echo "Running pgadmin entrypoint"
+
 # Fixup the passwd file, in case we're on OpenShift
 if ! whoami > /dev/null 2>&1; then
     # Check if the current user ID is not 5050 (a common default in some environments)
