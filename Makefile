@@ -68,8 +68,8 @@ COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH := infrastructure/common/compose/en
 COMPOSE_COMMON_REDIS_INSIGHT_CONFIG_PATH := infrastructure/common/compose/configs/ui/redisinsight/redisinsight.conf
 COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CONFIG_PATH := infrastructure/common/compose/configs/ui/redisinsight/nginx.conf
 COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
-COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_NGINX_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
-COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_CURL_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-curl.sh
+COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
+COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-curl.sh
 
 COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/postgres/*
 COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/mongo/*
