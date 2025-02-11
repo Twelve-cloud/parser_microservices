@@ -4,7 +4,7 @@ services:
     hostname: mongo-express
     container_name: mongo-express
     user: node
-    entrypoint: ["/docker-entrypoint.sh"]
+    entrypoint: ["/bin/mongoexpress/entrypoint.sh"]
     command: ["node", "app"]
     ports:
       - name: mongo-express-port
@@ -17,6 +17,14 @@ services:
       - path: ./infrastructure/common/compose/env/ui/mongoexpress/.env
         required: true
     volumes:
+      - type: bind
+        source: ./infrastructure/common/compose/entrypoints/ui/mongoexpress
+        target: /bin/mongoexpress
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/configs/ui/mongoexpress/mongoexpress.js
         target: /app/config.default.js

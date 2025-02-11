@@ -61,12 +61,15 @@ COMPOSE_TWT_PARSER_REDIS_KEY_PATH := infrastructure/twich_parser_service/compose
 COMPOSE_TWT_PARSER_REDIS_PEM_PATH := infrastructure/twich_parser_service/compose/certs/redis/server.pem
 COMPOSE_TWT_PARSER_REDIS_CERTS_PATH := infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
 
-COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/postgres/postgres.conf
-COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/mongo/mongo.conf
-COMPOSE_TWT_PARSER_REDIS_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/redis/redis.conf
-COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/postgres/entrypoint.sh
-COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/mongo/entrypoint.sh
-COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/redis/entrypoint.sh
+COMPOSE_COMMON_MONGO_EXPRESS_CONFIG_PATH := infrastructure/common/compose/configs/ui/mongoexpress/*
+COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/mongoexpress/*
+
+COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/postgres/*
+COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/mongo/*
+COMPOSE_TWT_PARSER_REDIS_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/redis/*
+COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/postgres/*
+COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/mongo/*
+COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/redis/*
 
 COMPOSE_COMMON_REDIS_INSIGHT_SCRIPTS_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/*.sh
 
@@ -174,6 +177,9 @@ _c_set_pgadmin_permissions:
 
 _c_set_mongo_express_permissions:
     @sudo chown 1000:1000 $(COMPOSE_COMMON_MONGO_EXPRESS_CERTS_PATH)
+    @sudo chown 1000:1000 $(COMPOSE_COMMON_MONGO_EXPRESS_CONFIG_PATH)
+    @sudo chown 1000:1000 $(COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH)
 
 _c_set_redis_insight_permissions:
     @sudo chown 1000:1000 $(COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH)
