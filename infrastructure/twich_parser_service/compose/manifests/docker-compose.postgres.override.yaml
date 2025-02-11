@@ -4,13 +4,21 @@ services:
     hostname: parser-postgres
     container_name: parser-postgres
     user: postgres
-    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
+    entrypoint: ["/bin/postgres/entrypoint.sh"]
     command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
     expose: ["${POSTGRES_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/postgres/.env
         required: true
     volumes:
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/entrypoints/postgres
+        target: /bin/postgres
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/postgres
         target: /etc/postgres

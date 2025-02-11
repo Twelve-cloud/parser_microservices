@@ -61,6 +61,13 @@ COMPOSE_TWT_PARSER_REDIS_KEY_PATH := infrastructure/twich_parser_service/compose
 COMPOSE_TWT_PARSER_REDIS_PEM_PATH := infrastructure/twich_parser_service/compose/certs/redis/server.pem
 COMPOSE_TWT_PARSER_REDIS_CERTS_PATH := infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
 
+COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/postgres/postgres.conf
+COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/mongo/mongo.conf
+COMPOSE_TWT_PARSER_REDIS_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/redis/redis.conf
+COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/postgres/entrypoint.sh
+COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/mongo/entrypoint.sh
+COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/redis/entrypoint.sh
+
 COMPOSE_COMMON_REDIS_INSIGHT_SCRIPTS_PATH := infrastructure/common/compose/configs/redisinsight/*.sh
 
 COMPOSE_COMMON_ENV_FILE_PATH := infrastructure/common/compose/env/compose/.env
@@ -175,12 +182,21 @@ _c_set_redis_insight_permissions:
 
 _c_set_twt_parser_postgres_permissions:
     @sudo chown 70:70 $(COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH)
+    @sudo chown 70:70 $(COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH)
+    @sudo chown 70:70 $(COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH)
 
 _c_set_twt_parser_mongo_permissions:
     @sudo chown 999:999 $(COMPOSE_TWT_PARSER_MONGO_CERTS_PATH)
+    @sudo chown 999:999 $(COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH)
+    @sudo chown 999:999 $(COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH)
 
 _c_set_twt_parser_redis_permissions:
     @sudo chown 999:1000 $(COMPOSE_TWT_PARSER_REDIS_CERTS_PATH)
+    @sudo chown 999:1000 $(COMPOSE_TWT_PARSER_REDIS_CONFIG_PATH)
+    @sudo chown 999:1000 $(COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH)
 
 # ------------------------------------------------------ CONFIGURATION ------------------------------------------------------------------
 

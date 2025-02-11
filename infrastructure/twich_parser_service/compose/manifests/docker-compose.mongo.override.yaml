@@ -4,13 +4,21 @@ services:
     hostname: parser-mongo
     container_name: parser-mongo
     user: mongodb
-    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
+    entrypoint: ["/bin/mongo/entrypoint.sh"]
     command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
     expose: ["${MONGO_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/mongo/.env
         required: true
     volumes:
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/entrypoints/mongo
+        target: /bin/mongo
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/mongo
         target: /etc/mongo

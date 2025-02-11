@@ -4,7 +4,7 @@ services:
     hostname: parser-redis
     container_name: parser-redis
     user: redis
-    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
+    entrypoint: ["/bin/redis/entrypoint.sh"]
     command:
       [
         "redis-server",
@@ -18,6 +18,14 @@ services:
       - path: ./infrastructure/twich_parser_service/compose/env/redis/.env
         required: true
     volumes:
+      - type: bind
+        source: ./infrastructure/twich_parser_service/compose/entrypoints/redis
+        target: /bin/redis
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/redis
         target: /etc/redis
