@@ -1,9 +1,12 @@
-#! /bin/sh
+#!/bin/sh
 
+# Exit if any command here fails
 set -e
 
+# Running redis insight nginx entrypoint
 echo "Running redis insight nginx entrypoint to setup basic auth"
 
+# Create htpasswd file
 echo "Creating htpasswd file"
 
 # Create htpasswd file

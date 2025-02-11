@@ -1,7 +1,9 @@
-#! /bin/sh
+#!/bin/sh
 
+# Exit if any command here fails
 set -e
 
+# Running redis insight curl entrypoint
 echo "Running redis insight curl entrypoint to setup predefined servers"
 
 # Get certificates and key filenames
@@ -9,8 +11,10 @@ tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.key)
 tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.crt)
 tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/ca/ca.crt)
 
+# Change encryption agreement
 echo "Changing encryption agreement"
 
+# Create post body for changing encryption agreement
 change_encryption_agreement_json=$(cat << EOF
 {
   "agreements": {
@@ -30,10 +34,13 @@ response=$(curl --silent --insecure                                          \
   -d "${change_encryption_agreement_json}"                                   \
 )
 
+# Response from redis insight for changing encryption agreement
 echo "Response: ${response}"
 
+# Create predefined servers
 echo "Creating parser redis predefined servers"
 
+# Create post body for creating predefined servers
 parser_redis_connection_options_json=$(cat << EOF
 {
   "name": "TwitchParser #1",
@@ -64,6 +71,8 @@ response=$(curl --silent --insecure                                          \
  -d "${parser_redis_connection_options_json}"                                \
 )
 
+# Response from redis insight for creating predefined servers
 echo "Response: ${response}"
 
+# Execute any input parameters
 exec "$@"

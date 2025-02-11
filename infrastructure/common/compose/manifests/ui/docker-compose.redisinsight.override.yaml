@@ -4,7 +4,7 @@ services:
     hostname: redis-insight
     container_name: redis-insight
     user: node
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/bin/redisinsight/entrypoint.sh"]
     command: ["node", "redisinsight/api/dist/src/main"]
     expose: ["${REDIS_INSIGHT_PORT}/tcp"]
     env_file:
@@ -21,7 +21,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
-        target: /entrypoint.sh
+        target: /bin/redisinsight/entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
@@ -79,7 +79,7 @@ services:
     hostname: ri-curl
     container_name: ri-curl
     user: curl_user
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/bin/curl/entrypoint.sh"]
     command: ["true"]
     env_file:
       - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
@@ -87,7 +87,7 @@ services:
     volumes:
       - type: bind
         source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-curl.sh
-        target: /entrypoint.sh
+        target: /bin/curl/entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
@@ -137,7 +137,7 @@ services:
     hostname: ri-nginx
     container_name: ri-nginx
     user: nginx
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/bin/nginx/entrypoint.sh"]
     command: ["nginx", "-g", "daemon off;"]
     ports:
       - name: redis-insight-port
@@ -160,7 +160,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
-        target: /entrypoint.sh
+        target: /bin/nginx/entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
@@ -169,6 +169,14 @@ services:
       - type: bind
         source: ./infrastructure/common/compose/certs/ui/redisinsight
         target: /etc/nginx/ssl
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ./infrastructure/common/compose/certs/ca/ca.crt
+        target: /etc/ssl/ca/ca.crt
         read_only: true
         bind:
           propagation: rprivate

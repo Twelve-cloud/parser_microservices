@@ -65,6 +65,11 @@ COMPOSE_COMMON_PGADMIN_CONFIG_PATH := infrastructure/common/compose/configs/ui/p
 COMPOSE_COMMON_PGADMIN_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/pgadmin/*
 COMPOSE_COMMON_MONGO_EXPRESS_CONFIG_PATH := infrastructure/common/compose/configs/ui/mongoexpress/*
 COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/mongoexpress/*
+COMPOSE_COMMON_REDIS_INSIGHT_CONFIG_PATH := infrastructure/common/compose/configs/ui/redisinsight/redisinsight.conf
+COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CONFIG_PATH := infrastructure/common/compose/configs/ui/redisinsight/nginx.conf
+COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
+COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_NGINX_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
+COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_CURL_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-curl.sh
 
 COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/postgres/*
 COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH := infrastructure/twich_parser_service/compose/configs/mongo/*
@@ -189,7 +194,17 @@ _c_set_mongo_express_permissions:
 _c_set_redis_insight_permissions:
     @sudo chown 1000:1000 $(COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH)
     @sudo chmod a+r $(COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH)
-    @sudo chmod a+x $(COMPOSE_COMMON_REDIS_INSIGHT_SCRIPTS_PATH)
+
+    @sudo chown 1000:1000 $(COMPOSE_COMMON_REDIS_INSIGHT_CONFIG_PATH)
+    @sudo chown 1000:1000 $(COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH)
+
+    @sudo chown 101:101 $(COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CONFIG_PATH)
+    @sudo chown 101:101 $(COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_PATH)
+
+    @sudo chown 100:101 $(COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_PATH)
 
 _c_set_twt_parser_postgres_permissions:
     @sudo chown 70:70 $(COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH)
