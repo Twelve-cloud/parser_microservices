@@ -4,7 +4,7 @@ services:
     hostname: pgadmin
     container_name: pgadmin
     user: pgadmin
-    entrypoint: ["/entrypoint.sh"]
+    entrypoint: ["/bin/pgadmin/entrypoint.sh"]
     command: ["true"]
     ports:
       - name: pgadmin-port
@@ -17,6 +17,14 @@ services:
       - path: ./infrastructure/common/compose/env/ui/pgadmin/.env
         required: true
     volumes:
+      - type: bind
+        source: ./infrastructure/common/compose/entrypoints/ui/pgadmin
+        target: /bin/pgadmin
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
       - type: bind
         source: ./infrastructure/common/compose/configs/ui/pgadmin/pgadmin.py
         target: /pgadmin4/config_local.py

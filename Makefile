@@ -61,6 +61,8 @@ COMPOSE_TWT_PARSER_REDIS_KEY_PATH := infrastructure/twich_parser_service/compose
 COMPOSE_TWT_PARSER_REDIS_PEM_PATH := infrastructure/twich_parser_service/compose/certs/redis/server.pem
 COMPOSE_TWT_PARSER_REDIS_CERTS_PATH := infrastructure/twich_parser_service/compose/certs/redis/!(*example*)
 
+COMPOSE_COMMON_PGADMIN_CONFIG_PATH := infrastructure/common/compose/configs/ui/pgadmin/*
+COMPOSE_COMMON_PGADMIN_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/pgadmin/*
 COMPOSE_COMMON_MONGO_EXPRESS_CONFIG_PATH := infrastructure/common/compose/configs/ui/mongoexpress/*
 COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH := infrastructure/common/compose/entrypoints/ui/mongoexpress/*
 
@@ -174,6 +176,9 @@ _c_set_ca_permissions:
 
 _c_set_pgadmin_permissions:
     @sudo chown 5050:5050 $(COMPOSE_COMMON_PGADMIN_CERTS_PATH)
+    @sudo chown 5050:5050 $(COMPOSE_COMMON_PGADMIN_CONFIG_PATH)
+    @sudo chown 5050:5050 $(COMPOSE_COMMON_PGADMIN_ENTRYPOINT_PATH)
+    @sudo chmod +x $(COMPOSE_COMMON_PGADMIN_ENTRYPOINT_PATH)
 
 _c_set_mongo_express_permissions:
     @sudo chown 1000:1000 $(COMPOSE_COMMON_MONGO_EXPRESS_CERTS_PATH)
