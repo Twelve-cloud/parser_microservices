@@ -50,6 +50,11 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
+      - type: volume
+        source: parser-redis-data
+        target: /storage/redis
+        volume:
+          nocopy: false
     healthcheck:
       test: ["CMD-SHELL", "redis-cli --user ${REDIS_USERNAME} --pass ${REDIS_PASSWORD} ping"]
       interval: 30s
@@ -89,3 +94,12 @@ networks:
         - subnet: ${REDIS_NETWORK_SUBNET}
           ip_range: ${REDIS_NETWORK_IP_RANGE}
           gateway: ${REDIS_NETWORK_GATEWAY}
+
+volumes:
+  parser-redis-data:
+    name: parser-redis-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      o: "size=${REDIS_DATA_SIZE},uid=${REDIS_DATA_UID},gid=${REDIS_DATA_GID}"
+      device: tmpfs

@@ -43,6 +43,11 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
+      - type: volume
+        source: parser-mongo-data
+        target: /storage/mongo
+        volume:
+          nocopy: false
     healthcheck:
       test: ["CMD-SHELL", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -82,3 +87,12 @@ networks:
         - subnet: ${MONGO_NETWORK_SUBNET}
           ip_range: ${MONGO_NETWORK_IP_RANGE}
           gateway: ${MONGO_NETWORK_GATEWAY}
+
+volumes:
+  parser-mongo-data:
+    name: parser-mongo-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      o: "size=${MONGO_DATA_SIZE},uid=${MONGO_DATA_UID},gid=${MONGO_DATA_GID}"
+      device: tmpfs

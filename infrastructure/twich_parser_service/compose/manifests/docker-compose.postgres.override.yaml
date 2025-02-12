@@ -43,6 +43,11 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
+      - type: volume
+        source: parser-postgres-data
+        target: /storage/postgres
+        volume:
+          nocopy: false
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 30s
@@ -82,3 +87,12 @@ networks:
         - subnet: ${POSTGRES_NETWORK_SUBNET}
           ip_range: ${POSTGRES_NETWORK_IP_RANGE}
           gateway: ${POSTGRES_NETWORK_GATEWAY}
+
+volumes:
+  parser-postgres-data:
+    name: parser-postgres-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      o: "size=${POSTGRES_DATA_SIZE},uid=${POSTGRES_DATA_UID},gid=${POSTGRES_DATA_GID}"
+      device: tmpfs
