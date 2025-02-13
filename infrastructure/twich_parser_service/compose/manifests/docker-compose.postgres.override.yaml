@@ -94,5 +94,6 @@ volumes:
     driver: local
     driver_opts:
       type: tmpfs
-      o: "size=${POSTGRES_DATA_SIZE},uid=${POSTGRES_DATA_UID},gid=${POSTGRES_DATA_GID}"
       device: tmpfs
+      o: |
+        size=${POSTGRES_DATA_SIZE},uid=${POSTGRES_DATA_UID},gid=${POSTGRES_DATA_GID}

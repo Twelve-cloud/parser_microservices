@@ -268,6 +268,9 @@ cstartd:
 cstop:
     @docker compose --project-name parser-microservices --project-directory . $(COMPOSE_ENV_FILE_PATHS) $(COMPOSE_FILE_PATHS) down
 
+cstopv:
+    @docker compose --project-name parser-microservices --project-directory . $(COMPOSE_ENV_FILE_PATHS) $(COMPOSE_FILE_PATHS) down -v
+
 cclean:
     @sudo rm -f $(COMPOSE_COMMON_CA_CERTS_PATH)
     @sudo rm -f $(COMPOSE_COMMON_PGADMIN_CERTS_PATH)

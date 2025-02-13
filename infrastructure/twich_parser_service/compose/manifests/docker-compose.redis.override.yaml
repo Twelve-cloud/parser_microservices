@@ -101,5 +101,6 @@ volumes:
     driver: local
     driver_opts:
       type: tmpfs
-      o: "size=${REDIS_DATA_SIZE},uid=${REDIS_DATA_UID},gid=${REDIS_DATA_GID}"
       device: tmpfs
+      o: |
+        size=${REDIS_DATA_SIZE},uid=${REDIS_DATA_UID},gid=${REDIS_DATA_GID}

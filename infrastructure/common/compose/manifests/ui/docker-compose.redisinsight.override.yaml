@@ -35,6 +35,11 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
+      - type: volume
+        source: redisinsight-data
+        target: /data
+        volume:
+          nocopy: false
     healthcheck:
       test:
         [
@@ -237,3 +242,13 @@ networks:
           gateway: ${REDIS_INSIGHT_NETWORK_GATEWAY}
   parser-redis-network:
     external: true
+
+volumes:
+  redisinsight-data:
+    name: redisinsight-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: |
+        size=${REDIS_INSIGHT_DATA_SIZE},uid=${REDIS_INSIGHT_DATA_UID},gid=${REDIS_INSIGHT_DATA_GID}
