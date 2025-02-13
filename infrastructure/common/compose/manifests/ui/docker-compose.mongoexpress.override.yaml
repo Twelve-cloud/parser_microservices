@@ -57,6 +57,11 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
+      - type: volume
+        source: mongoexpress-data
+        target: /opt/mongo-express
+        volume:
+          nocopy: false
     healthcheck:
       test:
         [
@@ -112,3 +117,13 @@ networks:
           gateway: ${MONGO_EXPRESS_NETWORK_GATEWAY}
   parser-mongo-network:
     external: true
+
+volumes:
+  mongoexpress-data:
+    name: mongoexpress-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: |
+        size=${MONGO_EXPRESS_DATA_SIZE},uid=${MONGO_EXPRESS_DATA_UID},gid=${MONGO_EXPRESS_DATA_GID}
