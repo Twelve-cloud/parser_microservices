@@ -1,11 +1,11 @@
 # Addresses that redis listen
-bind * -::*
+bind ${REDIS_HOST}
 
 # Redis port
-port 6379
+port ${REDIS_PORT}
 
 # Redis tls port
-tls-port 7379
+tls-port ${REDIS_TLS_PORT}
 
 # Allow tls and non-tls connections
 tls-auth-clients optional

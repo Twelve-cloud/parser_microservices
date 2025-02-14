@@ -21,7 +21,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/postgres
-        target: /etc/postgres
+        target: /etc/templates/postgres
         read_only: true
         bind:
           propagation: rprivate
@@ -46,6 +46,11 @@ services:
       - type: volume
         source: parser-postgres-data
         target: /storage/postgres
+        volume:
+          nocopy: false
+      - type: volume
+        source: parser-postgres-config
+        target: /etc/postgres
         volume:
           nocopy: false
     healthcheck:
@@ -96,4 +101,13 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: |
-        size=${POSTGRES_DATA_SIZE},uid=${POSTGRES_DATA_UID},gid=${POSTGRES_DATA_GID}
+        size=${POSTGRES_DATA_SIZE},uid=${POSTGRES_VOLUME_UID},gid=${POSTGRES_VOLUME_GID}
+
+  parser-postgres-config:
+    name: parser-postgres-config
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: |
+        size=${POSTGRES_CONFIG_SIZE},uid=${POSTGRES_VOLUME_UID},gid=${POSTGRES_VOLUME_GID}

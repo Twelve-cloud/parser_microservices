@@ -78,8 +78,6 @@ COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH := infrastructure/twich_parser_servi
 COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/mongo/*
 COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH := infrastructure/twich_parser_service/compose/entrypoints/redis/*
 
-COMPOSE_COMMON_REDIS_INSIGHT_SCRIPTS_PATH := infrastructure/common/compose/entrypoints/ui/redisinsight/*.sh
-
 COMPOSE_COMMON_ENV_FILE_PATH := infrastructure/common/compose/env/compose/.env
 COMPOSE_TWT_PARSER_ENV_FILE_PATH := infrastructure/twich_parser_service/compose/env/compose/.env
 

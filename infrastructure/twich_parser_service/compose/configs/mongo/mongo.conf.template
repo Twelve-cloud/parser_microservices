@@ -8,10 +8,10 @@ processManagement:
 
 net:
   # Addresses that mongo listen
-  bindIp: "*"
+  bindIp: ${MONGO_HOST}
 
   # Mongo port
-  port: 27017
+  port: ${MONGO_PORT}
 
   tls:
     # Allow tls and non-tls connections (but prefer tls)

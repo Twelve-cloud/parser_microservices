@@ -28,7 +28,7 @@ services:
           selinux: Z
       - type: bind
         source: ./infrastructure/twich_parser_service/compose/configs/redis
-        target: /etc/redis
+        target: /etc/templates/redis
         read_only: true
         bind:
           propagation: rprivate
@@ -53,6 +53,11 @@ services:
       - type: volume
         source: parser-redis-data
         target: /storage/redis
+        volume:
+          nocopy: false
+      - type: volume
+        source: parser-redis-config
+        target: /etc/redis
         volume:
           nocopy: false
     healthcheck:
@@ -103,4 +108,13 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: |
-        size=${REDIS_DATA_SIZE},uid=${REDIS_DATA_UID},gid=${REDIS_DATA_GID}
+        size=${REDIS_DATA_SIZE},uid=${REDIS_VOLUME_UID},gid=${REDIS_VOLUME_GID}
+
+  parser-redis-config:
+    name: parser-redis-config
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: |
+        size=${REDIS_CONFIG_SIZE},uid=${REDIS_VOLUME_UID},gid=${REDIS_VOLUME_GID}

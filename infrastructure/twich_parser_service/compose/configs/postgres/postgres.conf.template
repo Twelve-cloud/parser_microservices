@@ -1,8 +1,8 @@
 # Addresses that postgres listen
-listen_addresses = '*'
+listen_addresses = ${POSTGRES_HOST}
 
 # Postgres port
-port = 5432
+port = ${POSTGRES_PORT}
 
 # Cache size
 shared_buffers = 4GB
