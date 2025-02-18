@@ -1,12 +1,12 @@
 {
     "Servers": {
         "1": {
-            "Name": "TwitchParser #1",
+            "Name": "${PARSER_POSTGRES_CONNECTION_NAME}",
             "Group": "Servers",
-            "Host": "parser-postgres",
-            "Port": 5432,
-            "MaintenanceDB": "Twitch",
-            "Username": "Twelve",
+            "Host": "${PARSER_POSTGRES_HOST}",
+            "Port": ${PARSER_POSTGRES_PORT},
+            "MaintenanceDB": "${PARSER_POSTGRES_DB}",
+            "Username": "${PARSER_POSTGRES_USER}",
             "UseSSHTunnel": 0,
             "TunnelPort": "22",
             "TunnelAuthentication": 0,

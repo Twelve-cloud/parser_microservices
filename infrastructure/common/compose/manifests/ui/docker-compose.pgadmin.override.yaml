@@ -1,6 +1,7 @@
 services:
   pgadmin:
-    image: dpage/pgadmin4:8.9
+    # image: dpage/pgadmin4:8.9
+    build: ./infrastructure/common/compose/docker/ui/pgadmin
     hostname: pgadmin
     container_name: pgadmin
     user: pgadmin
@@ -26,16 +27,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/pgadmin/pgadmin.py
-        target: /pgadmin4/config_local.py
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ./infrastructure/common/compose/configs/ui/pgadmin/servers.json
-        target: /pgadmin4/servers.json
+        source: ./infrastructure/common/compose/configs/ui/pgadmin
+        target: /etc/templates/pgadmin
         read_only: true
         bind:
           propagation: rprivate
@@ -134,4 +127,4 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: |
-        size=${PGADMIN_DATA_SIZE},uid=${PGADMIN_DATA_UID},gid=${PGADMIN_DATA_GID}
+        size=${PGADMIN_DATA_SIZE},uid=${PGADMIN_VOLUME_UID},gid=${PGADMIN_VOLUME_GID}

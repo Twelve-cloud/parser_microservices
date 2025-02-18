@@ -6,6 +6,10 @@ set -e
 # Running pgadmin entrypoint
 echo "Running pgadmin entrypoint"
 
+# Substitute template variables
+envsubst < /etc/templates/pgadmin/pgadmin.py.template > /pgadmin4/config_local.py
+envsubst < /etc/templates/pgadmin/servers.json.template > /pgadmin4/servers.json
+
 # Fixup the passwd file, in case we're on OpenShift
 if ! whoami > /dev/null 2>&1; then
     # Check if the current user ID is not 5050 (a common default in some environments)
