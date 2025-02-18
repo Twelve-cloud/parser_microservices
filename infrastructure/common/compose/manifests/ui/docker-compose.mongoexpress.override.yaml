@@ -1,6 +1,7 @@
 services:
   mongo-express:
-    image: mongo-express:1.0.2
+    # image: mongo-express:1.0.2
+    build: ./infrastructure/common/compose/docker/ui/mongoexpress
     hostname: mongo-express
     container_name: mongo-express
     user: node
@@ -26,16 +27,8 @@ services:
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/mongoexpress/mongoexpress.js
-        target: /app/config.default.js
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ./infrastructure/common/compose/configs/ui/mongoexpress/connect.js
-        target: /app/lib/db.js
+        source: ./infrastructure/common/compose/configs/ui/mongoexpress
+        target: /etc/templates/mongoexpress
         read_only: true
         bind:
           propagation: rprivate
@@ -126,4 +119,4 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: |
-        size=${MONGO_EXPRESS_DATA_SIZE},uid=${MONGO_EXPRESS_DATA_UID},gid=${MONGO_EXPRESS_DATA_GID}
+        size=${MONGOE_DATA_SIZE},uid=${MONGOE_VOLUME_UID},gid=${MONGOE_VOLUME_GID}

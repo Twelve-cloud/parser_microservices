@@ -9,9 +9,9 @@ export default {
       allowDiskUse: false,
 
       // If a connection string options such as server/port/etc are ignored
-      connectionString: `mongodb://Twelve:${process.env.PARSER_MONGO_PASSWORD}@parser-mongo:27017/Twitch?authSource=admin`,
+      connectionString: 'mongodb://${PARSER_MONGO_USER}:${PARSER_MONGO_PASS}@${PARSER_MONGO_HOST}:${PARSER_MONGO_PORT}/${PARSER_MONGO_DB}?authSource=admin',
 
-      connectionName: 'TwitchParser #1',
+      connectionName: '${PARSER_MONGO_CONNECTION_NAME}',
 
       connectionOptions: {
         // Enable ssl
@@ -52,19 +52,19 @@ export default {
     cookieKeyName: 'mongo-express',
 
     // The cookie secret
-    cookieSecret: process.env.MONGO_EXPRESS_COOKIE_SECRET,
+    cookieSecret: '${MONGO_EXPRESS_COOKIE_SECRET}',
 
     // The host that mongo express will listen
-    host: '0.0.0.0',
+    host: '${MONGO_EXPRESS_HOST}',
 
     // The port that mongo express will use
-    port: 8081,
+    port: ${MONGO_EXPRESS_PORT},
 
     // Size of requests
     requestSizeLimit: '50mb',
 
     // The session secret
-    sessionSecret: process.env.MONGO_EXPRESS_SESSION_SECRET,
+    sessionSecret: '${MONGO_EXPRESS_SESSION_SECRET}',
 
     // SSL certificate
     sslCert: '/etc/ssl/mongoexpress/server.crt',
@@ -86,10 +86,10 @@ export default {
 
   basicAuth: {
     // Username for basic auth
-    username: process.env.MONGO_EXPRESS_DEFAULT_EMAIL,
+    username: '${MONGO_EXPRESS_DEFAULT_EMAIL}',
 
     // Password for basic auth
-    password: process.env.MONGO_EXPRESS_DEFAULT_PASSWORD,
+    password: '${MONGO_EXPRESS_DEFAULT_PASSWORD}'
   },
 
   options: {
