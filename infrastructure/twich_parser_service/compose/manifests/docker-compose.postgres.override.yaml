@@ -1,6 +1,7 @@
 services:
   parser-postgres:
-    image: postgres:16.3-alpine3.20
+    # image: postgres:16.3-alpine3.20
+    build: ./infrastructure/twich_parser_service/compose/docker/postgres
     hostname: parser-postgres
     container_name: parser-postgres
     user: postgres

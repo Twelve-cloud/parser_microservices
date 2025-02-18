@@ -1,6 +1,7 @@
 services:
   parser-mongo:
-    image: mongo:7.0-rc-jammy
+    # image: mongo:7.0-rc-jammy
+    build: ./infrastructure/twich_parser_service/compose/docker/mongo
     hostname: parser-mongo
     container_name: parser-mongo
     user: mongodb

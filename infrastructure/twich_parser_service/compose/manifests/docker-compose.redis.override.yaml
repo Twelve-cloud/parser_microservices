@@ -1,6 +1,7 @@
 services:
   parser-redis:
-    image: redis:7.4.0-alpine
+    # image: redis:7.4.0-alpine
+    build: ./infrastructure/twich_parser_service/compose/docker/redis
     hostname: parser-redis
     container_name: parser-redis
     user: redis
