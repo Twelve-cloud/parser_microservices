@@ -7,9 +7,9 @@ set -e
 echo "Running redis insight curl entrypoint to setup predefined servers"
 
 # Get certificates and key filenames
-tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.key)
-tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/redisinsight/server.crt)
-tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' /etc/ssl/ca/ca.crt)
+tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' ${RI_SSL_KEY_PATH})
+tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' ${RI_SSL_CERT_PATH})
+tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' ${RI_SSL_CA_PATH})
 
 # Change encryption agreement
 echo "Changing encryption agreement"
@@ -29,7 +29,7 @@ EOF
 
 # Change encryption agreement
 response=$(curl --silent --insecure                                          \
-  -X "PATCH" https://redis-insight:5540/api/settings                         \
+  -X "PATCH" ${RI_PROXY_PASS}/api/settings                                   \
   -H "Content-Type: application/json; charset=utf-8"                         \
   -d "${change_encryption_agreement_json}"                                   \
 )
@@ -43,11 +43,11 @@ echo "Creating parser redis predefined servers"
 # Create post body for creating predefined servers
 parser_redis_connection_options_json=$(cat << EOF
 {
-  "name": "TwitchParser #1",
-  "host": "parser-redis",
-  "port": 7379,
-  "username": "Twelve",
-  "password": "${PARSER_REDIS_PASSWORD}",
+  "name": "${PARSER_REDIS_CONNECTION_NAME}",
+  "host": "${PARSER_REDIS_HOST}",
+  "port": ${PARSER_REDIS_PORT},
+  "username": "${PARSER_REDIS_USER}",
+  "password": "${PARSER_REDIS_PASS}",
   "tls": true,
   "caCert": {
     "certificate": "${tls_ca_crt}",
@@ -66,7 +66,7 @@ EOF
 
 # Create predefined servers
 response=$(curl --silent --insecure                                          \
- -X "POST" https://redis-insight:5540/api/databases                          \
+ -X "POST" ${RI_PROXY_PASS}/api/databases                                    \
  -H "Content-Type: application/json; charset=utf-8"                          \
  -d "${parser_redis_connection_options_json}"                                \
 )
