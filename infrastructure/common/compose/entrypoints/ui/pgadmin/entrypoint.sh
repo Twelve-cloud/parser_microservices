@@ -7,8 +7,8 @@ set -e
 echo "Running pgadmin entrypoint"
 
 # Substitute template variables
-envsubst < /etc/templates/pgadmin/pgadmin.py.template > /pgadmin4/config_local.py
-envsubst < /etc/templates/pgadmin/servers.json.template > /pgadmin4/servers.json
+envsubst < ${PGADMIN_CONF_TEMPLATE_PATH} > ${PGADMIN_CONF_PATH}
+envsubst < ${PGADMIN_SERVERS_TEMPLATE_PATH} > ${PGADMIN_SERVERS_PATH}
 
 # Fixup the passwd file, in case we're on OpenShift
 if ! whoami > /dev/null 2>&1; then

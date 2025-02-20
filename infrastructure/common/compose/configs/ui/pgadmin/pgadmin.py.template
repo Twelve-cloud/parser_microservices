@@ -17,4 +17,4 @@ WTF_CSRF_ENABLED = 0
 ALLOW_SAVE_PASSWORD = True
 
 # Data location for pgadmin
-DATA_DIR = '/storage/pgadmin'
+DATA_DIR = ${PGADMIN_STORAGE_PATH}
