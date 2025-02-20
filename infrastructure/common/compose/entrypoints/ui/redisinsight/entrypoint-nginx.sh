@@ -6,6 +6,9 @@ set -e
 # Running redis insight nginx entrypoint
 echo "Running redis insight nginx entrypoint to setup basic auth"
 
+# Substitute template variables
+envsubst < /etc/templates/nginx/nginx.conf.template | sed -e 's/§/$/g' > /etc/nginx/nginx.conf
+
 # Create htpasswd file
 echo "Creating htpasswd file"
 

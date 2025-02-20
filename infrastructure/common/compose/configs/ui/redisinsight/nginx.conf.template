@@ -16,8 +16,8 @@ http {
     scgi_temp_path        /tmp/scgi_temp;
 
     server {
-        listen 5450 ssl;
-        server_name localhost 127.0.0.1;
+        listen ${RI_PROXY_PORT};
+        server_name ${RI_PROXY_HOST};
 
         ssl_certificate /etc/nginx/ssl/server.crt;
         ssl_certificate_key /etc/nginx/ssl/server.key;
@@ -27,11 +27,11 @@ http {
         location / {
             auth_basic "Redis Insight";
             auth_basic_user_file /tmp/.htpasswd;
-            proxy_pass https://redis-insight:5540;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass ${RI_PROXY_PASS};
+            proxy_set_header Host §host;
+            proxy_set_header X-Real-IP §remote_addr;
+            proxy_set_header X-Forwarded-For §proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto §scheme;
             proxy_read_timeout 900;
         }
 

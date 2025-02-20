@@ -6,12 +6,15 @@ set -e
 # Running redis insight entrypoint
 echo "Running redis insight entrypoint"
 
+# Substitute template variables
+envsubst < /etc/templates/redisinsight/default.conf.template > /usr/src/app/default.conf
+
 # Run original entrypoint
 echo "Exporting environment variables"
 
 # Load redis-insight configuration
 set -o allexport
-source ./config/default.conf
+source /usr/src/app/default.conf
 set +o allexport
 
 # Environment variables has been exported

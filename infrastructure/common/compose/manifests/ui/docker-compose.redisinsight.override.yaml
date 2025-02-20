@@ -1,6 +1,9 @@
 services:
   redis-insight:
-    image: redis/redisinsight:2.60.0
+    #image: redis/redisinsight:2.60.0
+    build:
+      context: ./infrastructure/common/compose/docker/ui/redisinsight
+      dockerfile: ./Dockerfile-ri
     hostname: redis-insight
     container_name: redis-insight
     user: node
@@ -12,16 +15,16 @@ services:
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/redisinsight/redisinsight.conf
-        target: /usr/src/app/config/default.conf
+        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
+        target: /bin/redisinsight/entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
-        target: /bin/redisinsight/entrypoint.sh
+        source: ./infrastructure/common/compose/configs/ui/redisinsight/redisinsight.conf.template
+        target: /etc/templates/redisinsight/default.conf.template
         read_only: true
         bind:
           propagation: rprivate
@@ -138,7 +141,10 @@ services:
     restart: on-failure:3
 
   redis-insight-proxy:
-    image: nginx:1.27.1-alpine3.20
+    # image: nginx:1.27.1-alpine3.20
+    build:
+      context: ./infrastructure/common/compose/docker/ui/redisinsight
+      dockerfile: ./Dockerfile-nginx
     hostname: ri-nginx
     container_name: ri-nginx
     user: nginx
@@ -156,16 +162,16 @@ services:
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/redisinsight/nginx.conf
-        target: /etc/nginx/nginx.conf
+        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
+        target: /bin/nginx/entrypoint.sh
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
-        target: /bin/nginx/entrypoint.sh
+        source: ./infrastructure/common/compose/configs/ui/redisinsight/nginx.conf.template
+        target: /etc/templates/nginx/nginx.conf.template
         read_only: true
         bind:
           propagation: rprivate
@@ -251,4 +257,4 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: |
-        size=${REDIS_INSIGHT_DATA_SIZE},uid=${REDIS_INSIGHT_DATA_UID},gid=${REDIS_INSIGHT_DATA_GID}
+        size=${REDISI_DATA_SIZE},uid=${REDISI_VOLUME_UID},gid=${REDISI_VOLUME_GID}
