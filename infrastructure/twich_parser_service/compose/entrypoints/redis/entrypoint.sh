@@ -7,7 +7,7 @@ set -e
 echo "Running redis entrypoint"
 
 # Substitute template variables
-envsubst < /etc/templates/redis/redis.conf.template > /etc/redis/redis.conf
+envsubst < ${REDIS_CONFIG_TEMPLATE_PATH} > ${REDIS_CONFIG_PATH}
 
 # Run original entrypoint
-exec /usr/local/bin/docker-entrypoint.sh "$@"
+exec ${REDIS_ORIGINAL_ENTRYPOINT_PATH} "$@"

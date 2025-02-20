@@ -7,7 +7,7 @@ set -e
 echo "Running mongo entrypoint"
 
 # Substitute template variables
-envsubst < /etc/templates/mongo/mongo.conf.template > /etc/mongo/mongo.conf
+envsubst < ${MONGO_CONFIG_TEMPLATE_PATH} > ${MONGO_CONFIG_PATH}
 
 # Run original entrypoint
-exec /usr/local/bin/docker-entrypoint.sh "$@"
+exec ${MONGO_ORIGINAL_ENTRYPOINT_PATH} "$@"

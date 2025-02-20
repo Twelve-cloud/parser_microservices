@@ -47,16 +47,16 @@ max_parallel_maintenance_workers = 4
 ssl = on
 
 # Postgres server certificate
-ssl_cert_file = '/etc/ssl/postgres/server.crt'
+ssl_cert_file = ${POSTGRES_SSL_CERT_PATH}
 
 # Postgres server private key
-ssl_key_file = '/etc/ssl/postgres/server.key'
+ssl_key_file = ${POSTGRES_SSL_KEY_PATH}
 
 # CA client certificate
-ssl_ca_file = '/etc/ssl/ca/ca.crt'
+ssl_ca_file = ${POSTGRES_SSL_CA_PATH}
 
 # TLS version
 ssl_min_protocol_version='TLSv1.3'
 
 # Data location for postgresql
-data_directory = '/storage/postgres'
+data_directory = ${POSTGRES_STORAGE_PATH}

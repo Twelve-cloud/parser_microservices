@@ -21,14 +21,14 @@ net:
     allowConnectionsWithoutCertificates: true
 
     # Mongo server certificate and private key
-    certificateKeyFile: /etc/ssl/mongo/server.pem
+    certificateKeyFile: ${MONGO_SSL_CERT_PATH}
 
     # CA client certificate
-    CAFile: /etc/ssl/ca/ca.pem
+    CAFile: ${MONGO_SSL_CA_PATH}
 
     # Which TLS protocols should be disabled
     disabledProtocols: TLS1_0,TLS1_1,TLS1_2
 
 storage:
   # Data location for mongodb
-  dbPath: /storage/mongo
+  dbPath: ${MONGO_STORAGE_PATH}

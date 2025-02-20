@@ -10,7 +10,7 @@ echo "Running postgres entrypoint"
 chmod -R 0700 ${PGDATA}
 
 # Substitute template variables
-envsubst < /etc/templates/postgres/postgres.conf.template > /etc/postgres/postgres.conf
+envsubst < ${POSTGRES_CONFIG_TEMPLATE_PATH} > ${POSTGRES_CONFIG_PATH}
 
 # Run original entrypoint
-exec /usr/local/bin/docker-entrypoint.sh "$@"
+exec ${POSTGRES_ORIGINAL_ENTRYPOINT_PATH} "$@"

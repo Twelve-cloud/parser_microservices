@@ -11,13 +11,13 @@ tls-port ${REDIS_TLS_PORT}
 tls-auth-clients optional
 
 # Redis server certificate
-tls-cert-file /etc/ssl/redis/server.crt
+tls-cert-file ${REDIS_SSL_CERT_PATH}
 
 # Redis server private key
-tls-key-file /etc/ssl/redis/server.key
+tls-key-file ${REDIS_SSL_KEY_PATH}
 
 # CA client certificate
-tls-ca-cert-file /etc/ssl/ca/ca.crt
+tls-ca-cert-file ${REDIS_SSL_CA_PATH}
 
 # TLS version
 tls-protocols "TLSv1.3"
@@ -38,4 +38,4 @@ io-threads 8
 io-threads-do-reads no
 
 # Data location for redis
-dir /storage/redis
+dir ${REDIS_STORAGE_PATH}
