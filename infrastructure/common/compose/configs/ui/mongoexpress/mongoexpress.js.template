@@ -24,10 +24,10 @@ export default {
         tlsAllowInvalidCertificates: false,
 
         // Single PEM file on disk
-        tlsCAFile: '/etc/ssl/ca/ca.pem',
+        tlsCAFile: '${MONGO_EXPRESS_SSL_CA_PATH}',
 
         // Client key PEM file on disk
-        tlsCertificateKeyFile: '/etc/ssl/mongoexpress/server.pem',
+        tlsCertificateKeyFile: '${MONGO_EXPRESS_SSL_CERT_PEM_PATH}',
 
         // Size of connection pool (number of connections to use)
         //maxPoolSize: 4,
@@ -67,13 +67,13 @@ export default {
     sessionSecret: '${MONGO_EXPRESS_SESSION_SECRET}',
 
     // SSL certificate
-    sslCert: '/etc/ssl/mongoexpress/server.crt',
+    sslCert: '${MONGO_EXPRESS_SSL_CERT_PATH}',
 
     // If true the use SSL for site
     sslEnabled: true,
 
     // SSL key
-    sslKey: '/etc/ssl/mongoexpress/server.key',
+    sslKey: '${MONGO_EXPRESS_SSL_KEY_PATH}',
   },
 
   healthCheck: {

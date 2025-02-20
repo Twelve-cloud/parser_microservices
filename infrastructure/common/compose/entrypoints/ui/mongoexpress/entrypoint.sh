@@ -7,8 +7,8 @@ set -e
 echo "Running mongo-express entrypoint"
 
 # Substitute template variables
-envsubst < /etc/templates/mongoexpress/connect.js.template > /app/lib/db.js
-envsubst < /etc/templates/mongoexpress/mongoexpress.js.template > /app/config.default.js
+envsubst < ${MONGO_EXPRESS_CONNECT_TEMPLATE_PATH} > ${MONGO_EXPRESS_CONNECT_PATH}
+envsubst < ${MONGO_EXPRESS_CONFIG_TEMPLATE_PATH} > ${MONGO_EXPRESS_CONFIG_PATH}
 
 # Run original entrypoint
-exec /docker-entrypoint.sh "$@"
+exec ${MONGO_EXPRESS_ORIGINAL_ENTRYPOINT_PATH} "$@"
