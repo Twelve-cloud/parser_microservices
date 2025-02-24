@@ -1,44 +1,46 @@
 services:
   parser-mongo:
     # image: mongo:7.0-rc-jammy
-    build: ./infrastructure/twich_parser_service/compose/docker/mongo
-    hostname: parser-mongo
+    build:
+      context: ${COMPOSE_TWT_PARSER_MONGO_CONTEXT}
+      dockerfile: ${COMPOSE_TWT_PARSER_MONGO_DOCKERFILE}
+    hostname: ${COMPOSE_TWT_PARSER_MONGO_HOST}
     container_name: parser-mongo
     user: mongodb
-    entrypoint: ["/bin/mongo/entrypoint.sh"]
-    command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
+    entrypoint: ["${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_TARGET}"]
+    command: ["mongod", "--config", "${COMPOSE_TWT_PARSER_MONGO_CONFIG_TARGET}"]
     expose: ["${COMPOSE_TWT_PARSER_MONGO_PORT}/tcp"]
     env_file:
-      - path: ./infrastructure/twich_parser_service/compose/env/mongo/.env
+      - path: ${COMPOSE_TWT_PARSER_MONGO_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/entrypoints/mongo
-        target: /bin/mongo
+        source: ${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/configs/mongo
-        target: /etc/templates/mongo
+        source: ${COMPOSE_TWT_PARSER_MONGO_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_MONGO_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/certs/mongo
-        target: /etc/ssl/mongo
+        source: ${COMPOSE_TWT_PARSER_MONGO_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_MONGO_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.pem
-        target: /etc/ssl/ca/ca.pem
+        source: ${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -46,12 +48,12 @@ services:
           selinux: Z
       - type: volume
         source: parser-mongo-data
-        target: /storage/mongo
+        target: ${COMPOSE_TWT_PARSER_MONGO_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
       - type: volume
         source: parser-mongo-config
-        target: /etc/mongo
+        target: ${COMPOSE_TWT_PARSER_MONGO_CONFIG_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:

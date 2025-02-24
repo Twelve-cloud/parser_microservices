@@ -2,37 +2,37 @@ services:
   redis-insight:
     #image: redis/redisinsight:2.60.0
     build:
-      context: ./infrastructure/common/compose/docker/ui/redisinsight
-      dockerfile: ./Dockerfile-ri
-    hostname: redis-insight
+      context: ${COMPOSE_COMMON_REDIS_INSIGHT_CONTEXT}
+      dockerfile: ${COMPOSE_COMMON_REDIS_INSIGHT_DOCKERFILE}
+    hostname: ${COMPOSE_COMMON_REDIS_INSIGHT_HOST}
     container_name: redis-insight
     user: node
-    entrypoint: ["/bin/redisinsight/entrypoint.sh"]
+    entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_TARGET}"]
     command: ["node", "redisinsight/api/dist/src/main"]
     expose: ["${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/tcp"]
     env_file:
-      - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
+      - path: ${COMPOSE_COMMON_REDIS_INSIGHT_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-ri.sh
-        target: /bin/redisinsight/entrypoint.sh
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/redisinsight/redisinsight.conf.template
-        target: /etc/templates/redisinsight/default.conf.template
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ui/redisinsight
-        target: /etc/ssl/redisinsight
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -40,7 +40,7 @@ services:
           selinux: Z
       - type: volume
         source: redisinsight-data
-        target: /data
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -84,34 +84,34 @@ services:
 
   redis-insight-setup:
     image: curlimages/curl:8.10.1
-    hostname: ri-curl
+    hostname: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_HOST}
     container_name: ri-curl
     user: curl_user
-    entrypoint: ["/bin/curl/entrypoint.sh"]
+    entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_TARGET}"]
     command: ["true"]
     env_file:
-      - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
+      - path: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-curl.sh
-        target: /bin/curl/entrypoint.sh
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ui/redisinsight
-        target: /etc/ssl/redisinsight
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.crt
-        target: /etc/ssl/ca/ca.crt
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -143,12 +143,12 @@ services:
   redis-insight-proxy:
     # image: nginx:1.27.1-alpine3.20
     build:
-      context: ./infrastructure/common/compose/docker/ui/redisinsight
-      dockerfile: ./Dockerfile-nginx
-    hostname: ri-nginx
+      context: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CONTEXT}
+      dockerfile: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_DOCKERFILE}
+    hostname: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_HOST}
     container_name: ri-nginx
     user: nginx
-    entrypoint: ["/bin/nginx/entrypoint.sh"]
+    entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_TARGET}"]
     command: ["nginx", "-g", "daemon off;"]
     ports:
       - name: redis-insight-port
@@ -158,36 +158,36 @@ services:
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
+      - path: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/redisinsight/entrypoint-nginx.sh
-        target: /bin/nginx/entrypoint.sh
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/redisinsight/nginx.conf.template
-        target: /etc/templates/nginx/nginx.conf.template
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_TEMPLATE_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_TEMPLATE_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ui/redisinsight
-        target: /etc/nginx/ssl
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.crt
-        target: /etc/ssl/ca/ca.crt
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate

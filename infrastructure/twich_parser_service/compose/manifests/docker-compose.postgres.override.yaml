@@ -1,44 +1,46 @@
 services:
   parser-postgres:
     # image: postgres:16.3-alpine3.20
-    build: ./infrastructure/twich_parser_service/compose/docker/postgres
-    hostname: parser-postgres
+    build:
+      context: ${COMPOSE_TWT_PARSER_POSTGRES_CONTEXT}
+      dockerfile: ${COMPOSE_TWT_PARSER_POSTGRES_DOCKERFILE}
+    hostname: ${COMPOSE_TWT_PARSER_POSTGRES_HOST}
     container_name: parser-postgres
     user: postgres
-    entrypoint: ["/bin/postgres/entrypoint.sh"]
-    command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
+    entrypoint: ["${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_TARGET}"]
+    command: ["postgres", "-c", "config_file=${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_TARGET}"]
     expose: ["${COMPOSE_TWT_PARSER_POSTGRES_PORT}/tcp"]
     env_file:
-      - path: ./infrastructure/twich_parser_service/compose/env/postgres/.env
+      - path: ${COMPOSE_TWT_PARSER_POSTGRES_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/entrypoints/postgres
-        target: /bin/postgres
+        source: ${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/configs/postgres
-        target: /etc/templates/postgres
+        source: ${COMPOSE_TWT_PARSER_POSTGRES_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_POSTGRES_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/certs/postgres
-        target: /etc/ssl/postgres
+        source: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.crt
-        target: /etc/ssl/ca/ca.crt
+        source: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -46,12 +48,12 @@ services:
           selinux: Z
       - type: volume
         source: parser-postgres-data
-        target: /storage/postgres
+        target: ${COMPOSE_TWT_PARSER_POSTGRES_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
       - type: volume
         source: parser-postgres-config
-        target: /etc/postgres
+        target: ${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:

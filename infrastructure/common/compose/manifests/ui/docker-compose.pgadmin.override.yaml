@@ -1,11 +1,13 @@
 services:
   pgadmin:
     # image: dpage/pgadmin4:8.9
-    build: ./infrastructure/common/compose/docker/ui/pgadmin
-    hostname: pgadmin
+    build:
+      context: ${COMPOSE_COMMON_PGADMIN_CONTEXT}
+      dockerfile: ${COMPOSE_COMMON_PGADMIN_DOCKERFILE}
+    hostname: ${COMPOSE_COMMON_PGADMIN_HOST}
     container_name: pgadmin
     user: pgadmin
-    entrypoint: ["/bin/pgadmin/entrypoint.sh"]
+    entrypoint: ["${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_TARGET}"]
     command: ["true"]
     ports:
       - name: pgadmin-port
@@ -15,44 +17,44 @@ services:
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/common/compose/env/ui/pgadmin/.env
+      - path: ${COMPOSE_COMMON_PGADMIN_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/pgadmin
-        target: /bin/pgadmin
+        source: ${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/pgadmin
-        target: /etc/templates/pgadmin
+        source: ${COMPOSE_COMMON_PGADMIN_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_PGADMIN_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ui/pgadmin/server.crt
-        target: /certs/server.cert
+        source: ${COMPOSE_COMMON_PGADMIN_SSL_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_PGADMIN_SSL_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ui/pgadmin/server.key
-        target: /certs/server.key
+        source: ${COMPOSE_COMMON_PGADMIN_SSL_KEY_SOURCE}
+        target: ${COMPOSE_COMMON_PGADMIN_SSL_KEY_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.crt
-        target: /home/pgadmin/.postgresql/root.crt
+        source: ${COMPOSE_COMMON_PGADMIN_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_PGADMIN_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -60,7 +62,7 @@ services:
           selinux: Z
       - type: volume
         source: pgadmin-data
-        target: /storage/pgadmin
+        target: ${COMPOSE_COMMON_PGADMIN_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:

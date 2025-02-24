@@ -1,11 +1,13 @@
 services:
   mongo-express:
     # image: mongo-express:1.0.2
-    build: ./infrastructure/common/compose/docker/ui/mongoexpress
-    hostname: mongo-express
+    build:
+      context: ${COMPOSE_COMMON_MONGO_EXPRESS_CONTEXT}
+      dockerfile: ${COMPOSE_COMMON_MONGO_EXPRESS_DOCKERFILE}
+    hostname: ${COMPOSE_COMMON_MONGO_EXPRESS_HOST}
     container_name: mongo-express
     user: node
-    entrypoint: ["/bin/mongoexpress/entrypoint.sh"]
+    entrypoint: ["${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_TARGET}"]
     command: ["node", "app"]
     ports:
       - name: mongo-express-port
@@ -15,36 +17,36 @@ services:
         protocol: tcp
         mode: host
     env_file:
-      - path: ./infrastructure/common/compose/env/ui/mongoexpress/.env
+      - path: ${COMPOSE_COMMON_MONGO_EXPRESS_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/common/compose/entrypoints/ui/mongoexpress
-        target: /bin/mongoexpress
+        source: ${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/configs/ui/mongoexpress
-        target: /etc/templates/mongoexpress
+        source: ${COMPOSE_COMMON_MONGO_EXPRESS_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_MONGO_EXPRESS_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ui/mongoexpress
-        target: /etc/ssl/mongoexpress
+        source: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.pem
-        target: /etc/ssl/ca/ca.pem
+        source: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -52,7 +54,7 @@ services:
           selinux: Z
       - type: volume
         source: mongoexpress-data
-        target: /opt/mongo-express
+        target: ${COMPOSE_COMMON_MONGO_EXPRESS_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:

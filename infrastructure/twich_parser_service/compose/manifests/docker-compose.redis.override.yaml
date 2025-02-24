@@ -1,51 +1,53 @@
 services:
   parser-redis:
     # image: redis:7.4.0-alpine
-    build: ./infrastructure/twich_parser_service/compose/docker/redis
+    build:
+      context: ${COMPOSE_TWT_PARSER_REDIS_CONTEXT}
+      dockerfile: ${COMPOSE_TWT_PARSER_REDIS_DOCKERFILE}
     hostname: parser-redis
     container_name: parser-redis
     user: redis
-    entrypoint: ["/bin/redis/entrypoint.sh"]
+    entrypoint: ["${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_TARGET}"]
     command:
       [
         "redis-server",
-        "/etc/redis/redis.conf",
+        "${COMPOSE_TWT_PARSER_REDIS_CONFIG_TARGET}",
         "--user ${COMPOSE_TWT_PARSER_REDIS_USERNAME} on >${COMPOSE_TWT_PARSER_REDIS_PASSWORD} ~* &* +@all",
         "--user default off nopass -@all",
         "--requirepass ${COMPOSE_TWT_PARSER_REDIS_PASSWORD}",
       ]
     expose: ["${COMPOSE_TWT_PARSER_REDIS_PORT}/tcp", "${COMPOSE_TWT_PARSER_REDIS_TLS_PORT}/tcp"]
     env_file:
-      - path: ./infrastructure/twich_parser_service/compose/env/redis/.env
+      - path: ${COMPOSE_TWT_PARSER_REDIS_ENV}
         required: true
     volumes:
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/entrypoints/redis
-        target: /bin/redis
+        source: ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/configs/redis
-        target: /etc/templates/redis
+        source: ${COMPOSE_TWT_PARSER_REDIS_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_REDIS_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/twich_parser_service/compose/certs/redis
-        target: /etc/ssl/redis
+        source: ${COMPOSE_TWT_PARSER_REDIS_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_REDIS_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ./infrastructure/common/compose/certs/ca/ca.crt
-        target: /etc/ssl/ca/ca.crt
+        source: ${COMPOSE_TWT_PARSER_REDIS_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_REDIS_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -53,12 +55,12 @@ services:
           selinux: Z
       - type: volume
         source: parser-redis-data
-        target: /storage/redis
+        target: ${COMPOSE_TWT_PARSER_REDIS_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
       - type: volume
         source: parser-redis-config
-        target: /etc/redis
+        target: ${COMPOSE_TWT_PARSER_REDIS_CONFIG_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
