@@ -7,7 +7,7 @@ services:
     user: mongodb
     entrypoint: ["/bin/mongo/entrypoint.sh"]
     command: ["mongod", "--config", "/etc/mongo/mongo.conf"]
-    expose: ["${MONGO_PORT}/tcp"]
+    expose: ["${COMPOSE_TWT_PARSER_MONGO_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/mongo/.env
         required: true
@@ -68,14 +68,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${MONGO_CPUS_LIMIT}
-          memory: ${MONGO_MEMORY_LIMIT}
+          cpus: ${COMPOSE_TWT_PARSER_MONGO_CPUS_LIMIT}
+          memory: ${COMPOSE_TWT_PARSER_MONGO_MEMORY_LIMIT}
         reservations:
-          cpus: ${MONGO_CPUS_RESERVATION}
-          memory: ${MONGO_MEMORY_RESERVATION}
+          cpus: ${COMPOSE_TWT_PARSER_MONGO_CPUS_RESERVATION}
+          memory: ${COMPOSE_TWT_PARSER_MONGO_MEMORY_RESERVATION}
     networks:
       parser-mongo-network:
-        ipv4_address: ${MONGO_IP_ADDRESS}
+        ipv4_address: ${COMPOSE_TWT_PARSER_MONGO_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
@@ -90,9 +90,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${MONGO_NETWORK_SUBNET}
-          ip_range: ${MONGO_NETWORK_IP_RANGE}
-          gateway: ${MONGO_NETWORK_GATEWAY}
+        - subnet: ${COMPOSE_TWT_PARSER_MONGO_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_TWT_PARSER_MONGO_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_TWT_PARSER_MONGO_NETWORK_GATEWAY}
 
 volumes:
   parser-mongo-data:
@@ -101,8 +101,11 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${MONGO_DATA_SIZE},uid=${MONGO_VOLUME_UID},gid=${MONGO_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_TWT_PARSER_MONGO_DATA_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_GID}\
+        "
 
   parser-mongo-config:
     name: parser-mongo-config
@@ -110,5 +113,8 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${MONGO_CONFIG_SIZE},uid=${MONGO_VOLUME_UID},gid=${MONGO_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_TWT_PARSER_MONGO_CONFIG_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_GID}\
+        "

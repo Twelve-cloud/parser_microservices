@@ -9,7 +9,7 @@ services:
     user: node
     entrypoint: ["/bin/redisinsight/entrypoint.sh"]
     command: ["node", "redisinsight/api/dist/src/main"]
-    expose: ["${REDIS_INSIGHT_PORT}/tcp"]
+    expose: ["${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/common/compose/env/ui/redisinsight/.env
         required: true
@@ -51,7 +51,7 @@ services:
           "--quiet",
           "--spider",
           "--no-check-certificate",
-          "https://${REDIS_INSIGHT_HOST}:${REDIS_INSIGHT_PORT}/api/health",
+          "https://${COMPOSE_COMMON_REDIS_INSIGHT_HOST}:${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/api/health",
         ]
       interval: 30s
       timeout: 30s
@@ -65,14 +65,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${REDIS_INSIGHT_CPUS_LIMIT}
-          memory: ${REDIS_INSIGHT_MEMORY_LIMIT}
+          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CPUS_LIMIT}
+          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_MEMORY_LIMIT}
         reservations:
-          cpus: ${REDIS_INSIGHT_CPUS_RESERVATION}
-          memory: ${REDIS_INSIGHT_MEMORY_RESERVATION}
+          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CPUS_RESERVATION}
+          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_MEMORY_RESERVATION}
     networks:
       redis-insight-network:
-        ipv4_address: ${REDIS_INSIGHT_IP_ADDRESS}
+        ipv4_address: ${COMPOSE_COMMON_REDIS_INSIGHT_IP_ADDRESS}
       parser-redis-network:
     depends_on:
       parser-redis:
@@ -124,14 +124,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${RI_CURL_CPUS_LIMIT}
-          memory: ${RI_CURL_MEMORY_LIMIT}
+          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_CPUS_LIMIT}
+          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_MEMORY_LIMIT}
         reservations:
-          cpus: ${RI_CURL_CPUS_RESERVATION}
-          memory: ${RI_CURL_MEMORY_RESERVATION}
+          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_CPUS_RESERVATION}
+          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_MEMORY_RESERVATION}
     networks:
       redis-insight-network:
-        ipv4_address: ${RI_CURL_IP_ADDRESS}
+        ipv4_address: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_IP_ADDRESS}
     depends_on:
       redis-insight:
         restart: true
@@ -152,9 +152,9 @@ services:
     command: ["nginx", "-g", "daemon off;"]
     ports:
       - name: redis-insight-port
-        target: ${RI_NGINX_PORT}
-        published: ${RI_NGINX_PUBLIC_PORT}
-        host_ip: ${RI_NGINX_HOST_IP}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_PORT}
+        published: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_PUBLIC_PORT}
+        host_ip: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_HOST_IP}
         protocol: tcp
         mode: host
     env_file:
@@ -201,8 +201,8 @@ services:
           "--silent",
           "--insecure",
           "--user",
-          "${RI_DEFAULT_EMAIL}:${RI_DEFAULT_PASSWORD}",
-          "https://${REDIS_INSIGHT_HOST}:${REDIS_INSIGHT_PORT}/api/health",
+          "${COMPOSE_COMMON_REDIS_INSIGHT_DEFAULT_EMAIL}:${COMPOSE_COMMON_REDIS_INSIGHT_DEFAULT_PASSWORD}",
+          "https://${COMPOSE_COMMON_REDIS_INSIGHT_HOST}:${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/api/health",
         ]
       interval: 30s
       timeout: 30s
@@ -216,14 +216,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${RI_NGINX_CPUS_LIMIT}
-          memory: ${RI_NGINX_MEMORY_LIMIT}
+          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CPUS_LIMIT}
+          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_MEMORY_LIMIT}
         reservations:
-          cpus: ${RI_NGINX_CPUS_RESERVATION}
-          memory: ${RI_NGINX_MEMORY_RESERVATION}
+          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CPUS_RESERVATION}
+          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_MEMORY_RESERVATION}
     networks:
       redis-insight-network:
-        ipv4_address: ${RI_NGINX_IP_ADDRESS}
+        ipv4_address: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_IP_ADDRESS}
     depends_on:
       redis-insight:
         restart: true
@@ -243,9 +243,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${REDIS_INSIGHT_NETWORK_SUBNET}
-          ip_range: ${REDIS_INSIGHT_NETWORK_IP_RANGE}
-          gateway: ${REDIS_INSIGHT_NETWORK_GATEWAY}
+        - subnet: ${COMPOSE_COMMON_REDIS_INSIGHT_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_COMMON_REDIS_INSIGHT_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_COMMON_REDIS_INSIGHT_NETWORK_GATEWAY}
   parser-redis-network:
     external: true
 
@@ -256,5 +256,8 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${REDISI_DATA_SIZE},uid=${REDISI_VOLUME_UID},gid=${REDISI_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_COMMON_REDIS_INSIGHT_DATA_SIZE},\
+        uid=${COMPOSE_COMMON_REDIS_INSIGHT_VOLUME_UID},\
+        gid=${COMPOSE_COMMON_REDIS_INSIGHT_VOLUME_GID}\
+        "

@@ -7,7 +7,7 @@ services:
     user: postgres
     entrypoint: ["/bin/postgres/entrypoint.sh"]
     command: ["postgres", "-c", "config_file=/etc/postgres/postgres.conf"]
-    expose: ["${POSTGRES_PORT}/tcp"]
+    expose: ["${COMPOSE_TWT_PARSER_POSTGRES_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/postgres/.env
         required: true
@@ -55,7 +55,7 @@ services:
         volume:
           nocopy: false
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${COMPOSE_TWT_PARSER_POSTGRES_USER} -d ${COMPOSE_TWT_PARSER_POSTGRES_DB}"]
       interval: 30s
       timeout: 30s
       retries: 10
@@ -68,14 +68,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${POSTGRES_CPUS_LIMIT}
-          memory: ${POSTGRES_MEMORY_LIMIT}
+          cpus: ${COMPOSE_TWT_PARSER_POSTGRES_CPUS_LIMIT}
+          memory: ${COMPOSE_TWT_PARSER_POSTGRES_MEMORY_LIMIT}
         reservations:
-          cpus: ${POSTGRES_CPUS_RESERVATION}
-          memory: ${POSTGRES_MEMORY_RESERVATION}
+          cpus: ${COMPOSE_TWT_PARSER_POSTGRES_CPUS_RESERVATION}
+          memory: ${COMPOSE_TWT_PARSER_POSTGRES_MEMORY_RESERVATION}
     networks:
       parser-postgres-network:
-        ipv4_address: ${POSTGRES_IP_ADDRESS}
+        ipv4_address: ${COMPOSE_TWT_PARSER_POSTGRES_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
@@ -90,9 +90,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${POSTGRES_NETWORK_SUBNET}
-          ip_range: ${POSTGRES_NETWORK_IP_RANGE}
-          gateway: ${POSTGRES_NETWORK_GATEWAY}
+        - subnet: ${COMPOSE_TWT_PARSER_POSTGRES_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_TWT_PARSER_POSTGRES_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_TWT_PARSER_POSTGRES_NETWORK_GATEWAY}
 
 volumes:
   parser-postgres-data:
@@ -101,8 +101,11 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${POSTGRES_DATA_SIZE},uid=${POSTGRES_VOLUME_UID},gid=${POSTGRES_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_TWT_PARSER_POSTGRES_DATA_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_GID}\
+        "
 
   parser-postgres-config:
     name: parser-postgres-config
@@ -110,5 +113,8 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${POSTGRES_CONFIG_SIZE},uid=${POSTGRES_VOLUME_UID},gid=${POSTGRES_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_GID}\
+        "

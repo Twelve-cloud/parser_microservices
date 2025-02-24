@@ -10,11 +10,11 @@ services:
       [
         "redis-server",
         "/etc/redis/redis.conf",
-        "--user ${REDIS_USERNAME} on >${REDIS_PASSWORD} ~* &* +@all",
+        "--user ${COMPOSE_TWT_PARSER_REDIS_USERNAME} on >${COMPOSE_TWT_PARSER_REDIS_PASSWORD} ~* &* +@all",
         "--user default off nopass -@all",
-        "--requirepass ${REDIS_PASSWORD}",
+        "--requirepass ${COMPOSE_TWT_PARSER_REDIS_PASSWORD}",
       ]
-    expose: ["${REDIS_PORT}/tcp", "${REDIS_TLS_PORT}/tcp"]
+    expose: ["${COMPOSE_TWT_PARSER_REDIS_PORT}/tcp", "${COMPOSE_TWT_PARSER_REDIS_TLS_PORT}/tcp"]
     env_file:
       - path: ./infrastructure/twich_parser_service/compose/env/redis/.env
         required: true
@@ -62,7 +62,11 @@ services:
         volume:
           nocopy: false
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli --user ${REDIS_USERNAME} --pass ${REDIS_PASSWORD} ping"]
+      test:
+        [
+          "CMD-SHELL",
+          "redis-cli --user ${COMPOSE_TWT_PARSER_REDIS_USERNAME} --pass ${COMPOSE_TWT_PARSER_REDIS_PASSWORD} ping",
+        ]
       interval: 30s
       timeout: 30s
       retries: 10
@@ -75,14 +79,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${REDIS_CPUS_LIMIT}
-          memory: ${REDIS_MEMORY_LIMIT}
+          cpus: ${COMPOSE_TWT_PARSER_REDIS_CPUS_LIMIT}
+          memory: ${COMPOSE_TWT_PARSER_REDIS_MEMORY_LIMIT}
         reservations:
-          cpus: ${REDIS_CPUS_RESERVATION}
-          memory: ${REDIS_MEMORY_RESERVATION}
+          cpus: ${COMPOSE_TWT_PARSER_REDIS_CPUS_RESERVATION}
+          memory: ${COMPOSE_TWT_PARSER_REDIS_MEMORY_RESERVATION}
     networks:
       parser-redis-network:
-        ipv4_address: ${REDIS_IP_ADDRESS}
+        ipv4_address: ${COMPOSE_TWT_PARSER_REDIS_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
@@ -97,9 +101,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${REDIS_NETWORK_SUBNET}
-          ip_range: ${REDIS_NETWORK_IP_RANGE}
-          gateway: ${REDIS_NETWORK_GATEWAY}
+        - subnet: ${COMPOSE_TWT_PARSER_REDIS_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_TWT_PARSER_REDIS_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_TWT_PARSER_REDIS_NETWORK_GATEWAY}
 
 volumes:
   parser-redis-data:
@@ -108,8 +112,11 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${REDIS_DATA_SIZE},uid=${REDIS_VOLUME_UID},gid=${REDIS_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_TWT_PARSER_REDIS_DATA_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_REDIS_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_REDIS_VOLUME_GID}\
+        "
 
   parser-redis-config:
     name: parser-redis-config
@@ -117,5 +124,8 @@ volumes:
     driver_opts:
       type: tmpfs
       device: tmpfs
-      o: |
-        size=${REDIS_CONFIG_SIZE},uid=${REDIS_VOLUME_UID},gid=${REDIS_VOLUME_GID}
+      o: "\
+        size=${COMPOSE_TWT_PARSER_REDIS_CONFIG_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_REDIS_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_REDIS_VOLUME_GID}\
+        "

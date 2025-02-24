@@ -7,9 +7,9 @@ set -e
 echo "Running redis insight curl entrypoint to setup predefined servers"
 
 # Get certificates and key filenames
-tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' ${RI_SSL_KEY_PATH})
-tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' ${RI_SSL_CERT_PATH})
-tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' ${RI_SSL_CA_PATH})
+tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' ${REDIS_INSIGHT_SSL_KEY_PATH})
+tls_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' ${REDIS_INSIGHT_SSL_CERT_PATH})
+tls_ca_crt=$(sed ':a;N;$!ba;s/\n/\\n/g' ${REDIS_INSIGHT_SSL_CA_PATH})
 
 # Change encryption agreement
 echo "Changing encryption agreement"
@@ -29,7 +29,7 @@ EOF
 
 # Change encryption agreement
 response=$(curl --silent --insecure                                          \
-  -X "PATCH" ${RI_PROXY_PASS}/api/settings                                   \
+  -X "PATCH" ${REDIS_INSIGHT_PROXY_PASS}/api/settings                        \
   -H "Content-Type: application/json; charset=utf-8"                         \
   -d "${change_encryption_agreement_json}"                                   \
 )
@@ -66,7 +66,7 @@ EOF
 
 # Create predefined servers
 response=$(curl --silent --insecure                                          \
- -X "POST" ${RI_PROXY_PASS}/api/databases                                    \
+ -X "POST" ${REDIS_INSIGHT_PROXY_PASS}/api/databases                         \
  -H "Content-Type: application/json; charset=utf-8"                          \
  -d "${parser_redis_connection_options_json}"                                \
 )

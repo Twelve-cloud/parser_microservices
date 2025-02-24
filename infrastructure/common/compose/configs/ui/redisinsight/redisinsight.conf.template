@@ -1,8 +1,17 @@
+# Redis insight host
+RI_APP_HOST=${REDIS_INSIGHT_APP_HOST}
+
+# Redis insight port
+RI_APP_PORT=${REDIS_INSIGHT_APP_PORT}
+
+# Redis insight encryption key
+RI_ENCRYPTION_KEY=${REDIS_INSIGHT_ENCRYPTION_KEY}
+
 # Redis insight server TLS key
-RI_SERVER_TLS_KEY=${RI_SSL_KEY_PATH}
+RI_SERVER_TLS_KEY=${REDIS_INSIGHT_SSL_KEY_PATH}
 
 # Redis insight server TLS cert
-RI_SERVER_TLS_CERT=${RI_SSL_CERT_PATH}
+RI_SERVER_TLS_CERT=${REDIS_INSIGHT_SSL_CERT_PATH}
 
 # From which level RI should log
 RI_LOG_LEVEL=info

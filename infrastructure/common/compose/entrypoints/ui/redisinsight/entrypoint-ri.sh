@@ -7,14 +7,14 @@ set -e
 echo "Running redis insight entrypoint"
 
 # Substitute template variables
-envsubst < ${RI_CONFIG_TEMPLATE_PATH} > ${RI_CONFIG_PATH}
+envsubst < ${REDIS_INSIGHT_CONFIG_TEMPLATE_PATH} > ${REDIS_INSIGHT_CONFIG_PATH}
 
 # Run original entrypoint
 echo "Exporting environment variables"
 
 # Load redis-insight configuration
 set -o allexport
-source ${RI_CONFIG_PATH}
+source ${REDIS_INSIGHT_CONFIG_PATH}
 set +o allexport
 
 # Environment variables has been exported
