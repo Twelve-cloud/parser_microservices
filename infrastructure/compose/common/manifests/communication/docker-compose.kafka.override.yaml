@@ -1,0 +1,90 @@
+services:
+  kafka:
+    image: apache/kafka:3.9.0
+    hostname: kafka
+    container_name: kafka
+    user: appuser
+    entrypoint: ["/__cacert_entrypoint.sh"]
+    command: ["/etc/kafka/docker/run"]
+    ports:
+      - name: kafka-port
+        target: ${KAFKA_PORT}
+        published: ${KAFKA_PUBLIC_PORT}
+        host_ip: ${KAFKA_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ./infrastructure/compose/common/env/kafka/.env
+        required: true
+    # volumes:
+    # - type: bind
+    #   source: ./infrastructure/compose/common/configs/kafka/kafka.js #
+    #   target: /app/config.default.js #
+    #   read_only: true
+    #   bind:
+    #     propagation: rprivate
+    #     create_host_path: true
+    #     selinux: Z
+    # - type: bind
+    #   source: ./infrastructure/compose/common/certs/kafka
+    #   target: /etc/ssl/kafka
+    #   read_only: true
+    #   bind:
+    #     propagation: rprivate
+    #     create_host_path: true
+    #     selinux: Z
+    # - type: bind
+    #   source: ./infrastructure/compose/common/certs/ca/ca.pem
+    #   target: /etc/ssl/ca/ca.pem
+    #   read_only: true
+    #   bind:
+    #     propagation: rprivate
+    #     create_host_path: true
+    #     selinux: Z
+    # healthcheck: #
+    #   test:
+    #     [
+    #       "CMD",
+    #       "wget",
+    #       "--quiet",
+    #       "--spider",
+    #       "--no-check-certificate",
+    #       "https://${KAFKA_HOST}:${KAFKA_PORT}/health",
+    #     ]
+    #   interval: 30s
+    #   timeout: 30s
+    #   retries: 10
+    #   start_period: 30s
+    #   start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${KAFKA_CPUS_LIMIT}
+          memory: ${KAFKA_MEMORY_LIMIT}
+        reservations:
+          cpus: ${KAFKA_CPUS_RESERVATION}
+          memory: ${KAFKA_MEMORY_RESERVATION}
+    networks:
+      kafka-network:
+        ipv4_address: ${KAFKA_IP_ADDRESS}
+    pull_policy: missing
+    restart: always
+
+networks:
+  kafka-network:
+    name: kafka-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${KAFKA_NETWORK_SUBNET}
+          ip_range: ${KAFKA_NETWORK_IP_RANGE}
+          gateway: ${KAFKA_NETWORK_GATEWAY}
