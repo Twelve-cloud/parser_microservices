@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Exit if any command here fails
+set -e
+
 # Function to parse named parameters
 function parse_named_parameters() {
 
@@ -12,7 +15,6 @@ function parse_named_parameters() {
             CA_CRT_PATH=*)  CA_CRT_PATH=${argument#*=} ;;
             CA_KEY_PATH=*)  CA_KEY_PATH=${argument#*=} ;;
             CA_PEM_PATH=*)  CA_PEM_PATH=${argument#*=} ;;
-            CA_FOLDER=*)    CA_FOLDER=${argument#*=} ;;
             *)              echo "Unknown parameter: ${argument}"; return 1 ;;
         esac
 
@@ -26,7 +28,7 @@ parse_named_parameters "$@"
 
 # Check if the parsing was successful
 if [[ $? -ne 0 ]]; then
-    echo "Usage: generate_ca_certificate.sh CN=value CA_CRT_PATH=value CA_KEY_PATH=value CA_PEM_PATH=value CA_FOLDER=value"
+    echo "Usage: generate_ca_certificate.sh CN=value CA_CRT_PATH=value CA_KEY_PATH=value CA_PEM_PATH=value"
     exit 1
 fi
 

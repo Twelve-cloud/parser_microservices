@@ -7,11 +7,13 @@
 **/*.srl
 **/*.csr
 **/*.pem
+**/*.p12
 !**/*.example.crt
 !**/*.example.key
 !**/*.example.srl
 !**/*.example.csr
 !**/*.example.pem
+!**/*.example.p12
 
 # ENV
 **/.env

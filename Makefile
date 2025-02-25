@@ -23,6 +23,7 @@ _configure_scripts:
 # ------------------------------------------------------- ABBREVATIONS ------------------------------------------------------------------
 
 COMPOSE_FILE_PATHS :=                                                                                                                   \
+    -f ${COMPOSE_COMMON_KAFKA_PATH}                                                                                                     \
     -f ${COMPOSE_COMMON_PGADMIN_PATH}                                                                                                   \
     -f ${COMPOSE_COMMON_MONGO_EXPRESS_PATH}                                                                                             \
     -f ${COMPOSE_COMMON_REDIS_INSIGHT_PATH}                                                                                             \
@@ -39,8 +40,21 @@ _c_generate_ca_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
     CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
 
+_c_generate_kafka_certificate:
+    @source ${GENERATE_KEYTOOL_CERTIFICATE_PATH}                                                                                        \
+    CN=kafka                                                                                                                            \
+    KEYSTORE_PATH=${COMPOSE_COMMON_KAFKA_KEYSTORE_PATH}                                                                                 \
+    KEYSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_KEYSTORE_PASSWORD}                                                                         \
+    TRUSTSTORE_PATH=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PATH}                                                                             \
+    TRUSTSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PASSWORD}                                                                     \
+    CSR_PATH=${COMPOSE_COMMON_KAFKA_CSR_PATH}                                                                                           \
+    PEM_PATH=${COMPOSE_COMMON_KAFKA_PEM_PATH}                                                                                           \
+    KEY_PASSWORD=${COMPOSE_COMMON_KAFKA_KEY_PASSWORD}                                                                                   \
+    CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
+    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+
 _c_generate_pgadmin_certificate:
-    @source ${GENERATE_CERTIFICATE_PATH}                                                                                                \
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=pgadmin                                                                                                                          \
     CSR_PATH=${COMPOSE_COMMON_PGADMIN_CSR_PATH}                                                                                         \
     CRT_PATH=${COMPOSE_COMMON_PGADMIN_CRT_PATH}                                                                                         \
@@ -50,7 +64,7 @@ _c_generate_pgadmin_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_mongo_express_certificate:
-    @source ${GENERATE_CERTIFICATE_PATH}                                                                                                \
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=mongo-express                                                                                                                    \
     CSR_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_CSR_PATH}                                                                                   \
     CRT_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_CRT_PATH}                                                                                   \
@@ -60,7 +74,7 @@ _c_generate_mongo_express_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_redis_insight_certificate:
-    @source ${GENERATE_CERTIFICATE_PATH}                                                                                                \
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=redis-insight                                                                                                                    \
     CSR_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_CSR_PATH}                                                                                   \
     CRT_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_CRT_PATH}                                                                                   \
@@ -70,7 +84,7 @@ _c_generate_redis_insight_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_twt_parser_postgres_certificate:
-    @source ${GENERATE_CERTIFICATE_PATH}                                                                                                \
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=parser-postgres                                                                                                                  \
     CSR_PATH=${COMPOSE_TWT_PARSER_POSTGRES_CSR_PATH}                                                                                    \
     CRT_PATH=${COMPOSE_TWT_PARSER_POSTGRES_CRT_PATH}                                                                                    \
@@ -80,7 +94,7 @@ _c_generate_twt_parser_postgres_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_twt_parser_mongo_certificate:
-    @source ${GENERATE_CERTIFICATE_PATH}                                                                                                \
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=parser-mongo                                                                                                                     \
     CSR_PATH=${COMPOSE_TWT_PARSER_MONGO_CSR_PATH}                                                                                       \
     CRT_PATH=${COMPOSE_TWT_PARSER_MONGO_CRT_PATH}                                                                                       \
@@ -90,7 +104,7 @@ _c_generate_twt_parser_mongo_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_twt_parser_redis_certificate:
-    @source ${GENERATE_CERTIFICATE_PATH}                                                                                                \
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=parser-redis                                                                                                                     \
     CSR_PATH=${COMPOSE_TWT_PARSER_REDIS_CSR_PATH}                                                                                       \
     CRT_PATH=${COMPOSE_TWT_PARSER_REDIS_CRT_PATH}                                                                                       \
@@ -103,6 +117,12 @@ _c_generate_twt_parser_redis_certificate:
 
 _c_set_ca_permissions:
     @sudo chmod a+r ${COMPOSE_COMMON_CA_CERTS_PATH}
+
+_c_set_kafka_permissions:
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CONFIG_PATH}
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
+    @sudo chmod +x ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
 
 _c_set_pgadmin_permissions:
     @sudo chown 5050:5050 ${COMPOSE_COMMON_PGADMIN_CERTS_PATH}
@@ -154,6 +174,10 @@ _c_configure_ca:
     @$(MAKE) --no-print-directory _c_generate_ca_certificate
     @$(MAKE) --no-print-directory _c_set_ca_permissions
 
+_c_configure_kafka:
+    @$(MAKE) --no-print-directory _c_generate_kafka_certificate
+    @$(MAKE) --no-print-directory _c_set_kafka_permissions
+
 _c_configure_pgadmin:
     @$(MAKE) --no-print-directory _c_generate_pgadmin_certificate
     @$(MAKE) --no-print-directory _c_set_pgadmin_permissions
@@ -197,6 +221,7 @@ cstopv:
 
 cclean:
     @sudo rm -f ${COMPOSE_COMMON_CA_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_PGADMIN_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH}
@@ -207,6 +232,7 @@ cclean:
 cinit:
     @$(MAKE) --no-print-directory _configure_scripts
     @$(MAKE) --no-print-directory _c_configure_ca
+    @$(MAKE) --no-print-directory _c_configure_kafka
     @$(MAKE) --no-print-directory _c_configure_pgadmin
     @$(MAKE) --no-print-directory _c_configure_mongo_express
     @$(MAKE) --no-print-directory _c_configure_redis_insight

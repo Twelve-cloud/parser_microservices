@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Exit if any command here fails
+set -e
+
 # Function to execute a command
 function execute_command() {
 
