@@ -5,34 +5,34 @@ process.roles=broker,controller
 node.id=1
 
 # The address the socket server listens on
-listeners=${KAFKA_LISTENERS}
+listeners=${_KAFKA_LISTENERS}
 
 # Listener name, hostname and port the broker or the controller will advertise to clients
-advertised.listeners=${KAFKA_ADVERTISED_LISTENERS}
+advertised.listeners=${_KAFKA_ADVERTISED_LISTENERS}
 
 # Name of listener used for communication between brokers
-inter.broker.listener.name=${KAFKA_INTER_BROKER_LISTENER_NAME}
+inter.broker.listener.name=${_KAFKA_INTER_BROKER_LISTENER_NAME}
 
 # A comma-separated list of the names of the listeners used by the controller
-controller.listener.names=${KAFKA_CONTROLLER_NAME}
+controller.listener.names=${_KAFKA_CONTROLLER_NAME}
 
 # Maps listener names to security protocols, the default is for them to be the same
-listener.security.protocol.map=${KAFKA_SECURITY_PROTOCOL_MAP}
+listener.security.protocol.map=${_KAFKA_SECURITY_PROTOCOL_MAP}
 
 # The connect string for the controller quorum
-controller.quorum.voters=${KAFKA_QUORUM_VOTERS}
+controller.quorum.voters=${_KAFKA_QUORUM_VOTERS}
 
 # Keystore location
-ssl.keystore.location=${KAFKA_KEYSTORE_PATH}
+ssl.keystore.location=${_KAFKA_KEYSTORE_PATH}
 
 # Keystore password
-ssl.keystore.password=${KAFKA_KEYSTORE_PASSWORD}
+ssl.keystore.password=${_KAFKA_KEYSTORE_PASSWORD}
 
 # Truststore location
-ssl.truststore.location=${KAFKA_TRUSTSTORE_PATH}
+ssl.truststore.location=${_KAFKA_TRUSTSTORE_PATH}
 
 # Truststore password
-ssl.truststore.password=${KAFKA_TRUSTSTORE_PASSWORD}
+ssl.truststore.password=${_KAFKA_TRUSTSTORE_PASSWORD}
 
 # SSL Authentication is not required
 ssl.client.auth=requested
@@ -56,7 +56,7 @@ socket.receive.buffer.bytes=102400
 socket.request.max.bytes=104857600
 
 # A comma separated list of directories under which to store log data files
-log.dirs=${KAFKA_LOG_DATA_PATH}
+log.dirs=${_KAFKA_LOG_DATA_PATH}
 
 # The default number of log partitions per topic
 num.partitions=3

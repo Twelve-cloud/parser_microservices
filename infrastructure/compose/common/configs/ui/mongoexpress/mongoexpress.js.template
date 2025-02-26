@@ -9,9 +9,9 @@ export default {
       allowDiskUse: false,
 
       // If a connection string options such as server/port/etc are ignored
-      connectionString: 'mongodb://${PARSER_MONGO_USER}:${PARSER_MONGO_PASS}@${PARSER_MONGO_HOST}:${PARSER_MONGO_PORT}/${PARSER_MONGO_DB}?authSource=admin',
+      connectionString: 'mongodb://${_PARSER_MONGO_USER}:${_PARSER_MONGO_PASS}@${_PARSER_MONGO_HOST}:${_PARSER_MONGO_PORT}/${_PARSER_MONGO_DB}?authSource=admin',
 
-      connectionName: '${PARSER_MONGO_CONNECTION_NAME}',
+      connectionName: '${_PARSER_MONGO_CONNECTION_NAME}',
 
       connectionOptions: {
         // Enable ssl
@@ -24,10 +24,10 @@ export default {
         tlsAllowInvalidCertificates: false,
 
         // Single PEM file on disk
-        tlsCAFile: '${MONGO_EXPRESS_SSL_CA_PATH}',
+        tlsCAFile: '${_MONGO_EXPRESS_SSL_CA_PATH}',
 
         // Client key PEM file on disk
-        tlsCertificateKeyFile: '${MONGO_EXPRESS_SSL_CERT_PEM_PATH}',
+        tlsCertificateKeyFile: '${_MONGO_EXPRESS_SSL_CERT_PEM_PATH}',
 
         // Size of connection pool (number of connections to use)
         //maxPoolSize: 4,
@@ -52,28 +52,28 @@ export default {
     cookieKeyName: 'mongo-express',
 
     // The cookie secret
-    cookieSecret: '${MONGO_EXPRESS_COOKIE_SECRET}',
+    cookieSecret: '${_MONGO_EXPRESS_COOKIE_SECRET}',
 
     // The host that mongo express will listen
-    host: '${MONGO_EXPRESS_HOST}',
+    host: '${_MONGO_EXPRESS_HOST}',
 
     // The port that mongo express will use
-    port: ${MONGO_EXPRESS_PORT},
+    port: ${_MONGO_EXPRESS_PORT},
 
     // Size of requests
     requestSizeLimit: '50mb',
 
     // The session secret
-    sessionSecret: '${MONGO_EXPRESS_SESSION_SECRET}',
+    sessionSecret: '${_MONGO_EXPRESS_SESSION_SECRET}',
 
     // SSL certificate
-    sslCert: '${MONGO_EXPRESS_SSL_CERT_PATH}',
+    sslCert: '${_MONGO_EXPRESS_SSL_CERT_PATH}',
 
     // If true the use SSL for site
     sslEnabled: true,
 
     // SSL key
-    sslKey: '${MONGO_EXPRESS_SSL_KEY_PATH}',
+    sslKey: '${_MONGO_EXPRESS_SSL_KEY_PATH}',
   },
 
   healthCheck: {
@@ -86,10 +86,10 @@ export default {
 
   basicAuth: {
     // Username for basic auth
-    username: '${MONGO_EXPRESS_DEFAULT_EMAIL}',
+    username: '${_MONGO_EXPRESS_DEFAULT_EMAIL}',
 
     // Password for basic auth
-    password: '${MONGO_EXPRESS_DEFAULT_PASSWORD}'
+    password: '${_MONGO_EXPRESS_DEFAULT_PASSWORD}'
   },
 
   options: {

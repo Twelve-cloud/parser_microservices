@@ -16,18 +16,18 @@ http {
     scgi_temp_path        /tmp/scgi_temp;
 
     server {
-        listen ${REDIS_INSIGHT_PROXY_PORT};
-        server_name ${REDIS_INSIGHT_PROXY_HOST};
+        listen ${_REDIS_INSIGHT_PROXY_PORT};
+        server_name ${_REDIS_INSIGHT_PROXY_HOST};
 
-        ssl_certificate ${REDIS_INSIGHT_PROXY_SSL_CERT_PATH};
-        ssl_certificate_key ${REDIS_INSIGHT_PROXY_SSL_KEY_PATH};
-        ssl_client_certificate ${REDIS_INSIGHT_PROXY_SSL_CA_PATH};
+        ssl_certificate ${_REDIS_INSIGHT_PROXY_SSL_CERT_PATH};
+        ssl_certificate_key ${_REDIS_INSIGHT_PROXY_SSL_KEY_PATH};
+        ssl_client_certificate ${_REDIS_INSIGHT_PROXY_SSL_CA_PATH};
         ssl_protocols TLSv1.3;
 
         location / {
             auth_basic "Redis Insight";
-            auth_basic_user_file ${REDIS_INSIGHT_PROXY_BASIC_AUTH_FILE_PASS};
-            proxy_pass ${REDIS_INSIGHT_PROXY_PASS};
+            auth_basic_user_file ${_REDIS_INSIGHT_PROXY_BASIC_AUTH_FILE_PASS};
+            proxy_pass ${_REDIS_INSIGHT_PROXY_PASS};
             proxy_set_header Host §host;
             proxy_set_header X-Real-IP §remote_addr;
             proxy_set_header X-Forwarded-For §proxy_add_x_forwarded_for;

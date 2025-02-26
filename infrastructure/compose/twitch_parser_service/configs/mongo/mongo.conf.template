@@ -8,10 +8,10 @@ processManagement:
 
 net:
   # Addresses that mongo listen
-  bindIp: ${MONGO_HOST}
+  bindIp: ${_MONGO_HOST}
 
   # Mongo port
-  port: ${MONGO_PORT}
+  port: ${_MONGO_PORT}
 
   tls:
     # Allow tls and non-tls connections (but prefer tls)
@@ -21,14 +21,14 @@ net:
     allowConnectionsWithoutCertificates: true
 
     # Mongo server certificate and private key
-    certificateKeyFile: ${MONGO_SSL_CERT_PATH}
+    certificateKeyFile: ${_MONGO_SSL_CERT_PATH}
 
     # CA client certificate
-    CAFile: ${MONGO_SSL_CA_PATH}
+    CAFile: ${_MONGO_SSL_CA_PATH}
 
     # Which TLS protocols should be disabled
     disabledProtocols: TLS1_0,TLS1_1,TLS1_2
 
 storage:
   # Data location for mongodb
-  dbPath: ${MONGO_STORAGE_PATH}
+  dbPath: ${_MONGO_STORAGE_PATH}

@@ -1,23 +1,23 @@
 # Addresses that redis listen
-bind ${REDIS_HOST}
+bind ${_REDIS_HOST}
 
 # Redis port
-port ${REDIS_PORT}
+port ${_REDIS_PORT}
 
 # Redis tls port
-tls-port ${REDIS_TLS_PORT}
+tls-port ${_REDIS_TLS_PORT}
 
 # Allow tls and non-tls connections
 tls-auth-clients optional
 
 # Redis server certificate
-tls-cert-file ${REDIS_SSL_CERT_PATH}
+tls-cert-file ${_REDIS_SSL_CERT_PATH}
 
 # Redis server private key
-tls-key-file ${REDIS_SSL_KEY_PATH}
+tls-key-file ${_REDIS_SSL_KEY_PATH}
 
 # CA client certificate
-tls-ca-cert-file ${REDIS_SSL_CA_PATH}
+tls-ca-cert-file ${_REDIS_SSL_CA_PATH}
 
 # TLS version
 tls-protocols "TLSv1.3"
@@ -38,4 +38,4 @@ io-threads 8
 io-threads-do-reads no
 
 # Data location for redis
-dir ${REDIS_STORAGE_PATH}
+dir ${_REDIS_STORAGE_PATH}

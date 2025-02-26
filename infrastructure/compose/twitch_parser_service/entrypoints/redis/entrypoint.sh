@@ -7,7 +7,7 @@ set -e
 echo "Running redis entrypoint"
 
 # Substitute template variables
-envsubst < ${REDIS_CONFIG_TEMPLATE_PATH} > ${REDIS_CONFIG_PATH}
+envsubst < ${_REDIS_CONFIG_TEMPLATE_PATH} > ${_REDIS_CONFIG_PATH}
 
 # Run original entrypoint
-exec ${REDIS_ORIGINAL_ENTRYPOINT_PATH} "$@"
+exec ${_REDIS_ORIGINAL_ENTRYPOINT_PATH} "$@"

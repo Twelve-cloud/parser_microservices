@@ -7,8 +7,8 @@ set -e
 echo "Running pgadmin entrypoint"
 
 # Substitute template variables
-envsubst < ${PGADMIN_CONF_TEMPLATE_PATH} > ${PGADMIN_CONF_PATH}
-envsubst < ${PGADMIN_SERVERS_TEMPLATE_PATH} > ${PGADMIN_SERVERS_PATH}
+envsubst < ${_PGADMIN_CONF_TEMPLATE_PATH} > ${_PGADMIN_CONF_PATH}
+envsubst < ${_PGADMIN_SERVERS_TEMPLATE_PATH} > ${_PGADMIN_SERVERS_PATH}
 
 # Fixup the passwd file, in case we're on OpenShift
 if ! whoami > /dev/null 2>&1; then

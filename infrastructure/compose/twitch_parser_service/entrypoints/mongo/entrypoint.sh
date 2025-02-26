@@ -7,7 +7,7 @@ set -e
 echo "Running mongo entrypoint"
 
 # Substitute template variables
-envsubst < ${MONGO_CONFIG_TEMPLATE_PATH} > ${MONGO_CONFIG_PATH}
+envsubst < ${_MONGO_CONFIG_TEMPLATE_PATH} > ${_MONGO_CONFIG_PATH}
 
 # Run original entrypoint
-exec ${MONGO_ORIGINAL_ENTRYPOINT_PATH} "$@"
+exec ${_MONGO_ORIGINAL_ENTRYPOINT_PATH} "$@"

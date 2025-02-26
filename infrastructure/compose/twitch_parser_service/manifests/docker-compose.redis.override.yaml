@@ -66,8 +66,13 @@ services:
     healthcheck:
       test:
         [
-          "CMD-SHELL",
-          "redis-cli --user ${COMPOSE_TWT_PARSER_REDIS_USERNAME} --pass ${COMPOSE_TWT_PARSER_REDIS_PASSWORD} ping",
+          "CMD",
+          "redis-cli",
+          "--user",
+          "${COMPOSE_TWT_PARSER_REDIS_USERNAME}",
+          "--pass",
+          "${COMPOSE_TWT_PARSER_REDIS_PASSWORD}",
+          "ping",
         ]
       interval: 30s
       timeout: 30s

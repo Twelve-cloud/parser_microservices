@@ -1,8 +1,8 @@
 # Addresses that postgres listen
-listen_addresses = ${POSTGRES_HOST}
+listen_addresses = ${_POSTGRES_HOST}
 
 # Postgres port
-port = ${POSTGRES_PORT}
+port = ${_POSTGRES_PORT}
 
 # Cache size
 shared_buffers = 4GB
@@ -47,16 +47,16 @@ max_parallel_maintenance_workers = 4
 ssl = on
 
 # Postgres server certificate
-ssl_cert_file = ${POSTGRES_SSL_CERT_PATH}
+ssl_cert_file = ${_POSTGRES_SSL_CERT_PATH}
 
 # Postgres server private key
-ssl_key_file = ${POSTGRES_SSL_KEY_PATH}
+ssl_key_file = ${_POSTGRES_SSL_KEY_PATH}
 
 # CA client certificate
-ssl_ca_file = ${POSTGRES_SSL_CA_PATH}
+ssl_ca_file = ${_POSTGRES_SSL_CA_PATH}
 
 # TLS version
 ssl_min_protocol_version='TLSv1.3'
 
 # Data location for postgresql
-data_directory = ${POSTGRES_STORAGE_PATH}
+data_directory = ${_POSTGRES_STORAGE_PATH}

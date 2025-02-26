@@ -10,7 +10,7 @@ echo "Running postgres entrypoint"
 chmod -R 0700 ${PGDATA}
 
 # Substitute template variables
-envsubst < ${POSTGRES_CONFIG_TEMPLATE_PATH} > ${POSTGRES_CONFIG_PATH}
+envsubst < ${_POSTGRES_CONFIG_TEMPLATE_PATH} > ${_POSTGRES_CONFIG_PATH}
 
 # Run original entrypoint
-exec ${POSTGRES_ORIGINAL_ENTRYPOINT_PATH} "$@"
+exec ${_POSTGRES_ORIGINAL_ENTRYPOINT_PATH} "$@"
