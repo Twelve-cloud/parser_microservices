@@ -8,7 +8,7 @@ USER root
 RUN chown -R 5050:5050 /pgadmin4
 
 # Add envsubst
-RUN apk update && apk add envsubst
+RUN apk update && apk add envsubst curl
 
 # Change user to pgadmin
 USER pgadmin

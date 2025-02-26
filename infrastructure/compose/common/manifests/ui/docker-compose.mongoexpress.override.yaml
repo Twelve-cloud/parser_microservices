@@ -61,10 +61,10 @@ services:
       test:
         [
           "CMD",
-          "wget",
-          "--quiet",
-          "--spider",
-          "--no-check-certificate",
+          "curl",
+          "--silent",
+          "--cacert",
+          "${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CA_CRT_TARGET}",
           "https://${COMPOSE_COMMON_MONGO_EXPRESS_HOST}:${COMPOSE_COMMON_MONGO_EXPRESS_PORT}/health",
         ]
       interval: 30s

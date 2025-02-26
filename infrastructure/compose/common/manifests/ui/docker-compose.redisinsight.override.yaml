@@ -38,6 +38,14 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CA_CRT_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
       - type: volume
         source: redisinsight-data
         target: ${COMPOSE_COMMON_REDIS_INSIGHT_STORAGE_FOLDER_TARGET}
@@ -47,10 +55,10 @@ services:
       test:
         [
           "CMD",
-          "wget",
-          "--quiet",
-          "--spider",
-          "--no-check-certificate",
+          "curl",
+          "--silent",
+          "--cacert",
+          "${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CA_CRT_TARGET}",
           "https://${COMPOSE_COMMON_REDIS_INSIGHT_HOST}:${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/api/health",
         ]
       interval: 30s
@@ -199,7 +207,8 @@ services:
           "CMD",
           "curl",
           "--silent",
-          "--insecure",
+          "--cacert",
+          "${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CA_CRT_TARGET}",
           "--user",
           "${COMPOSE_COMMON_REDIS_INSIGHT_DEFAULT_EMAIL}:${COMPOSE_COMMON_REDIS_INSIGHT_DEFAULT_PASSWORD}",
           "https://${COMPOSE_COMMON_REDIS_INSIGHT_HOST}:${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/api/health",

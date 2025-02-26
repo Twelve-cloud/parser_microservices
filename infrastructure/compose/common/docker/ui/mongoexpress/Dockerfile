@@ -8,7 +8,7 @@ USER root
 RUN chown -R 1000:1000 /app
 
 # Add envsubst
-RUN apk update && apk add envsubst
+RUN apk update && apk add envsubst curl
 
 # Change user to node
 USER node

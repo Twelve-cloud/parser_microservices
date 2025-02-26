@@ -69,10 +69,10 @@ services:
       test:
         [
           "CMD",
-          "wget",
-          "--quiet",
-          "--spider",
-          "--no-check-certificate",
+          "curl",
+          "--silent",
+          "--cacert",
+          "${COMPOSE_COMMON_PGADMIN_SSL_CA_CRT_TARGET}",
           "https://${COMPOSE_COMMON_PGADMIN_HOST}:${COMPOSE_COMMON_PGADMIN_PORT}/misc/ping",
         ]
       interval: 30s
