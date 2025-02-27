@@ -68,6 +68,13 @@ services:
         [
           "CMD",
           "redis-cli",
+          "-h",
+          "${COMPOSE_TWT_PARSER_REDIS_HOST}",
+          "-p",
+          "${COMPOSE_TWT_PARSER_REDIS_TLS_PORT}",
+          "--tls",
+          "--cacert",
+          "${COMPOSE_TWT_PARSER_REDIS_SSL_CA_CRT_TARGET}",
           "--user",
           "${COMPOSE_TWT_PARSER_REDIS_USERNAME}",
           "--pass",

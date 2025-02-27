@@ -57,7 +57,18 @@ services:
         volume:
           nocopy: false
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--host",
+          "${COMPOSE_TWT_PARSER_MONGO_HOST}",
+          "--tls",
+          "--tlsCAFile",
+          "${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
       interval: 30s
       timeout: 30s
       retries: 10
