@@ -60,7 +60,8 @@ services:
       test: [
           "CMD",
           "psql",
-          "host=${COMPOSE_TWT_PARSER_POSTGRES_HOST}
+          "
+          host=${COMPOSE_TWT_PARSER_POSTGRES_HOST}
           port=${COMPOSE_TWT_PARSER_POSTGRES_PORT}
           user=${COMPOSE_TWT_PARSER_POSTGRES_USER}
           password=${COMPOSE_TWT_PARSER_POSTGRES_PASS}
