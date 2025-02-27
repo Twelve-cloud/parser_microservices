@@ -68,6 +68,7 @@ services:
         [
           "CMD",
           "redis-cli",
+          "--no-auth-warning",
           "-h",
           "${COMPOSE_TWT_PARSER_REDIS_HOST}",
           "-p",

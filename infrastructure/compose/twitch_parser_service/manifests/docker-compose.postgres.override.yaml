@@ -57,14 +57,19 @@ services:
         volume:
           nocopy: false
     healthcheck:
-      test:
-        [
+      test: [
           "CMD",
-          "pg_isready",
-          "--username",
-          "${COMPOSE_TWT_PARSER_POSTGRES_USER}",
-          "--dbname",
-          "${COMPOSE_TWT_PARSER_POSTGRES_DB}",
+          "psql",
+          "host=${COMPOSE_TWT_PARSER_POSTGRES_HOST}
+          port=${COMPOSE_TWT_PARSER_POSTGRES_PORT}
+          user=${COMPOSE_TWT_PARSER_POSTGRES_USER}
+          password=${COMPOSE_TWT_PARSER_POSTGRES_PASS}
+          dbname=${COMPOSE_TWT_PARSER_POSTGRES_DB}
+          sslmode=verify-full
+          sslrootcert=${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
+          ",
+          "-c",
+          "SELECT 1",
         ]
       interval: 30s
       timeout: 30s
