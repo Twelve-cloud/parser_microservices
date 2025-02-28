@@ -63,11 +63,6 @@ services:
         target: ${COMPOSE_COMMON_REDPANDA_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
-      - type: volume
-        source: redpanda-config
-        target: ${COMPOSE_COMMON_REDPANDA_CONFIG_FOLDER_TARGET}
-        volume:
-          nocopy: false
     #     healthcheck:
     #       test:
     #         [
@@ -133,18 +128,6 @@ volumes:
       device: tmpfs
       o: "\
         size=${COMPOSE_COMMON_REDPANDA_DATA_SIZE},\
-        uid=${COMPOSE_COMMON_REDPANDA_VOLUME_UID},\
-        gid=${COMPOSE_COMMON_REDPANDA_VOLUME_GID}\
-        "
-
-  redpanda-config:
-    name: redpanda-config
-    driver: local
-    driver_opts:
-      type: tmpfs
-      device: tmpfs
-      o: "\
-        size=${COMPOSE_COMMON_REDPANDA_CONFIG_SIZE},\
         uid=${COMPOSE_COMMON_REDPANDA_VOLUME_UID},\
         gid=${COMPOSE_COMMON_REDPANDA_VOLUME_GID}\
         "
