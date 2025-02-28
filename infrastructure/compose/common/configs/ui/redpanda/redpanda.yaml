@@ -2,7 +2,7 @@
 kafka:
   # Brokers is a list of bootstrap servers with port (for example "localhost:9092")
   brokers:
-    - kafka:9092
+    - ${_KAFKA_HOST}:${KAFKA_PORT}
 
   # Client ID that the Kafka client can use to identify itself against the target Kafka cluster
   clientId: console
@@ -13,13 +13,13 @@ kafka:
     enabled: true
 
     # Path to CA certificate
-    caFilepath: /etc/ssl/ca/ca.crt
+    caFilepath: ${_REDPANDA_SSL_CA_PATH}
 
     # Path to certificate
-    certFilepath: /etc/ssl/redpanda/server.crt
+    certFilepath: ${_REDPANDA_SSL_CERT_PATH}
 
     # Path to key
-    keyFilepath: /etc/ssl/redpanda/server.key
+    keyFilepath: ${_REDPANDA_SSL_KEY_PATH}
 
     # Check CA certificate of the kafka broker
     insecureSkipTlsVerify: true
@@ -30,7 +30,7 @@ login:
   enabled: false
 
   # JwtSecret is the secret key you must use to sign and encrypt the JSON web token used to store user sessions
-  jwtSecret: "supersecret"
+  jwtSecret: "${_REDPANDA_JWT_SECRET}"
 
   # Secure cookies
   useSecureCookies: true
@@ -45,22 +45,22 @@ login:
 
     # Credentials
     credentials:
-      - username: "username"
-        password: "password"
+      - username: "${_REDPANDA_USERNAME}"
+        password: "${_REDPANDA_PASSWORD}"
 
 # Server configures Redpanda Console's HTTP server that serves all resources, including the Frontend application
 server:
   # Specifies the IP address on which the server listens for incoming HTTP requests.
-  listenAddress: 0.0.0.0
+  listenAddress: ${_REDPANDA_LISTEN_ADDRESS}
 
   # Defines the port for the HTTP server.
-  listenPort: 8080
+  listenPort: ${_REDPANDA_PORT}
 
   # Defines the port for the HTTPS server.
-  httpsListenPort: 8081
+  httpsListenPort: ${_REDPANDA_TLS_PORT}
 
   # Redirect on this port when access http
-  advertisedHttpsListenPort: 30505
+  advertisedHttpsListenPort: ${_REDPANDA_ADVERTISED_PORT}
 
   # The time the server waits to complete ongoing requests before shutting down gracefully.
   gracefulShutdownTimeout: 30s
@@ -83,13 +83,13 @@ server:
     enabled: true
 
     # Path to server certificate
-    certFilepath: /etc/ssl/redpanda/server.crt
+    certFilepath: ${_REDPANDA_SSL_CERT_PATH}
 
     # Path to server key
-    keyFilepath: /etc/ssl/redpanda/server.key
+    keyFilepath: ${_REDPANDA_SSL_KEY_PATH}
 
   # AllowedOrigins is a list of origins that can send requests from a browser to the Console API.
-  allowedOrigins: ["localhost:30504", "localhost:30505", "https://ui.redpanda.par"]
+  allowedOrigins: ${_REDPANDA_ALLOWED_ORIGINGS}
 
 # Prefix for all exported Prometheus metrics
 metricsNamespace: console
