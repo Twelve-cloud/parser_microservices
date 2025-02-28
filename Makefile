@@ -226,6 +226,18 @@ cstart:
 cstartd:
     @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} up --detach
 
+ctop:
+    @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} top
+
+cstat:
+    @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} stats
+
+cps:
+    @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} ps
+
+cls:
+    @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} ls
+
 cstop:
     @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} down
 
