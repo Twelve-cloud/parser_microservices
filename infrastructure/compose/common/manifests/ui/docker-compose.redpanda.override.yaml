@@ -63,21 +63,21 @@ services:
         target: ${COMPOSE_COMMON_REDPANDA_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
-    #     healthcheck:
-    #       test:
-    #         [
-    #           "CMD",
-    #           "curl",
-    #           "--silent",
-    #           "--cacert",
-    #           "${COMPOSE_COMMON_REDPANDA_SSL_CA_CRT_TARGET}",
-    #           "https://${COMPOSE_COMMON_REDPANDA_HOST}:${COMPOSE_COMMON_REDPANDA_PORT}/misc/ping",
-    #         ]
-    #       interval: 30s
-    #       timeout: 30s
-    #       retries: 10
-    #       start_period: 30s
-    #       start_interval: 10s
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--silent",
+          "--cacert",
+          "${COMPOSE_COMMON_REDPANDA_SSL_CA_CRT_TARGET}",
+          "https://${COMPOSE_COMMON_REDPANDA_HOST}:${COMPOSE_COMMON_REDPANDA_TLS_PORT}/admin/health",
+        ]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+      start_interval: 10s
     logging:
       driver: json-file
       options:
