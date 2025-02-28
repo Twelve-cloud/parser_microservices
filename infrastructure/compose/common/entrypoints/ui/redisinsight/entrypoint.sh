@@ -106,8 +106,8 @@ response=$(curl --silent --insecure                                             
 # Response from redis insight for creating predefined servers
 echo "Creating parser redis predefined servers response: ${response}"
 
-# Trap to kill the background process on SIGINT
-trap 'kill $REDIS_INSIGHT_PID' INT
+# Trap to kill the background process on SIGINT/SIGTERM and exit
+trap "kill -s SIGTERM $REDIS_INSIGHT_PID; wait $REDIS_INSIGHT_PID; exit $?" INT TERM
 
 # Bring the Redis Insight server process to the foreground
 wait $REDIS_INSIGHT_PID
