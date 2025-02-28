@@ -9,5 +9,5 @@ echo "Running redpanda entrypoint"
 # Substitute template variables
 envsubst < ${_REDPANDA_CONFIG_TEMPLATE_PATH} > ${_REDPANDA_CONFIG_PATH}
 
-# Run redpanda
-exec ./console
+# Execute any input parameters
+exec "$@"

@@ -8,7 +8,7 @@ services:
     container_name: redpanda
     user: redpandaconsole
     entrypoint: ["${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_TARGET}"]
-    command: ["true"]
+    command: ["/app/console"]
     ports:
       - name: redpanda-port
         target: ${COMPOSE_COMMON_REDPANDA_PORT}
