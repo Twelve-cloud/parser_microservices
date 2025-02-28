@@ -45,7 +45,7 @@ EOF
 )
 
 # Change encryption agreement
-response=$(curl                                         \
+response=$(curl --silent --insecure                                          \
   -X "PATCH" ${_REDIS_INSIGHT_ADDRESS}/api/settings                          \
   -H "Content-Type: application/json; charset=utf-8"                         \
   -d "${change_encryption_agreement_json}"                                   \
