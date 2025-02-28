@@ -41,19 +41,6 @@ _c_generate_ca_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
     CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
 
-_c_generate_kafka_certificate:
-    @source ${GENERATE_KEYTOOL_CERTIFICATE_PATH}                                                                                        \
-    CN=kafka                                                                                                                            \
-    KEYSTORE_PATH=${COMPOSE_COMMON_KAFKA_KEYSTORE_PATH}                                                                                 \
-    KEYSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_KEYSTORE_PASSWORD}                                                                         \
-    TRUSTSTORE_PATH=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PATH}                                                                             \
-    TRUSTSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PASSWORD}                                                                     \
-    CSR_PATH=${COMPOSE_COMMON_KAFKA_CSR_PATH}                                                                                           \
-    PEM_PATH=${COMPOSE_COMMON_KAFKA_PEM_PATH}                                                                                           \
-    KEY_PASSWORD=${COMPOSE_COMMON_KAFKA_KEY_PASSWORD}                                                                                   \
-    CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
-    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
-
 _c_generate_redpanda_certificate:
     @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=redpanda                                                                                                                         \
@@ -94,6 +81,19 @@ _c_generate_redis_insight_certificate:
     CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
+_c_generate_kafka_certificate:
+    @source ${GENERATE_KEYTOOL_CERTIFICATE_PATH}                                                                                        \
+    CN=kafka                                                                                                                            \
+    KEYSTORE_PATH=${COMPOSE_COMMON_KAFKA_KEYSTORE_PATH}                                                                                 \
+    KEYSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_KEYSTORE_PASSWORD}                                                                         \
+    TRUSTSTORE_PATH=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PATH}                                                                             \
+    TRUSTSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PASSWORD}                                                                     \
+    CSR_PATH=${COMPOSE_COMMON_KAFKA_CSR_PATH}                                                                                           \
+    PEM_PATH=${COMPOSE_COMMON_KAFKA_PEM_PATH}                                                                                           \
+    KEY_PASSWORD=${COMPOSE_COMMON_KAFKA_KEY_PASSWORD}                                                                                   \
+    CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
+    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+
 _c_generate_twt_parser_postgres_certificate:
     @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
     CN=parser-postgres                                                                                                                  \
@@ -129,12 +129,6 @@ _c_generate_twt_parser_redis_certificate:
 _c_set_ca_permissions:
     @sudo chmod a+r ${COMPOSE_COMMON_CA_CERTS_PATH}
 
-_c_set_kafka_permissions:
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CONFIG_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
-    @sudo chmod +x ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
-
 _c_set_redpanda_permissions:
     @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_CERTS_PATH}
     @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_CONFIG_PATH}
@@ -158,6 +152,12 @@ _c_set_redis_insight_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_REDIS_INSIGHT_CONFIG_PATH}
     @sudo chown 1000:1000 ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH}
+
+_c_set_kafka_permissions:
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CONFIG_PATH}
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
+    @sudo chmod +x ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
 
 _c_set_twt_parser_postgres_permissions:
     @sudo chown 70:70 ${COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH}
@@ -183,10 +183,6 @@ _c_configure_ca:
     @$(MAKE) --no-print-directory _c_generate_ca_certificate
     @$(MAKE) --no-print-directory _c_set_ca_permissions
 
-_c_configure_kafka:
-    @$(MAKE) --no-print-directory _c_generate_kafka_certificate
-    @$(MAKE) --no-print-directory _c_set_kafka_permissions
-
 _c_configure_redpanda:
     @$(MAKE) --no-print-directory _c_generate_redpanda_certificate
     @$(MAKE) --no-print-directory _c_set_redpanda_permissions
@@ -202,6 +198,10 @@ _c_configure_mongo_express:
 _c_configure_redis_insight:
     @$(MAKE) --no-print-directory _c_generate_redis_insight_certificate
     @$(MAKE) --no-print-directory _c_set_redis_insight_permissions
+
+_c_configure_kafka:
+    @$(MAKE) --no-print-directory _c_generate_kafka_certificate
+    @$(MAKE) --no-print-directory _c_set_kafka_permissions
 
 _c_configure_twt_parser_postgres:
     @$(MAKE) --no-print-directory _c_generate_twt_parser_postgres_certificate
@@ -234,11 +234,11 @@ cstopv:
 
 cclean:
     @sudo rm -f ${COMPOSE_COMMON_CA_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_REDPANDA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_PGADMIN_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CERTS_PATH}
@@ -246,11 +246,11 @@ cclean:
 cinit:
     @$(MAKE) --no-print-directory _configure_scripts
     @$(MAKE) --no-print-directory _c_configure_ca
-    @$(MAKE) --no-print-directory _c_configure_kafka
     @$(MAKE) --no-print-directory _c_configure_redpanda
     @$(MAKE) --no-print-directory _c_configure_pgadmin
     @$(MAKE) --no-print-directory _c_configure_mongo_express
     @$(MAKE) --no-print-directory _c_configure_redis_insight
+    @$(MAKE) --no-print-directory _c_configure_kafka
     @$(MAKE) --no-print-directory _c_configure_twt_parser_postgres
     @$(MAKE) --no-print-directory _c_configure_twt_parser_mongo
     @$(MAKE) --no-print-directory _c_configure_twt_parser_redis
