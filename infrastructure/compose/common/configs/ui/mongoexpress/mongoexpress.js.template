@@ -51,9 +51,6 @@ export default {
     // The name of the cookie that mongo express will use
     cookieKeyName: 'mongo-express',
 
-    // The cookie secret
-    cookieSecret: '${_MONGO_EXPRESS_COOKIE_SECRET}',
-
     // The host that mongo express will listen
     host: '${_MONGO_EXPRESS_HOST}',
 
@@ -62,6 +59,9 @@ export default {
 
     // Size of requests
     requestSizeLimit: '50mb',
+
+    // The cookie secret
+    cookieSecret: '${_MONGO_EXPRESS_COOKIE_SECRET}',
 
     // The session secret
     sessionSecret: '${_MONGO_EXPRESS_SESSION_SECRET}',
