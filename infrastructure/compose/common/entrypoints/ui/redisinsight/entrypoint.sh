@@ -9,19 +9,34 @@ echo "Running redis insight entrypoint"
 # Substitute template variables
 envsubst < ${_REDIS_INSIGHT_CONFIG_TEMPLATE_PATH} > ${_REDIS_INSIGHT_CONFIG_PATH}
 
-# Run original entrypoint
+# Exporting environment variables
 echo "Exporting environment variables"
 
 # Load redis-insight configuration
-set -o allexport
-source ${_REDIS_INSIGHT_CONFIG_PATH}
-set +o allexport
+set -o allexport && source ${_REDIS_INSIGHT_CONFIG_PATH} && set +o allexport
 
 # Environment variables has been exported
 echo "Environment variables has been exported"
 
-# Execute any input parameters
-exec "$@"
+# Execute any input parameters in background
+"$@" &
+
+# Capture the PID of the background process
+REDIS_INSIGHT_PID=$!
+
+# Waiting for Redis Insight to become available
+echo "Waiting for Redis Insight to become available"
+
+# Do curl until its become healthy
+while ! curl                                                                      \
+  --silent --insecure --output /dev/null --fail                                   \
+  ${_REDIS_INSIGHT_ADDRESS}/api/health;                                           \
+do
+  sleep 1
+done
+
+# Redis Insight is ready
+echo "Redis Insight is ready"
 
 # Get certificates and key filenames
 tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' ${_REDIS_INSIGHT_SSL_KEY_PATH})
@@ -45,14 +60,14 @@ EOF
 )
 
 # Change encryption agreement
-response=$(curl --silent --insecure                                          \
-  -X "PATCH" ${_REDIS_INSIGHT_ADDRESS}/api/settings                          \
-  -H "Content-Type: application/json; charset=utf-8"                         \
-  -d "${change_encryption_agreement_json}"                                   \
+response=$(curl --silent --insecure                                               \
+  -X "PATCH" ${_REDIS_INSIGHT_ADDRESS}/api/settings                               \
+  -H "Content-Type: application/json; charset=utf-8"                              \
+  -d "${change_encryption_agreement_json}"                                        \
 )
 
 # Response from redis insight for changing encryption agreement
-echo "Response: ${response}"
+echo "Changing agreement response: ${response}"
 
 # Create predefined servers
 echo "Creating parser redis predefined servers"
@@ -82,11 +97,20 @@ EOF
 )
 
 # Create predefined servers
-response=$(curl --silent --insecure                                          \
- -X "POST" ${_REDIS_INSIGHT_ADDRESS}/api/databases                           \
- -H "Content-Type: application/json; charset=utf-8"                          \
- -d "${parser_redis_connection_options_json}"                                \
+response=$(curl --silent --insecure                                               \
+ -X "POST" ${_REDIS_INSIGHT_ADDRESS}/api/databases                                \
+ -H "Content-Type: application/json; charset=utf-8"                               \
+ -d "${parser_redis_connection_options_json}"                                     \
 )
 
 # Response from redis insight for creating predefined servers
-echo "Response: ${response}"
+echo "Creating parser redis predefined servers response: ${response}"
+
+# Trap to kill the background process on SIGINT
+trap 'kill $REDIS_INSIGHT_PID' INT
+
+# Bring the Redis Insight server process to the foreground
+wait $REDIS_INSIGHT_PID
+
+# Exit from shell with the exit code of $REDIS_INSIGHT_PID process
+exit $?
