@@ -9,22 +9,28 @@ services:
     user: node
     entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_TARGET}"]
     command: ["node", "redisinsight/api/dist/src/main"]
-    expose: ["${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/tcp"]
+    ports:
+      - name: redis-insight-port
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_PORT}
+        published: ${COMPOSE_COMMON_REDIS_INSIGHT_PUBLIC_PORT}
+        host_ip: ${COMPOSE_COMMON_REDIS_INSIGHT_HOST_IP}
+        protocol: tcp
+        mode: host
     env_file:
       - path: ${COMPOSE_COMMON_REDIS_INSIGHT_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_TARGET}
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_TARGET}
+        source: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -84,157 +90,6 @@ services:
       parser-redis-network:
     depends_on:
       parser-redis:
-        restart: true
-        condition: service_healthy
-        required: true
-    pull_policy: missing
-    restart: always
-
-  redis-insight-setup:
-    image: curlimages/curl:8.10.1
-    hostname: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_HOST}
-    container_name: ri-curl
-    user: curl_user
-    entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_TARGET}"]
-    command: ["true"]
-    env_file:
-      - path: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENV}
-        required: true
-    volumes:
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_ENTRYPOINT_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CRT_FOLDER_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_SSL_CA_CRT_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-    logging:
-      driver: json-file
-      options:
-        labels-regex: "^.+"
-    deploy:
-      resources:
-        limits:
-          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_CPUS_LIMIT}
-          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_MEMORY_LIMIT}
-        reservations:
-          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_CPUS_RESERVATION}
-          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_MEMORY_RESERVATION}
-    networks:
-      redis-insight-network:
-        ipv4_address: ${COMPOSE_COMMON_REDIS_INSIGHT_CURL_IP_ADDRESS}
-    depends_on:
-      redis-insight:
-        restart: true
-        condition: service_healthy
-        required: true
-    pull_policy: missing
-    restart: on-failure:3
-
-  redis-insight-proxy:
-    # image: nginx:1.27.1-alpine3.20
-    build:
-      context: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CONTEXT}
-      dockerfile: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_DOCKERFILE}
-    hostname: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_HOST}
-    container_name: ri-nginx
-    user: nginx
-    entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_TARGET}"]
-    command: ["nginx", "-g", "daemon off;"]
-    ports:
-      - name: redis-insight-port
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_PORT}
-        published: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_PUBLIC_PORT}
-        host_ip: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_HOST_IP}
-        protocol: tcp
-        mode: host
-    env_file:
-      - path: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENV}
-        required: true
-    volumes:
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_ENTRYPOINT_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_TEMPLATE_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_TEMPLATE_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CRT_FOLDER_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-      - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CA_CRT_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "--silent",
-          "--cacert",
-          "${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_SSL_CA_CRT_TARGET}",
-          "--user",
-          "${COMPOSE_COMMON_REDIS_INSIGHT_DEFAULT_EMAIL}:${COMPOSE_COMMON_REDIS_INSIGHT_DEFAULT_PASSWORD}",
-          "https://${COMPOSE_COMMON_REDIS_INSIGHT_HOST}:${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/api/health",
-        ]
-      interval: 30s
-      timeout: 30s
-      retries: 10
-      start_period: 30s
-      start_interval: 10s
-    logging:
-      driver: json-file
-      options:
-        labels-regex: "^.+"
-    deploy:
-      resources:
-        limits:
-          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CPUS_LIMIT}
-          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_MEMORY_LIMIT}
-        reservations:
-          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_CPUS_RESERVATION}
-          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_MEMORY_RESERVATION}
-    networks:
-      redis-insight-network:
-        ipv4_address: ${COMPOSE_COMMON_REDIS_INSIGHT_NGINX_IP_ADDRESS}
-    depends_on:
-      redis-insight:
         restart: true
         condition: service_healthy
         required: true

@@ -2,7 +2,7 @@
 kafka:
   # Brokers is a list of bootstrap servers with port (for example "localhost:9092")
   brokers:
-    - ${_KAFKA_HOST}:${KAFKA_PORT}
+    - ${_KAFKA_SERVERS}
 
   # Client ID that the Kafka client can use to identify itself against the target Kafka cluster
   clientId: console

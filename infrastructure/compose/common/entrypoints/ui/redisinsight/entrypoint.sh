@@ -3,8 +3,25 @@
 # Exit if any command here fails
 set -e
 
-# Running redis insight curl entrypoint
-echo "Running redis insight curl entrypoint to setup predefined servers"
+# Running redis insight entrypoint
+echo "Running redis insight entrypoint"
+
+# Substitute template variables
+envsubst < ${_REDIS_INSIGHT_CONFIG_TEMPLATE_PATH} > ${_REDIS_INSIGHT_CONFIG_PATH}
+
+# Run original entrypoint
+echo "Exporting environment variables"
+
+# Load redis-insight configuration
+set -o allexport
+source ${_REDIS_INSIGHT_CONFIG_PATH}
+set +o allexport
+
+# Environment variables has been exported
+echo "Environment variables has been exported"
+
+# Execute any input parameters
+exec "$@"
 
 # Get certificates and key filenames
 tls_key=$(sed ':a;N;$!ba;s/\n/\\n/g' ${_REDIS_INSIGHT_SSL_KEY_PATH})
@@ -28,8 +45,8 @@ EOF
 )
 
 # Change encryption agreement
-response=$(curl --silent --insecure                                          \
-  -X "PATCH" ${_REDIS_INSIGHT_PROXY_PASS}/api/settings                       \
+response=$(curl                                         \
+  -X "PATCH" ${_REDIS_INSIGHT_ADDRESS}/api/settings                          \
   -H "Content-Type: application/json; charset=utf-8"                         \
   -d "${change_encryption_agreement_json}"                                   \
 )
@@ -66,13 +83,10 @@ EOF
 
 # Create predefined servers
 response=$(curl --silent --insecure                                          \
- -X "POST" ${_REDIS_INSIGHT_PROXY_PASS}/api/databases                        \
+ -X "POST" ${_REDIS_INSIGHT_ADDRESS}/api/databases                           \
  -H "Content-Type: application/json; charset=utf-8"                          \
  -d "${parser_redis_connection_options_json}"                                \
 )
 
 # Response from redis insight for creating predefined servers
 echo "Response: ${response}"
-
-# Execute any input parameters
-exec "$@"
