@@ -49,7 +49,7 @@ services:
           "/opt/kafka/bin/kafka-cluster.sh
           cluster-id
           --bootstrap-server
-          ${COMPOSE_COMMON_KAFKA_BOOTSTRAP_SERVER}
+          ${COMPOSE_COMMON_KAFKA_HEALTHCHECK_BOOTSTRAP_SERVER}
           --config
           <(echo -e \"
           security.protocol=SSL\n
