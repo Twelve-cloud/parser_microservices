@@ -7,8 +7,8 @@ set -e
 echo "Running mongo-express entrypoint"
 
 # Substitute template variables
-envsubst < ${_MONGO_EXPRESS_CONNECT_TEMPLATE_PATH} > ${_MONGO_EXPRESS_CONNECT_PATH}
 envsubst < ${_MONGO_EXPRESS_CONFIG_TEMPLATE_PATH} > ${_MONGO_EXPRESS_CONFIG_PATH}
+envsubst < ${_MONGO_EXPRESS_CONNECT_TEMPLATE_PATH} > ${_MONGO_EXPRESS_CONNECT_PATH}
 
 # Run original entrypoint
 exec ${_MONGO_EXPRESS_ORIGINAL_ENTRYPOINT_PATH} "$@"
