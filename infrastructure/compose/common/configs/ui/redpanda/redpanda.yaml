@@ -1,0 +1,105 @@
+# Kafka settings
+kafka:
+  # Brokers is a list of bootstrap servers with port (for example "localhost:9092")
+  brokers:
+    - kafka:9092
+
+  # Client ID that the Kafka client can use to identify itself against the target Kafka cluster
+  clientId: console
+
+  # TLS settings
+  tls:
+    # Enable tls
+    enabled: true
+
+    # Path to CA certificate
+    caFilepath: /etc/ssl/ca/ca.crt
+
+    # Path to certificate
+    certFilepath: /etc/ssl/redpanda/server.crt
+
+    # Path to key
+    keyFilepath: /etc/ssl/redpanda/server.key
+
+    # Check CA certificate of the kafka broker
+    insecureSkipTlsVerify: true
+
+# Login contains all configurations in order to protect Redpanda Console with a login screen
+login:
+  # Enable login screen
+  enabled: false
+
+  # JwtSecret is the secret key you must use to sign and encrypt the JSON web token used to store user sessions
+  jwtSecret: "supersecret"
+
+  # Secure cookies
+  useSecureCookies: true
+
+  # Chunk big cookie for several small cookies
+  useCookieChunking: false
+
+  # Plain authentication
+  plain:
+    # Enable plain authentication
+    enabled: true
+
+    # Credentials
+    credentials:
+      - username: "username"
+        password: "password"
+
+# Server configures Redpanda Console's HTTP server that serves all resources, including the Frontend application
+server:
+  # Specifies the IP address on which the server listens for incoming HTTP requests.
+  listenAddress: 0.0.0.0
+
+  # Defines the port for the HTTP server.
+  listenPort: 8080
+
+  # Defines the port for the HTTPS server.
+  httpsListenPort: 8081
+
+  # Redirect on this port when access http
+  advertisedHttpsListenPort: 30505
+
+  # The time the server waits to complete ongoing requests before shutting down gracefully.
+  gracefulShutdownTimeout: 30s
+
+  # Maximum time allowed for reading a request from a client.
+  readTimeout: 30s
+
+  # Maximum time allowed for writing a response to a client.
+  writeTimeout: 30s
+
+  # Maximum idle time for connections before they are closed by the server.
+  idleTimeout: 30s
+
+  # Sets the level of compression for HTTP responses.
+  compressionLevel: 4
+
+  # TLS settings
+  tls:
+    # Enable tls
+    enabled: true
+
+    # Path to server certificate
+    certFilepath: /etc/ssl/redpanda/server.crt
+
+    # Path to server key
+    keyFilepath: /etc/ssl/redpanda/server.key
+
+  # AllowedOrigins is a list of origins that can send requests from a browser to the Console API.
+  allowedOrigins: ["localhost:30504", "localhost:30505", "https://ui.redpanda.par"]
+
+# Prefix for all exported Prometheus metrics
+metricsNamespace: console
+
+# Logger settings
+logger:
+  # Valid values are: debug, info, warn, error, fatal
+  level: info
+
+# Analytics configures the telemetry service that sends anonymized usage statistics to Redpanda
+analytics:
+  # Enable analytics
+  enabled: true

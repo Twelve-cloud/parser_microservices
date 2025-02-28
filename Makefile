@@ -23,10 +23,11 @@ _configure_scripts:
 # ------------------------------------------------------- ABBREVATIONS ------------------------------------------------------------------
 
 COMPOSE_FILE_PATHS :=                                                                                                                   \
-    -f ${COMPOSE_COMMON_KAFKA_PATH}                                                                                                     \
+    -f ${COMPOSE_COMMON_REDPANDA_PATH}                                                                                                  \
     -f ${COMPOSE_COMMON_PGADMIN_PATH}                                                                                                   \
     -f ${COMPOSE_COMMON_MONGO_EXPRESS_PATH}                                                                                             \
     -f ${COMPOSE_COMMON_REDIS_INSIGHT_PATH}                                                                                             \
+    -f ${COMPOSE_COMMON_KAFKA_PATH}                                                                                                     \
     -f ${COMPOSE_TWT_PARSER_POSTGRES_PATH}                                                                                              \
     -f ${COMPOSE_TWT_PARSER_MONGO_PATH}                                                                                                 \
     -f ${COMPOSE_TWT_PARSER_REDIS_PATH}                                                                                                 \
@@ -51,6 +52,16 @@ _c_generate_kafka_certificate:
     PEM_PATH=${COMPOSE_COMMON_KAFKA_PEM_PATH}                                                                                           \
     KEY_PASSWORD=${COMPOSE_COMMON_KAFKA_KEY_PASSWORD}                                                                                   \
     CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
+    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+
+_c_generate_redpanda_certificate:
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
+    CN=redpanda                                                                                                                         \
+    CSR_PATH=${COMPOSE_COMMON_REDPANDA_CSR_PATH}                                                                                        \
+    CRT_PATH=${COMPOSE_COMMON_REDPANDA_CRT_PATH}                                                                                        \
+    KEY_PATH=${COMPOSE_COMMON_REDPANDA_KEY_PATH}                                                                                        \
+    PEM_PATH=${COMPOSE_COMMON_REDPANDA_PEM_PATH}                                                                                        \
+    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_pgadmin_certificate:
@@ -124,6 +135,12 @@ _c_set_kafka_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
 
+_c_set_redpanda_permissions:
+    @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_CERTS_PATH}
+    @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_CONFIG_PATH}
+    @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_PATH}
+    @sudo chmod +x ${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_PATH}
+
 _c_set_pgadmin_permissions:
     @sudo chown 5050:5050 ${COMPOSE_COMMON_PGADMIN_CERTS_PATH}
     @sudo chown 5050:5050 ${COMPOSE_COMMON_PGADMIN_CONFIG_PATH}
@@ -178,6 +195,10 @@ _c_configure_kafka:
     @$(MAKE) --no-print-directory _c_generate_kafka_certificate
     @$(MAKE) --no-print-directory _c_set_kafka_permissions
 
+_c_configure_redpanda:
+    @$(MAKE) --no-print-directory _c_generate_redpanda_certificate
+    @$(MAKE) --no-print-directory _c_set_redpanda_permissions
+
 _c_configure_pgadmin:
     @$(MAKE) --no-print-directory _c_generate_pgadmin_certificate
     @$(MAKE) --no-print-directory _c_set_pgadmin_permissions
@@ -222,6 +243,7 @@ cstopv:
 cclean:
     @sudo rm -f ${COMPOSE_COMMON_CA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_REDPANDA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_PGADMIN_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH}
@@ -233,6 +255,7 @@ cinit:
     @$(MAKE) --no-print-directory _configure_scripts
     @$(MAKE) --no-print-directory _c_configure_ca
     @$(MAKE) --no-print-directory _c_configure_kafka
+    @$(MAKE) --no-print-directory _c_configure_redpanda
     @$(MAKE) --no-print-directory _c_configure_pgadmin
     @$(MAKE) --no-print-directory _c_configure_mongo_express
     @$(MAKE) --no-print-directory _c_configure_redis_insight

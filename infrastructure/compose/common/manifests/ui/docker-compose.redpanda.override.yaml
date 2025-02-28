@@ -1,0 +1,150 @@
+services:
+  redpanda:
+    # image: redpandadata/console:v2.8.3
+    build:
+      context: ${COMPOSE_COMMON_REDPANDA_CONTEXT}
+      dockerfile: ${COMPOSE_COMMON_REDPANDA_DOCKERFILE}
+    hostname: ${COMPOSE_COMMON_REDPANDA_HOST}
+    container_name: redpanda
+    user: redpandaconsole
+    entrypoint: ["${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_TARGET}"]
+    command: ["true"]
+    ports:
+      - name: redpanda-port
+        target: ${COMPOSE_COMMON_REDPANDA_PORT}
+        published: ${COMPOSE_COMMON_REDPANDA_PUBLIC_PORT}
+        host_ip: ${COMPOSE_COMMON_REDPANDA_HOST_IP}
+        protocol: tcp
+        mode: host
+      - name: redpanda-tls-port
+        target: ${COMPOSE_COMMON_REDPANDA_TLS_PORT}
+        published: ${COMPOSE_COMMON_REDPANDA_PUBLIC_TLS_PORT}
+        host_ip: ${COMPOSE_COMMON_REDPANDA_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ${COMPOSE_COMMON_REDPANDA_ENV}
+        required: true
+    volumes:
+      - type: bind
+        source: ${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_REDPANDA_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDPANDA_TEMPLATE_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_REDPANDA_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_REDPANDA_SSL_CRT_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_REDPANDA_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_REDPANDA_SSL_CA_CRT_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: volume
+        source: redpanda-data
+        target: ${COMPOSE_COMMON_REDPANDA_STORAGE_FOLDER_TARGET}
+        volume:
+          nocopy: false
+      - type: volume
+        source: redpanda-config
+        target: ${COMPOSE_COMMON_REDPANDA_CONFIG_FOLDER_TARGET}
+        volume:
+          nocopy: false
+    #     healthcheck:
+    #       test:
+    #         [
+    #           "CMD",
+    #           "curl",
+    #           "--silent",
+    #           "--cacert",
+    #           "${COMPOSE_COMMON_REDPANDA_SSL_CA_CRT_TARGET}",
+    #           "https://${COMPOSE_COMMON_REDPANDA_HOST}:${COMPOSE_COMMON_REDPANDA_PORT}/misc/ping",
+    #         ]
+    #       interval: 30s
+    #       timeout: 30s
+    #       retries: 10
+    #       start_period: 30s
+    #       start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${COMPOSE_COMMON_REDPANDA_CPUS_LIMIT}
+          memory: ${COMPOSE_COMMON_REDPANDA_MEMORY_LIMIT}
+        reservations:
+          cpus: ${COMPOSE_COMMON_REDPANDA_CPUS_RESERVATION}
+          memory: ${COMPOSE_COMMON_REDPANDA_MEMORY_RESERVATION}
+    networks:
+      redpanda-network:
+        ipv4_address: ${COMPOSE_COMMON_REDPANDA_IP_ADDRESS}
+      kafka-network:
+    depends_on:
+      kafka:
+        restart: true
+        condition: service_healthy
+        required: true
+    pull_policy: missing
+    restart: always
+
+networks:
+  redpanda-network:
+    name: redpanda-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${COMPOSE_COMMON_REDPANDA_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_COMMON_REDPANDA_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_COMMON_REDPANDA_NETWORK_GATEWAY}
+  kafka-network:
+    external: true
+
+volumes:
+  redpanda-data:
+    name: redpanda-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${COMPOSE_COMMON_REDPANDA_DATA_SIZE},\
+        uid=${COMPOSE_COMMON_REDPANDA_VOLUME_UID},\
+        gid=${COMPOSE_COMMON_REDPANDA_VOLUME_GID}\
+        "
+
+  redpanda-config:
+    name: redpanda-config
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${COMPOSE_COMMON_REDPANDA_CONFIG_SIZE},\
+        uid=${COMPOSE_COMMON_REDPANDA_VOLUME_UID},\
+        gid=${COMPOSE_COMMON_REDPANDA_VOLUME_GID}\
+        "
