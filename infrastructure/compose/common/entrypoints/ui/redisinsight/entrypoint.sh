@@ -109,7 +109,7 @@ echo "Creating parser redis predefined servers response: ${response}"
 # Trap to kill the background process on SIGINT/SIGTERM and exit
 trap "kill -s SIGTERM $REDIS_INSIGHT_PID; wait $REDIS_INSIGHT_PID; exit $?" INT TERM
 
-# Bring the Redis Insight server process to the foreground
+# Wait for Redis Insight server to stop
 wait $REDIS_INSIGHT_PID
 
 # Exit from shell with the exit code of $REDIS_INSIGHT_PID process
