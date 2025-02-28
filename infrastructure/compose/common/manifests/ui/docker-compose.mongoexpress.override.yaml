@@ -8,7 +8,7 @@ services:
     container_name: mongo-express
     user: node
     entrypoint: ["${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_TARGET}"]
-    command: ["node", "app"]
+    command: ["mongo-express", "${COMPOSE_COMMON_MONGO_EXPRESS_PORT}", "10"]
     ports:
       - name: mongo-express-port
         target: ${COMPOSE_COMMON_MONGO_EXPRESS_PORT}
