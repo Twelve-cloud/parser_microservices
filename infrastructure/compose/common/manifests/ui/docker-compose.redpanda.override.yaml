@@ -16,12 +16,6 @@ services:
         host_ip: ${COMPOSE_COMMON_REDPANDA_HOST_IP}
         protocol: tcp
         mode: host
-      - name: redpanda-tls-port
-        target: ${COMPOSE_COMMON_REDPANDA_TLS_PORT}
-        published: ${COMPOSE_COMMON_REDPANDA_PUBLIC_TLS_PORT}
-        host_ip: ${COMPOSE_COMMON_REDPANDA_HOST_IP}
-        protocol: tcp
-        mode: host
     env_file:
       - path: ${COMPOSE_COMMON_REDPANDA_ENV}
         required: true
@@ -71,7 +65,7 @@ services:
           "--silent",
           "--cacert",
           "${COMPOSE_COMMON_REDPANDA_SSL_CA_CRT_TARGET}",
-          "https://${COMPOSE_COMMON_REDPANDA_HOST}:${COMPOSE_COMMON_REDPANDA_TLS_PORT}/admin/health",
+          "https://${COMPOSE_COMMON_REDPANDA_HOST}:${COMPOSE_COMMON_REDPANDA_PORT}/admin/health",
         ]
       interval: 30s
       timeout: 30s

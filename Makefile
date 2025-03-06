@@ -27,6 +27,7 @@ COMPOSE_FILE_PATHS :=                                                           
     -f ${COMPOSE_COMMON_PGADMIN_PATH}                                                                                                   \
     -f ${COMPOSE_COMMON_MONGO_EXPRESS_PATH}                                                                                             \
     -f ${COMPOSE_COMMON_REDIS_INSIGHT_PATH}                                                                                             \
+    -f ${COMPOSE_COMMON_BIND_PATH}                                                                                                      \
     -f ${COMPOSE_COMMON_KAFKA_PATH}                                                                                                     \
     -f ${COMPOSE_TWT_PARSER_POSTGRES_PATH}                                                                                              \
     -f ${COMPOSE_TWT_PARSER_MONGO_PATH}                                                                                                 \
@@ -78,6 +79,16 @@ _c_generate_redis_insight_certificate:
     CRT_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_CRT_PATH}                                                                                   \
     KEY_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_KEY_PATH}                                                                                   \
     PEM_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_PEM_PATH}                                                                                   \
+    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
+    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+
+_c_generate_bind_certificate:
+    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
+    CN=bind                                                                                                                             \
+    CSR_PATH=${COMPOSE_COMMON_BIND_CSR_PATH}                                                                                            \
+    CRT_PATH=${COMPOSE_COMMON_BIND_CRT_PATH}                                                                                            \
+    KEY_PATH=${COMPOSE_COMMON_BIND_KEY_PATH}                                                                                            \
+    PEM_PATH=${COMPOSE_COMMON_BIND_PEM_PATH}                                                                                            \
     CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
@@ -153,6 +164,12 @@ _c_set_redis_insight_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH}
 
+_c_set_bind_permissions:
+    @sudo chown 100:101 ${COMPOSE_COMMON_BIND_CERTS_PATH}
+    @sudo chown 100:101 ${COMPOSE_COMMON_BIND_CONFIG_PATH}
+    @sudo chown 100:101 ${COMPOSE_COMMON_BIND_ENTRYPOINT_PATH}
+    @sudo chmod +x ${COMPOSE_COMMON_BIND_ENTRYPOINT_PATH}
+
 _c_set_kafka_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
     @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CONFIG_PATH}
@@ -198,6 +215,10 @@ _c_configure_mongo_express:
 _c_configure_redis_insight:
     @$(MAKE) --no-print-directory _c_generate_redis_insight_certificate
     @$(MAKE) --no-print-directory _c_set_redis_insight_permissions
+
+_c_configure_bind:
+    @$(MAKE) --no-print-directory _c_generate_bind_certificate
+    @$(MAKE) --no-print-directory _c_set_bind_permissions
 
 _c_configure_kafka:
     @$(MAKE) --no-print-directory _c_generate_kafka_certificate
@@ -250,6 +271,7 @@ cclean:
     @sudo rm -f ${COMPOSE_COMMON_PGADMIN_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_BIND_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_CERTS_PATH}
@@ -262,6 +284,7 @@ cinit:
     @$(MAKE) --no-print-directory _c_configure_pgadmin
     @$(MAKE) --no-print-directory _c_configure_mongo_express
     @$(MAKE) --no-print-directory _c_configure_redis_insight
+    @$(MAKE) --no-print-directory _c_configure_bind
     @$(MAKE) --no-print-directory _c_configure_kafka
     @$(MAKE) --no-print-directory _c_configure_twt_parser_postgres
     @$(MAKE) --no-print-directory _c_configure_twt_parser_mongo
