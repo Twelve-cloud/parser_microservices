@@ -11,10 +11,11 @@ function parse_named_parameters() {
 
         # Check if the current argument is a named parameter
         case ${argument} in
-            CN=*)           CN=${argument#*=} ;;
-            CA_CRT_PATH=*)  CA_CRT_PATH=${argument#*=} ;;
+            CA_DIR_PATH=*)  CA_DIR_PATH=${argument#*=} ;;
             CA_KEY_PATH=*)  CA_KEY_PATH=${argument#*=} ;;
-            CA_PEM_PATH=*)  CA_PEM_PATH=${argument#*=} ;;
+            CA_CSR_PATH=*)  CA_CSR_PATH=${argument#*=} ;;
+            CA_CRT_PATH=*)  CA_CRT_PATH=${argument#*=} ;;
+            CA_CONFIG_PATH=*) CA_CONFIG_PATH=${argument#*=} ;;
             *)              echo "Unknown parameter: ${argument}"; return 1 ;;
         esac
 
@@ -32,8 +33,20 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Generate CA certificate
-source scripts/common/execute_command.sh openssl req -sha256 -new -x509 -days 3650 -nodes -subj "/CN=${CN}" -out ${CA_CRT_PATH} -keyout ${CA_KEY_PATH}
+# Export ca directory variable to use it in openssl commands with -config flag to use it in config itself
+export CA_DIR=${CA_DIR_PATH}
 
-# Create CA certificate in PEM format
-source scripts/common/execute_command.sh bash -c "cat ${CA_CRT_PATH} ${CA_KEY_PATH} > ${CA_PEM_PATH}"
+# Create index file if not exist otherwise update the access and modification times
+source scripts/common/execute_command.sh touch ${CA_DIR}/database/index.txt
+
+# Create crlnumber file if not exist otherwise update the access and modification times
+source scripts/common/execute_command.sh touch ${CA_DIR}/crl/crlnumber.txt
+
+# Generate private key (EdDSA curve Ed448)
+source scripts/common/execute_command.sh openssl genpkey -algorithm ED448 -out ${CA_KEY_PATH}
+
+# Generate certificate signing request (new)
+source scripts/common/execute_command.sh openssl req -new -config ${CA_CONFIG_PATH} -key ${CA_KEY_PATH} -out ${CA_CSR_PATH}
+
+# Generate ca certificate (self-signed, no text in certificate, do not ask questions)
+source scripts/common/execute_command.sh openssl ca -selfsign -notext -batch -config ${CA_CONFIG_PATH} -in ${CA_CSR_PATH} -out ${CA_CRT_PATH}

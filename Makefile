@@ -18,6 +18,18 @@ _set_cert_scripts_permissions:
 _configure_scripts:
     @$(MAKE) --no-print-directory _set_cert_scripts_permissions
 
+# --------------------------------------------------------- COMMANDS --------------------------------------------------------------------
+
+# Change all
+primary_network_interface:
+    @ip route | grep default | awk '{print $$5}'
+
+status_primary_network_interface:
+    @resolvectl status $$(make -s primary_network_interface)
+
+primary_network_interface_dns_servers:
+    @resolvectl status $$(make -s primary_network_interface) | grep "DNS Servers:" | awk -F ': ' '{print $$2}'
+
 # --------------------------------------------------------- COMPOSE ---------------------------------------------------------------------
 
 # ------------------------------------------------------- ABBREVATIONS ------------------------------------------------------------------
@@ -35,12 +47,13 @@ COMPOSE_FILE_PATHS :=                                                           
 
 # ------------------------------------------------------- CERTIFICATES ------------------------------------------------------------------
 
-_c_generate_ca_certificate:
+_c_generate_root_ca_certificate:
     @source ${GENERATE_CA_CERTIFICATE_PATH}                                                                                             \
-    CN=CA                                                                                                                               \
-    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
+    CA_DIR_PATH=${COMPOSE_COMMON_CA_DIR_PATH}                                                                                           \
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
-    CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
+    CA_CSR_PATH=${COMPOSE_COMMON_CA_CSR_PATH}                                                                                           \
+    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
+    CA_CONFIG_PATH=${COMPOSE_COMMON_CA_CONFIG_PATH}                                                                                     \
 
 _c_generate_redpanda_certificate:
     @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
