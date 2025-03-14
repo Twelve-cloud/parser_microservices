@@ -1,0 +1,1 @@
+status    expiration_date    revocation_date    serial_number    file_location    DN
