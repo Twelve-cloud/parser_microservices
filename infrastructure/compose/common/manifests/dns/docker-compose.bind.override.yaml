@@ -1,0 +1,135 @@
+services:
+  bind:
+    # ubuntu/bind9:9.20-24.10_beta
+    build:
+      context: ${COMPOSE_COMMON_BIND_CONTEXT}
+      dockerfile: ${COMPOSE_COMMON_BIND_DOCKERFILE}
+    hostname: ${COMPOSE_COMMON_BIND_HOST}
+    container_name: bind
+    user: bind
+    entrypoint: ["${COMPOSE_COMMON_BIND_ENTRYPOINT_TARGET}"]
+    command: ["named", "-u", "bind", "-f"]
+    ports:
+      - name: bind-port
+        target: ${COMPOSE_COMMON_BIND_PORT}
+        published: ${COMPOSE_COMMON_BIND_PUBLIC_PORT}
+        host_ip: ${COMPOSE_COMMON_BIND_HOST_IP}
+        protocol: tcp
+        mode: host
+    env_file:
+      - path: ${COMPOSE_COMMON_BIND_ENV}
+        required: true
+    volumes:
+      - type: bind
+        source: ${COMPOSE_COMMON_BIND_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_BIND_ENTRYPOINT_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_BIND_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_BIND_TEMPLATE_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_BIND_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_COMMON_BIND_SSL_CRT_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_COMMON_BIND_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_COMMON_BIND_SSL_CA_CRT_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: volume
+        source: bind-data
+        target: ${COMPOSE_COMMON_BIND_STORAGE_FOLDER_TARGET}
+        volume:
+          nocopy: false
+      - type: volume
+        source: bind-logs
+        target: ${COMPOSE_COMMON_BIND_LOGS_FOLDER_TARGET}
+        volume:
+          nocopy: false
+    # healthcheck:
+    #   test:
+    #     [
+    #       "CMD",
+    #       "curl",
+    #       "--silent",
+    #       "--cacert",
+    #       "${COMPOSE_COMMON_BIND_SSL_CA_CRT_TARGET}",
+    #       "https://${COMPOSE_COMMON_BIND_HOST}:${COMPOSE_COMMON_BIND_PORT}/health",
+    #     ]
+    #   interval: 30s
+    #   timeout: 30s
+    #   retries: 10
+    #   start_period: 30s
+    #   start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${COMPOSE_COMMON_BIND_CPUS_LIMIT}
+          memory: ${COMPOSE_COMMON_BIND_MEMORY_LIMIT}
+        reservations:
+          cpus: ${COMPOSE_COMMON_BIND_CPUS_RESERVATION}
+          memory: ${COMPOSE_COMMON_BIND_MEMORY_RESERVATION}
+    networks:
+      bind-network:
+        ipv4_address: ${COMPOSE_COMMON_BIND_IP_ADDRESS}
+    pull_policy: missing
+    restart: always
+
+networks:
+  bind-network:
+    name: bind-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${COMPOSE_COMMON_BIND_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_COMMON_BIND_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_COMMON_BIND_NETWORK_GATEWAY}
+
+volumes:
+  bind-data:
+    name: bind-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${COMPOSE_COMMON_BIND_DATA_SIZE},\
+        uid=${COMPOSE_COMMON_BIND_VOLUME_UID},\
+        gid=${COMPOSE_COMMON_BIND_VOLUME_GID}\
+        "
+  bind-logs:
+    name: bind-logs
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${COMPOSE_COMMON_BIND_DATA_SIZE},\
+        uid=${COMPOSE_COMMON_BIND_VOLUME_UID},\
+        gid=${COMPOSE_COMMON_BIND_VOLUME_GID}\
+        "

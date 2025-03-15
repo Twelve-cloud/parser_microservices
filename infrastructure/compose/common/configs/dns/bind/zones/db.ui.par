@@ -1,0 +1,23 @@
+; Setting TTL (Time in DNS cache)
+$TTL        86400
+
+; Setting Origin
+$ORIGIN     ui.par.
+
+; Settings Start of Authority
+@           IN          SOA         bind.par.        admin.par. (
+    1            ; Serial
+    3600       ; Refresh
+    1800       ; Retry
+    1209600    ; Expire
+    3600       ; Minimum TTL
+)
+
+; Settings Name Servers
+@           IN          NS          bind.par.
+
+; Settings Adress Records
+kafka       IN          A           192.168.11.1        ; IP-адрес для kafka.ui.par
+postgres    IN          A           192.168.12.1        ; IP-адрес для postgres.ui.par
+mongo       IN          A           192.168.13.1        ; IP-адрес для mongo.ui.par
+redis       IN          A           192.168.14.1        ; IP-адрес для redis.ui.par

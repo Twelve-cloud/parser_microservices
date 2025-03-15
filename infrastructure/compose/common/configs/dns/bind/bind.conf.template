@@ -1,0 +1,79 @@
+# Global settings
+options {
+	# Listen address
+	listen-on { any; };
+
+	# Allow requests from
+	allow-query { any; };
+
+	# Enable DNS over HTTPS (DoH)
+    https-port 443;
+
+	# Server working directory
+	directory "/var/cache/bind";
+
+	# Reqursive requests
+	recursion no;
+
+	# Validation dnssec
+	dnssec-validation auto;
+};
+
+# DNS over TLS settings
+tls bind-tls {
+	# CA certificate
+	ca-file "/etc/ssl/ca/ca.crt";
+
+	# Bind9 certificate
+	cert-file "/etc/ssl/bind/server.crt";
+
+	# Bind9 certificate key
+	key-file "/etc/ssl/bind/server.key";
+
+	# Allowed protocols
+	protocols { TLSv1.3; };
+};
+
+# Logging settings
+logging {
+	# Name of channel
+    channel default_log {
+		# Location of log file (files more than 5m are rotated)
+        file "/var/log/named/named.log" versions 3 size 5m;
+
+		# Log from INFO severity
+        severity info;
+
+		# Add time to log
+        print-time yes;
+
+		# Add severity to log
+        print-severity yes;
+
+		# Add category to log
+        print-category yes;
+    };
+
+	# Channel in default category
+    category default {
+		default_log;
+	};
+};
+
+# Root zone for .par
+zone "par" {
+	# Type of zone
+    type master;
+
+	# Location of zone
+    file "/var/lib/bind/db.par";
+};
+
+# Zone for ui.par
+zone "ui.par" {
+	# Type of zone
+    type master;
+
+	# Location of zone
+    file "/var/lib/bind/db.ui.par";
+};

@@ -1,0 +1,21 @@
+; Setting TTL (Time in DNS cache)
+$TTL        86400
+
+; Setting Origin
+$ORIGIN     par.
+
+; Settings Start of Authority
+@           IN          SOA         bind.par.        admin.par. (
+    1            ; Serial
+    3600       ; Refresh
+    1800       ; Retry
+    1209600    ; Expire
+    3600       ; Minimum TTL
+)
+
+; Settings Name Servers
+@           IN          NS          bind.par.
+
+; Settings Adress Records
+bind        IN          A           192.168.21.1        ; IP-адрес DNS-сервера
+ui          IN          A           192.168.21.1        ; IP-адрес для ui.par
