@@ -49,11 +49,19 @@ COMPOSE_FILE_PATHS :=                                                           
 
 _c_generate_root_ca_certificate:
     @source ${GENERATE_CA_CERTIFICATE_PATH}                                                                                             \
-    CA_DIR_PATH=${COMPOSE_COMMON_CA_DIR_PATH}                                                                                           \
-    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
-    CA_CSR_PATH=${COMPOSE_COMMON_CA_CSR_PATH}                                                                                           \
-    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
-    CA_CONFIG_PATH=${COMPOSE_COMMON_CA_CONFIG_PATH}                                                                                     \
+    CA_DIR_PATH=${COMPOSE_COMMON_ROOT_CA_DIR_PATH}                                                                                      \
+    CA_KEY_PATH=${COMPOSE_COMMON_ROOT_CA_KEY_PATH}                                                                                      \
+    CA_CSR_PATH=${COMPOSE_COMMON_ROOT_CA_CSR_PATH}                                                                                      \
+    CA_CRT_PATH=${COMPOSE_COMMON_ROOT_CA_CRT_PATH}                                                                                      \
+    CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_CONFIG_PATH}                                                                                \
+
+_c_generate_intermediate_ca_certificate:
+    @source ${GENERATE_CA_CERTIFICATE_PATH}                                                                                             \
+    CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                              \
+    CA_KEY_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_KEY_PATH}                                                                              \
+    CA_CSR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CSR_PATH}                                                                              \
+    CA_CRT_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CRT_PATH}                                                                              \
+    CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CONFIG_PATH}                                                                        \
 
 _c_generate_redpanda_certificate:
     @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
