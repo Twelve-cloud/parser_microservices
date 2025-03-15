@@ -20,16 +20,6 @@ _configure_scripts:
 
 # --------------------------------------------------------- COMMANDS --------------------------------------------------------------------
 
-# Change all
-primary_network_interface:
-    @ip route | grep default | awk '{print $$5}'
-
-status_primary_network_interface:
-    @resolvectl status $$(make -s primary_network_interface)
-
-primary_network_interface_dns_servers:
-    @resolvectl status $$(make -s primary_network_interface) | grep "DNS Servers:" | awk -F ': ' '{print $$2}'
-
 check_key:
     @openssl pkey -in $(path) -noout -text
 
