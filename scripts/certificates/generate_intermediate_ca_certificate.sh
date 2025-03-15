@@ -53,5 +53,5 @@ source scripts/common/execute_command.sh openssl genpkey -algorithm ED448 -out $
 # Generate certificate signing request (new)
 source scripts/common/execute_command.sh openssl req -new -config ${INTERMEDIATE_CA_CONFIG_PATH} -key ${INTERMEDIATE_CA_KEY_PATH} -out ${INTERMEDIATE_CA_CSR_PATH}
 
-# Generate intermediateca certificate (no text in certificate, do not ask questions)
+# Generate intermediate ca certificate (no text in certificate, do not ask questions)
 source scripts/common/execute_command.sh openssl ca -notext -batch -config ${ROOT_CA_CONFIG_PATH} -in ${INTERMEDIATE_CA_CSR_PATH} -out ${INTERMEDIATE_CA_CRT_PATH}

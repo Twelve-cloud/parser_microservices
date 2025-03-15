@@ -53,7 +53,7 @@ _c_generate_root_ca_certificate:
     ROOT_CA_KEY_PATH=${COMPOSE_COMMON_ROOT_CA_KEY_PATH}                                                                                 \
     ROOT_CA_CSR_PATH=${COMPOSE_COMMON_ROOT_CA_CSR_PATH}                                                                                 \
     ROOT_CA_CRT_PATH=${COMPOSE_COMMON_ROOT_CA_CRT_PATH}                                                                                 \
-    ROOT_CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_CONFIG_PATH}                                                                           \
+    ROOT_CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_OPENSSL_CONFIG_PATH}                                                                   \
 
 _c_generate_intermediate_ca_certificate:
     @source ${GENERATE_INTERMEDIATE_CA_CERTIFICATE_PATH}                                                                                \
@@ -61,9 +61,9 @@ _c_generate_intermediate_ca_certificate:
     INTERMEDIATE_CA_KEY_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_KEY_PATH}                                                                 \
     INTERMEDIATE_CA_CSR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CSR_PATH}                                                                 \
     INTERMEDIATE_CA_CRT_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CRT_PATH}                                                                 \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CONFIG_PATH}                                                           \
+    INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
     ROOT_CA_DIR_PATH=${COMPOSE_COMMON_ROOT_CA_DIR_PATH}                                                                                 \
-    ROOT_CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_CONFIG_PATH}                                                                           \
+    ROOT_CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_OPENSSL_CONFIG_PATH}                                                                   \
 
 _c_generate_redpanda_certificate:
     @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
@@ -139,14 +139,13 @@ _c_generate_twt_parser_postgres_certificate:
     CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
 
 _c_generate_twt_parser_mongo_certificate:
-    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
-    CN=parser-mongo                                                                                                                     \
-    CSR_PATH=${COMPOSE_TWT_PARSER_MONGO_CSR_PATH}                                                                                       \
-    CRT_PATH=${COMPOSE_TWT_PARSER_MONGO_CRT_PATH}                                                                                       \
-    KEY_PATH=${COMPOSE_TWT_PARSER_MONGO_KEY_PATH}                                                                                       \
-    PEM_PATH=${COMPOSE_TWT_PARSER_MONGO_PEM_PATH}                                                                                       \
-    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
-    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                                         \
+    SERVER_KEY_PATH=${COMPOSE_TWT_PARSER_MONGO_KEY_PATH}                                                                                \
+    SERVER_CSR_PATH=${COMPOSE_TWT_PARSER_MONGO_CSR_PATH}                                                                                \
+    SERVER_CRT_PATH=${COMPOSE_TWT_PARSER_MONGO_CRT_PATH}                                                                                \
+    SERVER_CONFIG_PATH=${COMPOSE_TWT_PARSER_MONGO_OPENSSL_CONFIG_PATH}                                                                  \
+    INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
+    INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
 _c_generate_twt_parser_redis_certificate:
     @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
