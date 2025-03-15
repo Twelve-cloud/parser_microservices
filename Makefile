@@ -30,6 +30,18 @@ status_primary_network_interface:
 primary_network_interface_dns_servers:
     @resolvectl status $$(make -s primary_network_interface) | grep "DNS Servers:" | awk -F ': ' '{print $$2}'
 
+check_key:
+    @openssl pkey -in $(path) -noout -text
+
+check_csr:
+    @openssl req -in $(path) -noout -text
+
+check_crt:
+    @openssl x509 -in $(path) -noout -text
+
+verify_crt:
+    @openssl verify -verbose -show_chain $(path)
+
 # --------------------------------------------------------- COMPOSE ---------------------------------------------------------------------
 
 # ------------------------------------------------------- ABBREVATIONS ------------------------------------------------------------------
