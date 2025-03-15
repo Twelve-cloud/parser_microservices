@@ -102,14 +102,13 @@ _c_generate_redis_insight_certificate:
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
 _c_generate_bind_certificate:
-    @source ${GENERATE_OPENSSL_CERTIFICATE_PATH}                                                                                        \
-    CN=bind                                                                                                                             \
-    CSR_PATH=${COMPOSE_COMMON_BIND_CSR_PATH}                                                                                            \
-    CRT_PATH=${COMPOSE_COMMON_BIND_CRT_PATH}                                                                                            \
-    KEY_PATH=${COMPOSE_COMMON_BIND_KEY_PATH}                                                                                            \
-    PEM_PATH=${COMPOSE_COMMON_BIND_PEM_PATH}                                                                                            \
-    CA_CRT_PATH=${COMPOSE_COMMON_CA_CRT_PATH}                                                                                           \
-    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                                         \
+    SERVER_KEY_PATH=${COMPOSE_COMMON_BIND_KEY_PATH}                                                                                     \
+    SERVER_CSR_PATH=${COMPOSE_COMMON_BIND_CSR_PATH}                                                                                     \
+    SERVER_CRT_PATH=${COMPOSE_COMMON_BIND_CRT_PATH}                                                                                     \
+    SERVER_CONFIG_PATH=${COMPOSE_COMMON_BIND_OPENSSL_CONFIG_PATH}                                                                       \
+    INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
+    INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
 _c_generate_kafka_certificate:
     @source ${GENERATE_KEYTOOL_CERTIFICATE_PATH}                                                                                        \
