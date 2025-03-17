@@ -22,6 +22,11 @@ _configure_scripts:
     @$(MAKE) --no-print-directory _set_common_scripts_permissions
     @$(MAKE) --no-print-directory _set_cert_scripts_permissions
 
+# ------------------------------------------------------------ ENV ----------------------------------------------------------------------
+
+_copy_root_env:
+    @cp .env.example .env
+
 # --------------------------------------------------------- COMMANDS --------------------------------------------------------------------
 
 check_key:
@@ -50,6 +55,19 @@ COMPOSE_FILE_PATHS :=                                                           
     -f ${COMPOSE_TWT_PARSER_POSTGRES_PATH}                                                                                              \
     -f ${COMPOSE_TWT_PARSER_MONGO_PATH}                                                                                                 \
     -f ${COMPOSE_TWT_PARSER_REDIS_PATH}                                                                                                 \
+
+# ------------------------------------------------------------ ENV ----------------------------------------------------------------------
+
+_c_copy_env:
+    @cp ${COMPOSE_COMMON_REDPANDA_ENV_EXAMPLE_PATH} ${COMPOSE_COMMON_REDPANDA_ENV_PATH}
+    @cp ${COMPOSE_COMMON_PGADMIN_ENV_EXAMPLE_PATH} ${COMPOSE_COMMON_PGADMIN_ENV_PATH}
+    @cp ${COMPOSE_COMMON_MONGO_EXPRESS_ENV_EXAMPLE_PATH} ${COMPOSE_COMMON_MONGO_EXPRESS_ENV_PATH}
+    @cp ${COMPOSE_COMMON_REDIS_INSIGHT_ENV_EXAMPLE_PATH} ${COMPOSE_COMMON_REDIS_INSIGHT_ENV_PATH}
+    @cp ${COMPOSE_COMMON_BIND_ENV_EXAMPLE_PATH} ${COMPOSE_COMMON_BIND_ENV_PATH}
+    @cp ${COMPOSE_COMMON_KAFKA_ENV_EXAMPLE_PATH} ${COMPOSE_COMMON_KAFKA_ENV_PATH}
+    @cp ${COMPOSE_TWT_PARSER_POSTGRES_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_POSTGRES_ENV_PATH}
+    @cp ${COMPOSE_TWT_PARSER_MONGO_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_MONGO_ENV_PATH}
+    @cp ${COMPOSE_TWT_PARSER_REDIS_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_REDIS_ENV_PATH}
 
 # ------------------------------------------------------- CERTIFICATES ------------------------------------------------------------------
 
@@ -311,7 +329,9 @@ cclean:
     @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CURRENT_CERTS_PATH}
 
 cinit:
+    @$(MAKE) --no-print-directory _copy_root_env
     @$(MAKE) --no-print-directory _configure_scripts
+    @$(MAKE) --no-print-directory _c_copy_env
     @$(MAKE) --no-print-directory _c_configure_root_ca
     @$(MAKE) --no-print-directory _c_configure_intermediate_ca
     @$(MAKE) --no-print-directory _c_configure_redpanda
