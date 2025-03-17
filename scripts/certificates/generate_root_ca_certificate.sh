@@ -49,4 +49,4 @@ source scripts/common/execute_command.sh openssl genpkey -algorithm ED448 -out $
 source scripts/common/execute_command.sh openssl req -new -config ${ROOT_CA_CONFIG_PATH} -key ${ROOT_CA_KEY_PATH} -out ${ROOT_CA_CSR_PATH}
 
 # Generate root ca certificate (self-signed, no text in certificate, do not ask questions)
-source scripts/common/execute_command.sh openssl ca -selfsign -notext -batch -config ${ROOT_CA_CONFIG_PATH} -in ${ROOT_CA_CSR_PATH} -out ${ROOT_CA_CRT_PATH}
+source scripts/common/execute_command.sh openssl ca -selfsign -notext -batch -extensions root_cert_extension_section -config ${ROOT_CA_CONFIG_PATH} -in ${ROOT_CA_CSR_PATH} -out ${ROOT_CA_CRT_PATH}
