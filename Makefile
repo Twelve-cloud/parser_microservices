@@ -135,17 +135,13 @@ _c_generate_bind_certificate:
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
 _c_generate_kafka_certificate:
-    @source ${GENERATE_KEYTOOL_CERTIFICATE_PATH}                                                                                        \
-    CN=kafka                                                                                                                            \
-    KEYSTORE_PATH=${COMPOSE_COMMON_KAFKA_KEYSTORE_PATH}                                                                                 \
-    KEYSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_KEYSTORE_PASSWORD}                                                                         \
-    TRUSTSTORE_PATH=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PATH}                                                                             \
-    TRUSTSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PASSWORD}                                                                     \
-    CSR_PATH=${COMPOSE_COMMON_KAFKA_CSR_PATH}                                                                                           \
-    PEM_PATH=${COMPOSE_COMMON_KAFKA_PEM_PATH}                                                                                           \
-    KEY_PASSWORD=${COMPOSE_COMMON_KAFKA_KEY_PASSWORD}                                                                                   \
-    CA_PEM_PATH=${COMPOSE_COMMON_CA_PEM_PATH}                                                                                           \
-    CA_KEY_PATH=${COMPOSE_COMMON_CA_KEY_PATH}                                                                                           \
+    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                                         \
+    SERVER_KEY_PATH=${COMPOSE_COMMON_KAFKA_KEY_PATH}                                                                                    \
+    SERVER_CSR_PATH=${COMPOSE_COMMON_KAFKA_CSR_PATH}                                                                                    \
+    SERVER_CRT_PATH=${COMPOSE_COMMON_KAFKA_CRT_PATH}                                                                                    \
+    SERVER_CONFIG_PATH=${COMPOSE_COMMON_KAFKA_OPENSSL_CONFIG_PATH}                                                                      \
+    INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
+    INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
 _c_generate_twt_parser_postgres_certificate:
     @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                                         \
@@ -213,7 +209,7 @@ _c_set_bind_permissions:
     @sudo chmod +x ${COMPOSE_COMMON_BIND_ENTRYPOINT_PATH}
 
 _c_set_kafka_permissions:
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
+    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CURRENT_CERTS_PATH}
     @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CONFIG_PATH}
     @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
@@ -323,7 +319,7 @@ cclean:
     @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMPOSE_COMMON_BIND_CURRENT_CERTS_PATH}
-    # @sudo rm -f ${COMPOSE_COMMON_KAFKA_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_KAFKA_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CURRENT_CERTS_PATH}
@@ -339,7 +335,7 @@ cinit:
     @$(MAKE) --no-print-directory _c_configure_mongo_express
     @$(MAKE) --no-print-directory _c_configure_redis_insight
     @$(MAKE) --no-print-directory _c_configure_bind
-    # @$(MAKE) --no-print-directory _c_configure_kafka
+    @$(MAKE) --no-print-directory _c_configure_kafka
     @$(MAKE) --no-print-directory _c_configure_twt_parser_postgres
     @$(MAKE) --no-print-directory _c_configure_twt_parser_mongo
     @$(MAKE) --no-print-directory _c_configure_twt_parser_redis
