@@ -143,6 +143,17 @@ _c_generate_kafka_certificate:
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
+    @source ${IMPORT_CERTIFICATE_INTO_KEY-TRUST_STORE_PATH}                                                                             \
+    SERVER_KEY_PATH=${COMPOSE_COMMON_KAFKA_KEY_PATH}                                                                                    \
+    SERVER_CRT_PATH=${COMPOSE_COMMON_KAFKA_CRT_PATH}                                                                                    \
+    SERVER_P12_PATH=${COMPOSE_COMMON_KAFKA_P12_PATH}                                                                                    \
+    INTERMEDIATE_CA_CRT_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CRT_PATH}                                                                 \
+    KEYSTORE_PATH=${COMPOSE_COMMON_KAFKA_KEYSTORE_PATH}                                                                                 \
+    TRUSTSTORE_PATH=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PATH}                                                                             \
+    P12_PASSWORD=${COMPOSE_COMMON_KAFKA_P12_PASSWORD}                                                                                   \
+    KEYSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_KEYSTORE_PASSWORD}                                                                         \
+    TRUSTSTORE_PASSWORD=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PASSWORD}                                                                     \
+
 _c_generate_twt_parser_postgres_certificate:
     @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                                         \
     SERVER_KEY_PATH=${COMPOSE_TWT_PARSER_POSTGRES_KEY_PATH}                                                                             \
