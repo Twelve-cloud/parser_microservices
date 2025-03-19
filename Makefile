@@ -4,7 +4,7 @@
 
 # ----------------------------------------------------------- INIT ----------------------------------------------------------------------
 
-include .env
+-include .env
 export
 
 .RECIPEPREFIX := $() $()
@@ -26,6 +26,9 @@ _configure_scripts:
 
 _copy_root_env:
     @cp .env.example .env
+
+_clean_root_env:
+    @rm .env
 
 # --------------------------------------------------------- COMMANDS --------------------------------------------------------------------
 
@@ -68,6 +71,32 @@ _c_copy_env:
     @cp ${COMPOSE_TWT_PARSER_POSTGRES_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_POSTGRES_ENV_PATH}
     @cp ${COMPOSE_TWT_PARSER_MONGO_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_MONGO_ENV_PATH}
     @cp ${COMPOSE_TWT_PARSER_REDIS_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_REDIS_ENV_PATH}
+
+_c_clean_env:
+    @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_DATABASE_DATA_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_ISSUED_DATA_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_INTERMEDIATE_CA_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_INTERMEDIATE_CA_DATABASE_DATA_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_INTERMEDIATE_CA_ISSUED_DATA_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_REDPANDA_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_REDPANDA_ENV_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_PGADMIN_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_PGADMIN_ENV_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_ENV_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_ENV_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_BIND_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_BIND_ENV_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_KAFKA_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_COMMON_KAFKA_ENV_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_ENV_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_ENV_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_ENV_PATH}
 
 # ------------------------------------------------------- CERTIFICATES ------------------------------------------------------------------
 
@@ -319,21 +348,8 @@ cstopv:
     @docker compose --project-name parser-microservices --project-directory . ${COMPOSE_FILE_PATHS} down -v
 
 cclean:
-    @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_DATABASE_DATA_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_ISSUED_DATA_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_INTERMEDIATE_CA_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_INTERMEDIATE_CA_DATABASE_DATA_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_INTERMEDIATE_CA_ISSUED_DATA_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_REDPANDA_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_PGADMIN_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_MONGO_EXPRESS_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_REDIS_INSIGHT_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_BIND_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_COMMON_KAFKA_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_TWT_PARSER_POSTGRES_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CURRENT_CERTS_PATH}
+    @$(MAKE) --no-print-directory _clean_root_env
+    @$(MAKE) --no-print-directory _c_clean_env
 
 cinit:
     @$(MAKE) --no-print-directory _copy_root_env
