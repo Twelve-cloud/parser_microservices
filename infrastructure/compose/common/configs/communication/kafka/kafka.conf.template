@@ -34,8 +34,8 @@ ssl.truststore.location=${_KAFKA_TRUSTSTORE_PATH}
 # Truststore password
 ssl.truststore.password=${_KAFKA_TRUSTSTORE_PASSWORD}
 
-# SSL Authentication is required
-ssl.client.auth=required
+# SSL Authentication is not required
+ssl.client.auth=requested
 
 # TLS versions
 ssl.enabled.protocols=TLSv1.3
