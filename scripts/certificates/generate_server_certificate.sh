@@ -14,6 +14,7 @@ function parse_named_parameters() {
             SERVER_KEY_PATH=*)              SERVER_KEY_PATH=${argument#*=} ;;
             SERVER_CSR_PATH=*)              SERVER_CSR_PATH=${argument#*=} ;;
             SERVER_CRT_PATH=*)              SERVER_CRT_PATH=${argument#*=} ;;
+            SERVER_PEM_PATH=*)              SERVER_PEM_PATH=${argument#*=} ;;
             SERVER_CONFIG_PATH=*)           SERVER_CONFIG_PATH=${argument#*=} ;;
             INTERMEDIATE_CA_DIR_PATH=*)     INTERMEDIATE_CA_DIR_PATH=${argument#*=} ;;
             INTERMEDIATE_CA_CONFIG_PATH=*)  INTERMEDIATE_CA_CONFIG_PATH=${argument#*=} ;;
@@ -45,3 +46,6 @@ source scripts/common/execute_command.sh openssl req -new -config ${SERVER_CONFI
 
 # Generate server certificate (no text in certificate, do not ask questions)
 source scripts/common/execute_command.sh openssl ca -notext -batch -config ${INTERMEDIATE_CA_CONFIG_PATH} -in ${SERVER_CSR_PATH} -out ${SERVER_CRT_PATH}
+
+# Create server pem file
+cat ${SERVER_CRT_PATH} ${SERVER_KEY_PATH} > ${SERVER_PEM_PATH}

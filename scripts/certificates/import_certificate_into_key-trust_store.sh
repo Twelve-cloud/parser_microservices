@@ -14,7 +14,7 @@ function parse_named_parameters() {
             SERVER_KEY_PATH=*)          SERVER_KEY_PATH=${argument#*=} ;;
             SERVER_CRT_PATH=*)          SERVER_CRT_PATH=${argument#*=} ;;
             SERVER_P12_PATH=*)          SERVER_P12_PATH=${argument#*=} ;;
-            INTERMEDIATE_CA_CRT_PATH=*) INTERMEDIATE_CA_CRT_PATH=${argument#*=} ;;
+            CHAIN_CA_PATH=*)            CHAIN_CA_PATH=${argument#*=} ;;
             KEYSTORE_PATH=*)            KEYSTORE_PATH=${argument#*=} ;;
             TRUSTSTORE_PATH=*)          TRUSTSTORE_PATH=${argument#*=} ;;
             P12_PASSWORD=*)             P12_PASSWORD=${argument#*=} ;;
@@ -44,4 +44,4 @@ source scripts/common/execute_command.sh openssl pkcs12 -export -in ${SERVER_CRT
 source scripts/common/execute_command.sh keytool -importkeystore -srckeystore ${SERVER_P12_PATH} -srcstoretype PKCS12 -srcstorepass ${P12_PASSWORD} -destkeystore ${KEYSTORE_PATH} -deststoretype JKS -deststorepass ${KEYSTORE_PASSWORD}
 
 # Import intermediate ca certificate into truststore
-source scripts/common/execute_command.sh keytool -import -trustcacerts -file ${INTERMEDIATE_CA_CRT_PATH} -keystore ${TRUSTSTORE_PATH} -storepass ${TRUSTSTORE_PASSWORD} -alias ca -noprompt
+source scripts/common/execute_command.sh keytool -import -trustcacerts -file ${CHAIN_CA_PATH} -keystore ${TRUSTSTORE_PATH} -storepass ${TRUSTSTORE_PASSWORD} -alias ca -noprompt

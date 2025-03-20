@@ -100,12 +100,16 @@ _c_clean_env:
 
 # ------------------------------------------------------- CERTIFICATES ------------------------------------------------------------------
 
+_c_create_ca_certificate_chain:
+    @cat ${COMPOSE_COMMON_INTERMEDIATE_CA_CRT_PATH} ${COMPOSE_COMMON_ROOT_CA_CRT_PATH} > ${COMPOSE_COMMON_CHAIN_CA_PATH}
+
 _c_generate_root_ca_certificate:
     @source ${GENERATE_ROOT_CA_CERTIFICATE_PATH}                                                                                        \
     ROOT_CA_DIR_PATH=${COMPOSE_COMMON_ROOT_CA_DIR_PATH}                                                                                 \
     ROOT_CA_KEY_PATH=${COMPOSE_COMMON_ROOT_CA_KEY_PATH}                                                                                 \
     ROOT_CA_CSR_PATH=${COMPOSE_COMMON_ROOT_CA_CSR_PATH}                                                                                 \
     ROOT_CA_CRT_PATH=${COMPOSE_COMMON_ROOT_CA_CRT_PATH}                                                                                 \
+    ROOT_CA_PEM_PATH=${COMPOSE_COMMON_ROOT_CA_PEM_PATH}                                                                                 \
     ROOT_CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_OPENSSL_CONFIG_PATH}                                                                   \
 
 _c_generate_intermediate_ca_certificate:
@@ -114,6 +118,7 @@ _c_generate_intermediate_ca_certificate:
     INTERMEDIATE_CA_KEY_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_KEY_PATH}                                                                 \
     INTERMEDIATE_CA_CSR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CSR_PATH}                                                                 \
     INTERMEDIATE_CA_CRT_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CRT_PATH}                                                                 \
+    INTERMEDIATE_CA_PEM_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_PEM_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
     ROOT_CA_DIR_PATH=${COMPOSE_COMMON_ROOT_CA_DIR_PATH}                                                                                 \
     ROOT_CA_CONFIG_PATH=${COMPOSE_COMMON_ROOT_CA_OPENSSL_CONFIG_PATH}                                                                   \
@@ -123,6 +128,7 @@ _c_generate_redpanda_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_REDPANDA_KEY_PATH}                                                                                 \
     SERVER_CSR_PATH=${COMPOSE_COMMON_REDPANDA_CSR_PATH}                                                                                 \
     SERVER_CRT_PATH=${COMPOSE_COMMON_REDPANDA_CRT_PATH}                                                                                 \
+    SERVER_PEM_PATH=${COMPOSE_COMMON_REDPANDA_PEM_PATH}                                                                                 \
     SERVER_CONFIG_PATH=${COMPOSE_COMMON_REDPANDA_OPENSSL_CONFIG_PATH}                                                                   \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -132,6 +138,7 @@ _c_generate_pgadmin_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_PGADMIN_KEY_PATH}                                                                                  \
     SERVER_CSR_PATH=${COMPOSE_COMMON_PGADMIN_CSR_PATH}                                                                                  \
     SERVER_CRT_PATH=${COMPOSE_COMMON_PGADMIN_CRT_PATH}                                                                                  \
+    SERVER_PEM_PATH=${COMPOSE_COMMON_PGADMIN_PEM_PATH}                                                                                  \
     SERVER_CONFIG_PATH=${COMPOSE_COMMON_PGADMIN_OPENSSL_CONFIG_PATH}                                                                    \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -141,6 +148,7 @@ _c_generate_mongo_express_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_KEY_PATH}                                                                            \
     SERVER_CSR_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_CSR_PATH}                                                                            \
     SERVER_CRT_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_CRT_PATH}                                                                            \
+    SERVER_PEM_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_PEM_PATH}                                                                            \
     SERVER_CONFIG_PATH=${COMPOSE_COMMON_MONGO_EXPRESS_OPENSSL_CONFIG_PATH}                                                              \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -150,6 +158,7 @@ _c_generate_redis_insight_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_KEY_PATH}                                                                            \
     SERVER_CSR_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_CSR_PATH}                                                                            \
     SERVER_CRT_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_CRT_PATH}                                                                            \
+    SERVER_PEM_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_PEM_PATH}                                                                            \
     SERVER_CONFIG_PATH=${COMPOSE_COMMON_REDIS_INSIGHT_OPENSSL_CONFIG_PATH}                                                              \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -159,6 +168,7 @@ _c_generate_bind_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_BIND_KEY_PATH}                                                                                     \
     SERVER_CSR_PATH=${COMPOSE_COMMON_BIND_CSR_PATH}                                                                                     \
     SERVER_CRT_PATH=${COMPOSE_COMMON_BIND_CRT_PATH}                                                                                     \
+    SERVER_PEM_PATH=${COMPOSE_COMMON_BIND_PEM_PATH}                                                                                     \
     SERVER_CONFIG_PATH=${COMPOSE_COMMON_BIND_OPENSSL_CONFIG_PATH}                                                                       \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -168,6 +178,7 @@ _c_generate_kafka_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_KAFKA_KEY_PATH}                                                                                    \
     SERVER_CSR_PATH=${COMPOSE_COMMON_KAFKA_CSR_PATH}                                                                                    \
     SERVER_CRT_PATH=${COMPOSE_COMMON_KAFKA_CRT_PATH}                                                                                    \
+    SERVER_PEM_PATH=${COMPOSE_COMMON_KAFKA_PEM_PATH}                                                                                    \
     SERVER_CONFIG_PATH=${COMPOSE_COMMON_KAFKA_OPENSSL_CONFIG_PATH}                                                                      \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -176,7 +187,7 @@ _c_generate_kafka_certificate:
     SERVER_KEY_PATH=${COMPOSE_COMMON_KAFKA_KEY_PATH}                                                                                    \
     SERVER_CRT_PATH=${COMPOSE_COMMON_KAFKA_CRT_PATH}                                                                                    \
     SERVER_P12_PATH=${COMPOSE_COMMON_KAFKA_P12_PATH}                                                                                    \
-    INTERMEDIATE_CA_CRT_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_CRT_PATH}                                                                 \
+    CHAIN_CA_PATH=${COMPOSE_COMMON_CHAIN_CA_PATH}                                                                                       \
     KEYSTORE_PATH=${COMPOSE_COMMON_KAFKA_KEYSTORE_PATH}                                                                                 \
     TRUSTSTORE_PATH=${COMPOSE_COMMON_KAFKA_TRUSTSTORE_PATH}                                                                             \
     P12_PASSWORD=${COMPOSE_COMMON_KAFKA_P12_PASSWORD}                                                                                   \
@@ -188,6 +199,7 @@ _c_generate_twt_parser_postgres_certificate:
     SERVER_KEY_PATH=${COMPOSE_TWT_PARSER_POSTGRES_KEY_PATH}                                                                             \
     SERVER_CSR_PATH=${COMPOSE_TWT_PARSER_POSTGRES_CSR_PATH}                                                                             \
     SERVER_CRT_PATH=${COMPOSE_TWT_PARSER_POSTGRES_CRT_PATH}                                                                             \
+    SERVER_PEM_PATH=${COMPOSE_TWT_PARSER_POSTGRES_PEM_PATH}                                                                             \
     SERVER_CONFIG_PATH=${COMPOSE_TWT_PARSER_POSTGRES_OPENSSL_CONFIG_PATH}                                                               \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -197,6 +209,7 @@ _c_generate_twt_parser_mongo_certificate:
     SERVER_KEY_PATH=${COMPOSE_TWT_PARSER_MONGO_KEY_PATH}                                                                                \
     SERVER_CSR_PATH=${COMPOSE_TWT_PARSER_MONGO_CSR_PATH}                                                                                \
     SERVER_CRT_PATH=${COMPOSE_TWT_PARSER_MONGO_CRT_PATH}                                                                                \
+    SERVER_PEM_PATH=${COMPOSE_TWT_PARSER_MONGO_PEM_PATH}                                                                                \
     SERVER_CONFIG_PATH=${COMPOSE_TWT_PARSER_MONGO_OPENSSL_CONFIG_PATH}                                                                  \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
@@ -206,11 +219,15 @@ _c_generate_twt_parser_redis_certificate:
     SERVER_KEY_PATH=${COMPOSE_TWT_PARSER_REDIS_KEY_PATH}                                                                                \
     SERVER_CSR_PATH=${COMPOSE_TWT_PARSER_REDIS_CSR_PATH}                                                                                \
     SERVER_CRT_PATH=${COMPOSE_TWT_PARSER_REDIS_CRT_PATH}                                                                                \
+    SERVER_PEM_PATH=${COMPOSE_TWT_PARSER_REDIS_PEM_PATH}                                                                                \
     SERVER_CONFIG_PATH=${COMPOSE_TWT_PARSER_REDIS_OPENSSL_CONFIG_PATH}                                                                  \
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
 # ------------------------------------------------------- PERMISSIONS -------------------------------------------------------------------
+
+_c_set_ca_certificate_chain_permissions:
+    @sudo chmod a+r ${COMPOSE_COMMON_CHAIN_CA_PATH}
 
 _c_set_root_ca_permissions:
     @sudo chmod a+r ${COMPOSE_COMMON_ROOT_CA_CURRENT_CERTS_PATH}
@@ -273,6 +290,10 @@ _c_set_twt_parser_redis_permissions:
     @sudo chmod +x ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH}
 
 # ------------------------------------------------------ CONFIGURATION ------------------------------------------------------------------
+
+_c_configure_ca_certificate_chain:
+    @$(MAKE) --no-print-directory _c_create_ca_certificate_chain
+    @$(MAKE) --no-print-directory _c_set_ca_certificate_chain_permissions
 
 _c_configure_root_ca:
     @$(MAKE) --no-print-directory _c_generate_root_ca_certificate
@@ -357,6 +378,7 @@ cinit:
     @$(MAKE) --no-print-directory _c_copy_env
     @$(MAKE) --no-print-directory _c_configure_root_ca
     @$(MAKE) --no-print-directory _c_configure_intermediate_ca
+    @$(MAKE) --no-print-directory _c_configure_ca_certificate_chain
     @$(MAKE) --no-print-directory _c_configure_redpanda
     @$(MAKE) --no-print-directory _c_configure_pgadmin
     @$(MAKE) --no-print-directory _c_configure_mongo_express

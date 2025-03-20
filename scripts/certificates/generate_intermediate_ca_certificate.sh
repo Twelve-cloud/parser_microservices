@@ -15,6 +15,7 @@ function parse_named_parameters() {
             INTERMEDIATE_CA_KEY_PATH=*)     INTERMEDIATE_CA_KEY_PATH=${argument#*=} ;;
             INTERMEDIATE_CA_CSR_PATH=*)     INTERMEDIATE_CA_CSR_PATH=${argument#*=} ;;
             INTERMEDIATE_CA_CRT_PATH=*)     INTERMEDIATE_CA_CRT_PATH=${argument#*=} ;;
+            INTERMEDIATE_CA_PEM_PATH=*)     INTERMEDIATE_CA_PEM_PATH=${argument#*=} ;;
             INTERMEDIATE_CA_CONFIG_PATH=*)  INTERMEDIATE_CA_CONFIG_PATH=${argument#*=} ;;
             ROOT_CA_DIR_PATH=*)             ROOT_CA_DIR_PATH=${argument#*=} ;;
             ROOT_CA_CONFIG_PATH=*)          ROOT_CA_CONFIG_PATH=${argument#*=} ;;
@@ -52,3 +53,6 @@ source scripts/common/execute_command.sh openssl req -new -config ${INTERMEDIATE
 
 # Generate intermediate ca certificate (no text in certificate, do not ask questions)
 source scripts/common/execute_command.sh openssl ca -notext -batch -config ${ROOT_CA_CONFIG_PATH} -in ${INTERMEDIATE_CA_CSR_PATH} -out ${INTERMEDIATE_CA_CRT_PATH}
+
+# Create intermediate ca pem file
+cat ${INTERMEDIATE_CA_CRT_PATH} ${INTERMEDIATE_CA_KEY_PATH} > ${INTERMEDIATE_CA_PEM_PATH}
