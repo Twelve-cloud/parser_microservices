@@ -1,5 +1,5 @@
 # Base image
-FROM mongo:7.0-rc-jammy
+FROM mongo:8.0.5-noble
 
 # Change user to root
 USER root

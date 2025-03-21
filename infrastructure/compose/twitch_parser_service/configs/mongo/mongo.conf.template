@@ -14,14 +14,20 @@ net:
   port: ${_MONGO_PORT}
 
   tls:
-    # Allow tls and non-tls connections (but prefer tls)
-    mode: preferTLS
+    # The server uses and accepts only TLS encrypted connections
+    mode: requireTLS
 
-    # Allow basic auth over tls
-    allowConnectionsWithoutCertificates: true
+    # All clients must provide client TLS certificates
+    allowConnectionsWithoutCertificates: false
+
+    # Enable the validation checks for TLS certificates
+    allowInvalidCertificates: false
+
+    # Enable the validation of the hostnames in TLS certificates
+    allowInvalidHostnames: false
 
     # Mongo server certificate and private key
-    certificateKeyFile: ${_MONGO_SSL_CERT_PATH}
+    certificateKeyFile: ${_MONGO_SSL_CRT_KEY_PATH}
 
     # CA client certificate
     CAFile: ${_MONGO_SSL_CA_PATH}

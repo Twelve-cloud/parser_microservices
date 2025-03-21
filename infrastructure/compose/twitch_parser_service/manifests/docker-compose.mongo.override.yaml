@@ -64,6 +64,8 @@ services:
           "--host",
           "${COMPOSE_TWT_PARSER_MONGO_HOST}",
           "--tls",
+          "--tlsCertificateKeyFile",
+          "${COMPOSE_TWT_PARSER_MONGO_SSL_CRT_KEY_TARGET}",
           "--tlsCAFile",
           "${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}",
           "--eval",

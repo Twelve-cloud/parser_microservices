@@ -41,7 +41,7 @@ export ROOT_CA_DIR=${ROOT_CA_DIR_PATH}
 source scripts/common/execute_command.sh touch ${ROOT_CA_DIR_PATH}/database/index.txt
 
 # Generate private key (EdDSA curve Ed448)
-source scripts/common/execute_command.sh openssl genpkey -algorithm ED448 -out ${ROOT_CA_KEY_PATH}
+source scripts/common/execute_command.sh openssl genpkey -algorithm RSA -out ${ROOT_CA_KEY_PATH} -pkeyopt rsa_keygen_bits:2048
 
 # Generate certificate signing request (new)
 source scripts/common/execute_command.sh openssl req -new -config ${ROOT_CA_CONFIG_PATH} -key ${ROOT_CA_KEY_PATH} -out ${ROOT_CA_CSR_PATH}

@@ -46,7 +46,7 @@ export INTERMEDIATE_CA_DIR=${INTERMEDIATE_CA_DIR_PATH}
 source scripts/common/execute_command.sh touch ${INTERMEDIATE_CA_DIR_PATH}/database/index.txt
 
 # Generate private key (EdDSA curve Ed448)
-source scripts/common/execute_command.sh openssl genpkey -algorithm ED448 -out ${INTERMEDIATE_CA_KEY_PATH}
+source scripts/common/execute_command.sh openssl genpkey -algorithm RSA -out ${INTERMEDIATE_CA_KEY_PATH} -pkeyopt rsa_keygen_bits:2048
 
 # Generate certificate signing request (new)
 source scripts/common/execute_command.sh openssl req -new -config ${INTERMEDIATE_CA_CONFIG_PATH} -key ${INTERMEDIATE_CA_KEY_PATH} -out ${INTERMEDIATE_CA_CSR_PATH}
