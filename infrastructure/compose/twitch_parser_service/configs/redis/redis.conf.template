@@ -1,14 +1,14 @@
 # Addresses that redis listen
 bind ${_REDIS_HOST}
 
-# Redis port
-port ${_REDIS_PORT}
+# Disable redis plain connection
+port 0
 
 # Redis tls port
-tls-port ${_REDIS_TLS_PORT}
+tls-port ${_REDIS_PORT}
 
-# Allow tls and non-tls connections
-tls-auth-clients optional
+# Allow only tls connections
+tls-auth-clients yes
 
 # Redis server certificate
 tls-cert-file ${_REDIS_SSL_CERT_PATH}
@@ -21,6 +21,12 @@ tls-ca-cert-file ${_REDIS_SSL_CA_PATH}
 
 # TLS version
 tls-protocols "TLSv1.3"
+
+# TLSv1.3 ciphersuites
+tls-ciphersuites TLS_AES_256_GCM_SHA384:TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256
+
+# When choosing a cipher, use the server's preference instead of the client preference
+tls-prefer-server-ciphers yes
 
 # Log only warnings and errors
 loglevel notice

@@ -16,7 +16,7 @@ services:
         "--user default off nopass -@all",
         "--requirepass ${COMPOSE_TWT_PARSER_REDIS_PASSWORD}",
       ]
-    expose: ["${COMPOSE_TWT_PARSER_REDIS_PORT}/tcp", "${COMPOSE_TWT_PARSER_REDIS_TLS_PORT}/tcp"]
+    expose: ["${COMPOSE_TWT_PARSER_REDIS_PORT}/tcp"]
     env_file:
       - path: ${COMPOSE_TWT_PARSER_REDIS_ENV}
         required: true
@@ -72,8 +72,12 @@ services:
           "-h",
           "${COMPOSE_TWT_PARSER_REDIS_HOST}",
           "-p",
-          "${COMPOSE_TWT_PARSER_REDIS_TLS_PORT}",
+          "${COMPOSE_TWT_PARSER_REDIS_PORT}",
           "--tls",
+          "--cert",
+          "${COMPOSE_TWT_PARSER_REDIS_SSL_CRT_TARGET}",
+          "--key",
+          "${COMPOSE_TWT_PARSER_REDIS_SSL_KEY_TARGET}",
           "--cacert",
           "${COMPOSE_TWT_PARSER_REDIS_SSL_CA_CRT_TARGET}",
           "--user",
