@@ -48,3 +48,5 @@ io-threads-do-reads no
 
 # Data location for redis
 dir ${_REDIS_STORAGE_PATH}
+
+# Here should be auth method, but Redis 7.4 does not suport auth mechanisms
