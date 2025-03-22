@@ -53,6 +53,8 @@ services:
           --config
           <(echo -e \"
           security.protocol=SSL\n
+          ssl.keystore.location=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PATH}\n
+          ssl.keystore.password=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PASSWORD}\n
           ssl.truststore.location=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_TRUSTSTURE_PATH}\n
           ssl.truststore.password=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_TRUSTSTORE_PASSWORD}\"
           )",

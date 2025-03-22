@@ -34,11 +34,20 @@ ssl.truststore.location=${_KAFKA_TRUSTSTORE_PATH}
 # Truststore password
 ssl.truststore.password=${_KAFKA_TRUSTSTORE_PASSWORD}
 
-# SSL Authentication is not required
-ssl.client.auth=requested
+# SSL Authentication is required for broker listener
+listener.name.broker.ssl.client.auth=required
+
+# SSL Authentication is required for controller listener
+listener.name.controller.ssl.client.auth=required
 
 # TLS versions
 ssl.enabled.protocols=TLSv1.3
+
+# TLSv1.3 ciphersuites
+# ECDHE/DHE for key exchange (forward secrecy); AES-256-GCM for symmetric encryption and data authentication; SHA-384 for key derivation and integrity verification (via PRF);
+# ECDHE/DHE for key exchange (forward secrecy); ChaCha20 for symmetric encryption; Poly1305 for data authentication (MAC); SHA-256 for key derivation and integrity verification (via PRF).
+# ECDHE/DHE for key exchange (forward secrecy); AES-128-GCM for symmetric encryption and data authentication; SHA-256 for key derivation and integrity verification (via PRF).
+ssl.cipher.suites=TLS_AES_256_GCM_SHA384,TLS_CHACHA20_POLY1305_SHA256,TLS_AES_128_GCM_SHA256
 
 # The number of threads that the server uses for receiving requests from the network and sending responses to the network
 num.network.threads=4
