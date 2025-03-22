@@ -1,5 +1,5 @@
 # Base image
-FROM postgres:16.3-alpine3.20
+FROM postgres:17.4-alpine3.21
 
 # Change user to root
 USER root

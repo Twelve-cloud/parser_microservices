@@ -58,5 +58,13 @@ ssl_ca_file = ${_POSTGRES_SSL_CA_PATH}
 # TLS version
 ssl_min_protocol_version='TLSv1.3'
 
+# Here must be TLS 1.3 ciphersuites, but postgres(17) do not support for TLS 1.3 (only below)
+
+# When choosing a cipher, use the server's preference instead of the client preference
+ssl_prefer_server_ciphers = on
+
 # Data location for postgresql
 data_directory = ${_POSTGRES_STORAGE_PATH}
+
+# Path to pg_hba file
+hba_file = ${_POSTGRES_HBA_CONFIG_PATH}

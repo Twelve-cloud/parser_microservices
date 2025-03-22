@@ -11,6 +11,7 @@ chmod -R 0700 ${PGDATA}
 
 # Substitute template variables
 envsubst < ${_POSTGRES_CONFIG_TEMPLATE_PATH} > ${_POSTGRES_CONFIG_PATH}
+envsubst < ${_POSTGRES_HBA_TEMPLATE_PATH} > ${_POSTGRES_HBA_PATH}
 
 # Run original entrypoint
 exec ${_POSTGRES_ORIGINAL_ENTRYPOINT_PATH} "$@"
