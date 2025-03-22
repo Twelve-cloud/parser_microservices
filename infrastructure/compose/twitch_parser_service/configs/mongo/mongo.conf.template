@@ -45,3 +45,6 @@ setParameter:
   # ECDHE/DHE for key exchange (forward secrecy); ChaCha20 for symmetric encryption; Poly1305 for data authentication (MAC); SHA-256 for key derivation and integrity verification (via PRF).
   # ECDHE/DHE for key exchange (forward secrecy); AES-128-GCM for symmetric encryption and data authentication; SHA-256 for key derivation and integrity verification (via PRF).
   opensslCipherSuiteConfig: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256
+
+  # Auth method - hash on password
+  authenticationMechanisms: SCRAM-SHA-256
