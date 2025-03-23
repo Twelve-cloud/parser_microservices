@@ -1,5 +1,5 @@
 # Use server mode
-SERVER_MODE = True
+SERVER_MODE = False
 
 # As web server use python
 WEB_SERVER = 'Python'

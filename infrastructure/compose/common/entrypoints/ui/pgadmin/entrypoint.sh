@@ -47,30 +47,6 @@ fi
 
 # Initialize pgadmin before starting Gunicorn
 if [ ! -f /var/lib/pgadmin/pgadmin4.db ]; then
-    # Check if both PGADMIN_DEFAULT_EMAIL and PGADMIN_DEFAULT_PASSWORD are set, otherwise fail
-    if [ -z "${PGADMIN_DEFAULT_EMAIL}" ] || { [ -z "${PGADMIN_DEFAULT_PASSWORD}" ]; }; then
-        echo 'You need to define the PGADMIN_DEFAULT_EMAIL and PGADMIN_DEFAULT_PASSWORD.'
-        exit 1
-    fi
-
-    # Check if the email is valid
-    if ! echo "${PGADMIN_DEFAULT_EMAIL}" | grep -E "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" > /dev/null; then
-        echo "'${PGADMIN_DEFAULT_EMAIL}' does not appear to be a valid email address. "
-        exit 1
-    fi
-
-    # Read secret contents
-    if [ -n "${PGADMIN_DEFAULT_PASSWORD_FILE}" ]; then
-        PGADMIN_DEFAULT_PASSWORD=$(cat "${PGADMIN_DEFAULT_PASSWORD_FILE}")
-        export PGADMIN_DEFAULT_PASSWORD
-    fi
-
-    # Set the default username
-    export PGADMIN_SETUP_EMAIL="${PGADMIN_DEFAULT_EMAIL}"
-
-    # Set the default password
-    export PGADMIN_SETUP_PASSWORD="${PGADMIN_DEFAULT_PASSWORD}"
-
     # Initialize pgadmin. Importing pgadmin4 (from this script) is enough
     /venv/bin/python3 run_pgadmin.py
 
@@ -85,8 +61,7 @@ if [ ! -f /var/lib/pgadmin/pgadmin4.db ]; then
         if [ "${PGADMIN_CONFIG_SERVER_MODE}" = "False" ]; then
             /venv/bin/python3 /pgadmin4/setup.py load-servers "${PGADMIN_SERVER_JSON_FILE}" --replace
         else
-            /venv/bin/python3 /pgadmin4/setup.py load-servers "${PGADMIN_SERVER_JSON_FILE}"                             \
-            --user "${PGADMIN_DEFAULT_EMAIL}" --replace
+            /venv/bin/python3 /pgadmin4/setup.py load-servers "${PGADMIN_SERVER_JSON_FILE}" --replace
         fi
     fi
 
