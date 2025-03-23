@@ -86,10 +86,10 @@ export default {
 
   basicAuth: {
     // Username for basic auth
-    username: '${_MONGO_EXPRESS_DEFAULT_EMAIL}',
+    username: '',
 
     // Password for basic auth
-    password: '${_MONGO_EXPRESS_DEFAULT_PASSWORD}'
+    password: ''
   },
 
   options: {
