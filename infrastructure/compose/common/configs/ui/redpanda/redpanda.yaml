@@ -22,7 +22,7 @@ kafka:
     keyFilepath: ${_REDPANDA_SSL_KEY_PATH}
 
     # Check CA certificate of the kafka broker
-    insecureSkipTlsVerify: true
+    insecureSkipTlsVerify: false
 
 # Login contains all configurations in order to protect Redpanda Console with a login screen
 login:
@@ -45,22 +45,19 @@ login:
 
     # Credentials
     credentials:
-      - username: "${_REDPANDA_USERNAME}"
-        password: "${_REDPANDA_PASSWORD}"
+      - username: ""
+        password: ""
 
 # Server configures Redpanda Console's HTTP server that serves all resources, including the Frontend application
 server:
   # Specifies the IP address on which the server listens for incoming HTTP requests.
   listenAddress: ${_REDPANDA_LISTEN_ADDRESS}
 
-  # Defines the port for the HTTP server.
-  listenPort: ${_REDPANDA_PORT}
+  # Disable http access
+  listenPort: 0
 
   # Defines the port for the HTTPS server.
-  httpsListenPort: ${_REDPANDA_TLS_PORT}
-
-  # Redirect on this port when access http
-  advertisedHttpsListenPort: ${_REDPANDA_ADVERTISED_PORT}
+  httpsListenPort: ${_REDPANDA_PORT}
 
   # The time the server waits to complete ongoing requests before shutting down gracefully.
   gracefulShutdownTimeout: 30s
