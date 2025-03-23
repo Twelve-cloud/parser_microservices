@@ -82,7 +82,7 @@ export default {
   },
 
   // Set useBasicAuth to true if you want to authenticate mongo-express logins
-  useBasicAuth: true,
+  useBasicAuth: false,
 
   basicAuth: {
     // Username for basic auth
