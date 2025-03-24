@@ -95,8 +95,3 @@ metricsNamespace: console
 logger:
   # Valid values are: debug, info, warn, error, fatal
   level: info
-
-# Analytics configures the telemetry service that sends anonymized usage statistics to Redpanda
-analytics:
-  # Enable analytics
-  enabled: true
