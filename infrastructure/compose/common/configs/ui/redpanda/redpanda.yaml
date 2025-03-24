@@ -22,7 +22,7 @@ kafka:
     keyFilepath: ${_REDPANDA_SSL_KEY_PATH}
 
     # Check CA certificate of the kafka broker
-    insecureSkipTlsVerify: true
+    insecureSkipTlsVerify: false
 
 # Login contains all configurations in order to protect Redpanda Console with a login screen
 login:

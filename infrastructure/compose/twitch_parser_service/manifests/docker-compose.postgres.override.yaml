@@ -70,7 +70,7 @@ services:
           sslrootcert=${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
           ",
           "-c",
-          "SELECT 1",
+          "SELECT 'OK'",
         ]
       interval: 30s
       timeout: 30s
