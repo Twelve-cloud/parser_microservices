@@ -67,6 +67,8 @@ services:
           password=${COMPOSE_TWT_PARSER_POSTGRES_PASS}
           dbname=${COMPOSE_TWT_PARSER_POSTGRES_DB}
           sslmode=verify-full
+          sslcert=${COMPOSE_TWT_PARSER_POSTGRES_SSL_CRT_TARGET}
+          sslkey=${COMPOSE_TWT_PARSER_POSTGRES_SSL_KEY_TARGET}
           sslrootcert=${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
           ",
           "-c",

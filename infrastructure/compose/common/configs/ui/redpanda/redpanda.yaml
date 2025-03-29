@@ -24,6 +24,20 @@ kafka:
     # Check CA certificate of the kafka broker
     insecureSkipTlsVerify: false
 
+  # Sasl settings for kafka
+  sasl:
+    # Enable sasl
+    enabled: true
+
+    # Sasl kafka user
+    username: ${_KAFKA_USER}
+
+    # Sasl kafka password
+    password: ${_KAFKA_PASS}
+
+    # Sasl mechanism
+    mechanism: SCRAM-SHA-256
+
 # Login contains all configurations in order to protect Redpanda Console with a login screen
 login:
   # Enable login screen
