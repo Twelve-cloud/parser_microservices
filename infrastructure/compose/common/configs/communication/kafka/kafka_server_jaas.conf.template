@@ -1,0 +1,11 @@
+KafkaServer {
+    org.apache.kafka.common.security.scram.ScramLoginModule required
+    username="${_KAFKA_BROKER_USER}"
+    password="${_KAFKA_BROKER_PASSWORD}";
+};
+
+KafkaController {
+    org.apache.kafka.common.security.scram.ScramLoginModule required
+    username="${_KAFKA_CONTROLLER_USER}"
+    password="${_KAFKA_CONTROLLER_PASSWORD}";
+};

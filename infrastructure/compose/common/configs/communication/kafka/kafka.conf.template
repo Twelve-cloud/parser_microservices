@@ -22,6 +22,18 @@ listener.security.protocol.map=${_KAFKA_SECURITY_PROTOCOL_MAP}
 # The connect string for the controller quorum
 controller.quorum.voters=${_KAFKA_QUORUM_VOTERS}
 
+# Available authentication mechanisms
+sasl.enabled.mechanisms=SCRAM-SHA-256
+
+# Authentication mechanism used for client connection
+sasl.mechanism=SCRAM-SHA-256
+
+# Authentication mechanism used for inter-broker communication
+sasl.mechanism.inter.broker.protocol=SCRAM-SHA-256
+
+# Authentication mechanism used for inter-controller communication
+sasl.mechanism.controller.protocol=SCRAM-SHA-256
+
 # Keystore location
 ssl.keystore.location=${_KAFKA_KEYSTORE_PATH}
 

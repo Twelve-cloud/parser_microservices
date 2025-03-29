@@ -52,7 +52,11 @@ services:
           ${COMPOSE_COMMON_KAFKA_HEALTHCHECK_BOOTSTRAP_SERVER}
           --config
           <(echo -e \"
-          security.protocol=SSL\n
+          security.protocol=SASL_SSL\n
+          sasl.mechanism=SCRAM-SHA-256\n
+          sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required \
+          username=\"${COMPOSE_COMMON_KAFKA_USER}\" \
+          password=\"${COMPOSE_COMMON_KAFKA_PASS}\";\n
           ssl.keystore.location=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PATH}\n
           ssl.keystore.password=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PASSWORD}\n
           ssl.truststore.location=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_TRUSTSTURE_PATH}\n
