@@ -100,7 +100,7 @@ server:
     keyFilepath: ${_REDPANDA_SSL_KEY_PATH}
 
   # AllowedOrigins is a list of origins that can send requests from a browser to the Console API.
-  allowedOrigins: ${_REDPANDA_ALLOWED_ORIGINGS}
+  allowedOrigins: ${_REDPANDA_ALLOWED_ORIGINS}
 
 # Prefix for all exported Prometheus metrics
 metricsNamespace: console

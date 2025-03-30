@@ -1,3 +1,4 @@
+# Base image
 FROM redpandadata/console:v2.8.3
 
 # Change user to root
