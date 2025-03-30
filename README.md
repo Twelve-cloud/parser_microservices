@@ -4,7 +4,6 @@
 
 Since **PostgreSQL** and **Redpanda** do not support EdDSA (ED448), I use RSA-based certificates with the following settings:
 
-## Specifications
 | Parameter           | Value                          |
 |---------------------|--------------------------------|
 | **Key Algorithm**   | RSA                            |
