@@ -14,8 +14,8 @@ Since **PostgreSQL** and **Redpanda** do not support EdDSA (ED448), I use RSA-ba
 | Service        | Status | Notes          |
 |----------------|--------|----------------|
 | Redis Insight  | ✅ OK  | Enabled        |
-| Mongo express  | ✅ OK  | Enabled        |
-| PgAdmin        | ✅ OK  | Enabled        |
+| Mongo Express  | ✅ OK  | Enabled        |
+| pgAdmin        | ✅ OK  | Enabled        |
 | Redpanda       | ✅ OK  | Enabled        |
 
 ### 🔒 Mutual TLS (mTLS) Support
