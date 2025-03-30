@@ -10,6 +10,13 @@ Since **PostgreSQL** and **Redpanda** do not support EdDSA (ED448), I use RSA-ba
 | **Key Size**        | 2048 bits                      |
 | **Signature Scheme**| SHA-256 with RSA Encryption    |
 
+### 🌐 UI HTTPS Protocol
+| Service        | Status | Notes          |
+|----------------|--------|----------------|
+| Redis Insight  | ✅ OK  | Enabled        |
+| Mongo express  | ✅ OK  | Enabled        |
+| PgAdmin        | ✅ OK  | Enabled        |
+| Redpanda       | ✅ OK  | Enabled        |
 
 ### 🔒 Mutual TLS (mTLS) Support
 | Service    | Status | Notes          |
