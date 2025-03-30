@@ -2,6 +2,16 @@
 
 # Security Status
 
+Since **PostgreSQL** and **Redpanda** do not support EdDSA (ED448), I use RSA-based certificates with the following settings:
+
+## Specifications
+| Parameter           | Value                          |
+|---------------------|--------------------------------|
+| **Key Algorithm**   | RSA                            |
+| **Key Size**        | 2048 bits                      |
+| **Signature Scheme**| SHA-256 with RSA Encryption    |
+
+
 ### 🔒 Mutual TLS (mTLS) Support
 | Service    | Status | Notes          |
 |------------|--------|----------------|
