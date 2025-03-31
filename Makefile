@@ -58,6 +58,7 @@ COMPOSE_FILE_PATHS :=                                                           
     -f ${COMPOSE_TWT_PARSER_POSTGRES_PATH}                                                                                              \
     -f ${COMPOSE_TWT_PARSER_MONGO_PATH}                                                                                                 \
     -f ${COMPOSE_TWT_PARSER_REDIS_PATH}                                                                                                 \
+    -f ${COMPOSE_TWT_PARSER_PATH}                                                                                                       \
 
 # ------------------------------------------------------------ ENV ----------------------------------------------------------------------
 
@@ -71,6 +72,7 @@ _c_copy_env:
     @cp ${COMPOSE_TWT_PARSER_POSTGRES_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_POSTGRES_ENV_PATH}
     @cp ${COMPOSE_TWT_PARSER_MONGO_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_MONGO_ENV_PATH}
     @cp ${COMPOSE_TWT_PARSER_REDIS_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_REDIS_ENV_PATH}
+    @cp ${COMPOSE_TWT_PARSER_ENV_EXAMPLE_PATH} ${COMPOSE_TWT_PARSER_ENV_PATH}
 
 _c_clean_env:
     @sudo rm -f ${COMPOSE_COMMON_ROOT_CA_CURRENT_CERTS_PATH}
@@ -97,6 +99,8 @@ _c_clean_env:
     @sudo rm -f ${COMPOSE_TWT_PARSER_MONGO_ENV_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMPOSE_TWT_PARSER_REDIS_ENV_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_CURRENT_CERTS_PATH}
+    @sudo rm -f ${COMPOSE_TWT_PARSER_ENV_PATH}
 
 # ------------------------------------------------------- CERTIFICATES ------------------------------------------------------------------
 
@@ -224,6 +228,16 @@ _c_generate_twt_parser_redis_certificate:
     INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
     INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
 
+_c_generate_twt_parser_certificate:
+    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                                         \
+    SERVER_KEY_PATH=${COMPOSE_TWT_PARSER_KEY_PATH}                                                                                      \
+    SERVER_CSR_PATH=${COMPOSE_TWT_PARSER_CSR_PATH}                                                                                      \
+    SERVER_CRT_PATH=${COMPOSE_TWT_PARSER_CRT_PATH}                                                                                      \
+    SERVER_PEM_PATH=${COMPOSE_TWT_PARSER_PEM_PATH}                                                                                      \
+    SERVER_CONFIG_PATH=${COMPOSE_TWT_PARSER_OPENSSL_CONFIG_PATH}                                                                        \
+    INTERMEDIATE_CA_DIR_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_DIR_PATH}                                                                 \
+    INTERMEDIATE_CA_CONFIG_PATH=${COMPOSE_COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                                   \
+
 # ------------------------------------------------------- PERMISSIONS -------------------------------------------------------------------
 
 _c_set_ca_certificate_chain_permissions:
@@ -289,6 +303,12 @@ _c_set_twt_parser_redis_permissions:
     @sudo chown 999:1000 ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH}
 
+_c_set_twt_parser_permissions:
+    @sudo chown 1001:1001 ${COMPOSE_TWT_PARSER_CURRENT_CERTS_PATH}
+    @sudo chown 1001:1001 ${COMPOSE_TWT_PARSER_CONFIG_PATH}
+    @sudo chown 1001:1001 ${COMPOSE_TWT_PARSER_ENTRYPOINT_PATH}
+    @sudo chmod +x ${COMPOSE_TWT_PARSER_ENTRYPOINT_PATH}
+
 # ------------------------------------------------------ CONFIGURATION ------------------------------------------------------------------
 
 _c_configure_ca_certificate_chain:
@@ -339,6 +359,10 @@ _c_configure_twt_parser_redis:
     @$(MAKE) --no-print-directory _c_generate_twt_parser_redis_certificate
     @$(MAKE) --no-print-directory _c_set_twt_parser_redis_permissions
 
+_c_configure_twt_parser:
+    @$(MAKE) --no-print-directory _c_generate_twt_parser_certificate
+    @$(MAKE) --no-print-directory _c_set_twt_parser_permissions
+
 # --------------------------------------------------------- COMMANDS --------------------------------------------------------------------
 
 cbuild:
@@ -388,5 +412,6 @@ cinit:
     @$(MAKE) --no-print-directory _c_configure_twt_parser_postgres
     @$(MAKE) --no-print-directory _c_configure_twt_parser_mongo
     @$(MAKE) --no-print-directory _c_configure_twt_parser_redis
+    @$(MAKE) --no-print-directory _c_configure_twt_parser
 
 # ---------------------------------------------------------------------------------------------------------------------------------------
