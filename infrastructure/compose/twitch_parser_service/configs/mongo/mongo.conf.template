@@ -29,7 +29,7 @@ net:
     # Mongo server certificate and private key
     certificateKeyFile: ${_MONGO_SSL_CRT_KEY_PATH}
 
-    # CA client certificate
+    # CA certificate
     CAFile: ${_MONGO_SSL_CA_PATH}
 
     # Which TLS protocols should be disabled

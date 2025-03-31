@@ -52,7 +52,7 @@ ssl_cert_file = ${_POSTGRES_SSL_CERT_PATH}
 # Postgres server private key
 ssl_key_file = ${_POSTGRES_SSL_KEY_PATH}
 
-# CA client certificate
+# CA certificate
 ssl_ca_file = ${_POSTGRES_SSL_CA_PATH}
 
 # TLS version

@@ -16,7 +16,7 @@ tls-cert-file ${_REDIS_SSL_CERT_PATH}
 # Redis server private key
 tls-key-file ${_REDIS_SSL_KEY_PATH}
 
-# CA client certificate
+# CA certificate
 tls-ca-cert-file ${_REDIS_SSL_CA_PATH}
 
 # TLS version
