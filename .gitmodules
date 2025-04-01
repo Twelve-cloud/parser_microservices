@@ -1,3 +1,0 @@
-[submodule "twitch_parser_service"]
-	path = twitch_parser_service
-	url = git@github.com:Twelve-cloud/twitch_parser_service.git
