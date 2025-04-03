@@ -1,0 +1,131 @@
+services:
+  twitch-parser:
+    # image: twitch-parser:1.0.0
+    build:
+      context: ${COMPOSE_TWT_PARSER_CONTEXT}
+      dockerfile: ${COMPOSE_TWT_PARSER_DOCKERFILE}
+      target: production
+    hostname: ${COMPOSE_TWT_PARSER_HOST}
+    container_name: twitch-parser
+    user: twitch-parser
+    entrypoint: ["${COMPOSE_TWT_PARSER_ENTRYPOINT_TARGET}"]
+    command: ["python", "main.py"]
+    expose: ["${COMPOSE_TWT_PARSER_PORT}/tcp"]
+    env_file:
+      - path: ${COMPOSE_TWT_PARSER_ENV}
+        required: true
+    volumes:
+      - type: bind
+        source: ${COMPOSE_TWT_PARSER_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_ENTRYPOINT_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_TWT_PARSER_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_TEMPLATE_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_TWT_PARSER_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_SSL_CRT_FOLDER_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: bind
+        source: ${COMPOSE_TWT_PARSER_SSL_CA_CRT_SOURCE}
+        target: ${COMPOSE_TWT_PARSER_SSL_CA_CRT_TARGET}
+        read_only: true
+        bind:
+          propagation: rprivate
+          create_host_path: true
+          selinux: Z
+      - type: volume
+        source: twitch-parser-data
+        target: ${COMPOSE_TWT_PARSER_STORAGE_FOLDER_TARGET}
+        volume:
+          nocopy: false
+      - type: volume
+        source: twitch-parser-config
+        target: ${COMPOSE_TWT_PARSER_CONFIG_FOLDER_TARGET}
+        volume:
+          nocopy: false
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "--silent",
+          "--cacert",
+          "${COMPOSE_TWT_PARSER_SSL_CA_CRT_TARGET}",
+          "https://${COMPOSE_TWT_PARSER_HOST}:${COMPOSE_TWT_PARSER_PORT}/api/v1/health",
+        ]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 30s
+      start_interval: 10s
+    logging:
+      driver: json-file
+      options:
+        labels-regex: "^.+"
+    deploy:
+      resources:
+        limits:
+          cpus: ${COMPOSE_TWT_PARSER_CPUS_LIMIT}
+          memory: ${COMPOSE_TWT_PARSER_MEMORY_LIMIT}
+        reservations:
+          cpus: ${COMPOSE_TWT_PARSER_CPUS_RESERVATION}
+          memory: ${COMPOSE_TWT_PARSER_MEMORY_RESERVATION}
+    networks:
+      twitch-parser-network:
+        ipv4_address: ${COMPOSE_TWT_PARSER_IP_ADDRESS}
+    pull_policy: missing
+    restart: always
+
+networks:
+  twitch-parser-network:
+    name: twitch-parser-network
+    driver: bridge
+    internal: false
+    external: false
+    attachable: false
+    enable_ipv6: false
+    ipam:
+      driver: default
+      config:
+        - subnet: ${COMPOSE_TWT_PARSER_NETWORK_SUBNET}
+          ip_range: ${COMPOSE_TWT_PARSER_NETWORK_IP_RANGE}
+          gateway: ${COMPOSE_TWT_PARSER_NETWORK_GATEWAY}
+
+volumes:
+  twitch-parser-data:
+    name: twitch-parser-data
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${COMPOSE_TWT_PARSER_DATA_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_VOLUME_GID}\
+        "
+
+  twitch-parser-config:
+    name: twitch-parser-config
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${COMPOSE_TWT_PARSER_CONFIG_SIZE},\
+        uid=${COMPOSE_TWT_PARSER_VOLUME_UID},\
+        gid=${COMPOSE_TWT_PARSER_VOLUME_GID}\
+        "
