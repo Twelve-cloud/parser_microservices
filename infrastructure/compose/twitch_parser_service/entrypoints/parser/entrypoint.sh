@@ -10,7 +10,7 @@ echo "Running twitch parser entrypoint"
 envsubst < ${_PARSER_CONFIG_TEMPLATE_PATH} > ${_PARSER_CONFIG_PATH}
 
 # Change directory to src
-cd src
+cd ${_SRC_FOLDER}
 
 # Every command that passed to this entrypoint will be executed
 exec "$@"

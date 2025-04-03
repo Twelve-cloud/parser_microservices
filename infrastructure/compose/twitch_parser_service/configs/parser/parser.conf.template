@@ -29,7 +29,7 @@ ssl_certfile = ${_PARSER_SSL_CRT_PATH}
 ssl_ca_certs = ${_PARSER_SSL_CA_CRT_PATH}
 
 # Require client certificate
-ssl_cert-reqs = 2
+ssl_cert_reqs = 2
 
 # Enable auto-reload
 reload = True

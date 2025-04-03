@@ -1,5 +1,5 @@
 # Base image
-FROM redis:7.4.0-alpine
+FROM redis:7.4.0-alpine3.20
 
 # Change user to root
 USER root
