@@ -10,15 +10,6 @@ workers = 8
 # Twitch parser server loop
 loop = uvloop
 
-# Enable only TLSv1.3
-ssl_version = 10
-
-# TLSv1.3 ciphersuites
-# ECDHE/DHE for key exchange (forward secrecy); AES-256-GCM for symmetric encryption and data authentication; SHA-384 for key derivation and integrity verification (via PRF);
-# ECDHE/DHE for key exchange (forward secrecy); ChaCha20 for symmetric encryption; Poly1305 for data authentication (MAC); SHA-256 for key derivation and integrity verification (via PRF).
-# ECDHE/DHE for key exchange (forward secrecy); AES-128-GCM for symmetric encryption and data authentication; SHA-256 for key derivation and integrity verification (via PRF).
-ssl_ciphers = TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256
-
 # Twitch parser server key
 ssl_keyfile = ${_PARSER_SSL_KEY_PATH}
 
@@ -32,7 +23,7 @@ ssl_ca_certs = ${_PARSER_SSL_CA_CRT_PATH}
 ssl_cert_reqs = 2
 
 # Enable auto-reload
-reload = True
+reload = False
 
 # Enable proxy headers
 proxy_headers = True
