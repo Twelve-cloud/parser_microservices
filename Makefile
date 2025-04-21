@@ -251,62 +251,42 @@ _c_set_intermediate_ca_permissions:
 
 _c_set_redpanda_permissions:
     @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_CURRENT_CERTS_PATH}
-    @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_CONFIG_PATH}
-    @sudo chown 100:101 ${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_REDPANDA_ENTRYPOINT_PATH}
 
 _c_set_pgadmin_permissions:
     @sudo chown 5050:5050 ${COMPOSE_COMMON_PGADMIN_CURRENT_CERTS_PATH}
-    @sudo chown 5050:5050 ${COMPOSE_COMMON_PGADMIN_CONFIG_PATH}
-    @sudo chown 5050:5050 ${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_PATH}
 
 _c_set_mongo_express_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_MONGO_EXPRESS_CURRENT_CERTS_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_MONGO_EXPRESS_CONFIG_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_PATH}
 
 _c_set_redis_insight_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_REDIS_INSIGHT_CURRENT_CERTS_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_REDIS_INSIGHT_CONFIG_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_PATH}
 
 _c_set_bind_permissions:
     @sudo chown 100:101 ${COMPOSE_COMMON_BIND_CURRENT_CERTS_PATH}
-    @sudo chown 100:101 ${COMPOSE_COMMON_BIND_CONFIG_PATH}
-    @sudo chown 100:101 ${COMPOSE_COMMON_BIND_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_BIND_ENTRYPOINT_PATH}
 
 _c_set_kafka_permissions:
     @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CURRENT_CERTS_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_CONFIG_PATH}
-    @sudo chown 1000:1000 ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_PATH}
 
 _c_set_twt_parser_postgres_permissions:
     @sudo chown 70:70 ${COMPOSE_TWT_PARSER_POSTGRES_CURRENT_CERTS_PATH}
-    @sudo chown 70:70 ${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_PATH}
-    @sudo chown 70:70 ${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_PATH}
 
 _c_set_twt_parser_mongo_permissions:
     @sudo chown 999:999 ${COMPOSE_TWT_PARSER_MONGO_CURRENT_CERTS_PATH}
-    @sudo chown 999:999 ${COMPOSE_TWT_PARSER_MONGO_CONFIG_PATH}
-    @sudo chown 999:999 ${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_PATH}
 
 _c_set_twt_parser_redis_permissions:
     @sudo chown 999:1000 ${COMPOSE_TWT_PARSER_REDIS_CURRENT_CERTS_PATH}
-    @sudo chown 999:1000 ${COMPOSE_TWT_PARSER_REDIS_CONFIG_PATH}
-    @sudo chown 999:1000 ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_TWT_PARSER_REDIS_ENTRYPOINT_PATH}
 
 _c_set_twt_parser_permissions:
     @sudo chown 1001:1001 ${COMPOSE_TWT_PARSER_CURRENT_CERTS_PATH}
-    @sudo chown 1001:1001 ${COMPOSE_TWT_PARSER_CONFIG_PATH}
-    @sudo chown 1001:1001 ${COMPOSE_TWT_PARSER_ENTRYPOINT_PATH}
     @sudo chmod +x ${COMPOSE_TWT_PARSER_ENTRYPOINT_PATH}
 
 # ------------------------------------------------------ CONFIGURATION ------------------------------------------------------------------
