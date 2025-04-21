@@ -40,7 +40,7 @@ export ROOT_CA_DIR=${ROOT_CA_DIR_PATH}
 # Create index file if not exist otherwise update the access and modification times
 source scripts/common/execute_command.sh touch ${ROOT_CA_DIR_PATH}/database/index.txt
 
-# Generate private key (EdDSA curve Ed448)
+# Generate private key (RSA key 2048)
 source scripts/common/execute_command.sh openssl genpkey -algorithm RSA -out ${ROOT_CA_KEY_PATH} -pkeyopt rsa_keygen_bits:2048
 
 # Generate certificate signing request (new)

@@ -38,7 +38,7 @@ fi
 # Export intermediate ca directory variable to use it in openssl commands with -config flag to use it in config itself
 export INTERMEDIATE_CA_DIR=${INTERMEDIATE_CA_DIR_PATH}
 
-# Generate private key (EdDSA curve Ed448)
+# Generate private key (RSA key 2048)
 source scripts/common/execute_command.sh openssl genpkey -algorithm RSA -out ${SERVER_KEY_PATH} -pkeyopt rsa_keygen_bits:2048
 
 # Generate certificate signing request (new)
