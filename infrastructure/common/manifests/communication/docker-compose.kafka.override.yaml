@@ -2,37 +2,37 @@ services:
   kafka:
     # image: apache/kafka:3.9.0
     build:
-      context: ${COMPOSE_COMMON_KAFKA_CONTEXT}
-      dockerfile: ${COMPOSE_COMMON_KAFKA_DOCKERFILE}
-    hostname: ${COMPOSE_COMMON_KAFKA_HOST}
+      context: ${COMMON_KAFKA_CONTEXT}
+      dockerfile: ${COMMON_KAFKA_DOCKERFILE}
+    hostname: ${COMMON_KAFKA_HOST}
     container_name: kafka
     user: appuser
-    entrypoint: ["${COMPOSE_COMMON_KAFKA_ENTRYPOINT_TARGET}"]
+    entrypoint: ["${COMMON_KAFKA_ENTRYPOINT_TARGET}"]
     command: ["/etc/kafka/docker/run"]
-    expose: ["${COMPOSE_COMMON_KAFKA_PORT}/tcp"]
+    expose: ["${COMMON_KAFKA_PORT}/tcp"]
     env_file:
-      - path: ${COMPOSE_COMMON_KAFKA_ENV}
+      - path: ${COMMON_KAFKA_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_KAFKA_ENTRYPOINT_FOLDER_TARGET}
+        source: ${COMMON_KAFKA_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMMON_KAFKA_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_KAFKA_TEMPLATE_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_KAFKA_TEMPLATE_FOLDER_TARGET}
+        source: ${COMMON_KAFKA_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMMON_KAFKA_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_KAFKA_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_KAFKA_SSL_CRT_FOLDER_TARGET}
+        source: ${COMMON_KAFKA_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMMON_KAFKA_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -40,7 +40,7 @@ services:
           selinux: Z
       - type: volume
         source: kafka-data
-        target: ${COMPOSE_COMMON_KAFKA_STORAGE_FOLDER_TARGET}
+        target: ${COMMON_KAFKA_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -49,18 +49,18 @@ services:
           "/opt/kafka/bin/kafka-cluster.sh
           cluster-id
           --bootstrap-server
-          ${COMPOSE_COMMON_KAFKA_HEALTHCHECK_BOOTSTRAP_SERVER}
+          ${COMMON_KAFKA_HEALTHCHECK_BOOTSTRAP_SERVER}
           --config
           <(echo -e \"
           security.protocol=SASL_SSL\n
           sasl.mechanism=SCRAM-SHA-256\n
           sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required \
-          username=\"${COMPOSE_COMMON_KAFKA_HEALTHCHECK_CLIENT_USER}\" \
-          password=\"${COMPOSE_COMMON_KAFKA_HEALTHCHECK_CLIENT_PASS}\";\n
-          ssl.keystore.location=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PATH}\n
-          ssl.keystore.password=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PASSWORD}\n
-          ssl.truststore.location=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_TRUSTSTURE_PATH}\n
-          ssl.truststore.password=${COMPOSE_COMMON_KAFKA_HEALTHCHECK_TRUSTSTORE_PASSWORD}\"
+          username=\"${COMMON_KAFKA_HEALTHCHECK_CLIENT_USER}\" \
+          password=\"${COMMON_KAFKA_HEALTHCHECK_CLIENT_PASS}\";\n
+          ssl.keystore.location=${COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PATH}\n
+          ssl.keystore.password=${COMMON_KAFKA_HEALTHCHECK_KEYSTORE_PASSWORD}\n
+          ssl.truststore.location=${COMMON_KAFKA_HEALTHCHECK_TRUSTSTURE_PATH}\n
+          ssl.truststore.password=${COMMON_KAFKA_HEALTHCHECK_TRUSTSTORE_PASSWORD}\"
           )",
         ]
       interval: 30s
@@ -75,14 +75,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${COMPOSE_COMMON_KAFKA_CPUS_LIMIT}
-          memory: ${COMPOSE_COMMON_KAFKA_MEMORY_LIMIT}
+          cpus: ${COMMON_KAFKA_CPUS_LIMIT}
+          memory: ${COMMON_KAFKA_MEMORY_LIMIT}
         reservations:
-          cpus: ${COMPOSE_COMMON_KAFKA_CPUS_RESERVATION}
-          memory: ${COMPOSE_COMMON_KAFKA_MEMORY_RESERVATION}
+          cpus: ${COMMON_KAFKA_CPUS_RESERVATION}
+          memory: ${COMMON_KAFKA_MEMORY_RESERVATION}
     networks:
       kafka-network:
-        ipv4_address: ${COMPOSE_COMMON_KAFKA_IP_ADDRESS}
+        ipv4_address: ${COMMON_KAFKA_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
@@ -97,9 +97,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${COMPOSE_COMMON_KAFKA_NETWORK_SUBNET}
-          ip_range: ${COMPOSE_COMMON_KAFKA_NETWORK_IP_RANGE}
-          gateway: ${COMPOSE_COMMON_KAFKA_NETWORK_GATEWAY}
+        - subnet: ${COMMON_KAFKA_NETWORK_SUBNET}
+          ip_range: ${COMMON_KAFKA_NETWORK_IP_RANGE}
+          gateway: ${COMMON_KAFKA_NETWORK_GATEWAY}
 
 volumes:
   kafka-data:
@@ -109,7 +109,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_COMMON_KAFKA_DATA_SIZE},\
-        uid=${COMPOSE_COMMON_KAFKA_VOLUME_UID},\
-        gid=${COMPOSE_COMMON_KAFKA_VOLUME_GID}\
+        size=${COMMON_KAFKA_DATA_SIZE},\
+        uid=${COMMON_KAFKA_VOLUME_UID},\
+        gid=${COMMON_KAFKA_VOLUME_GID}\
         "

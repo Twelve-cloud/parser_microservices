@@ -2,59 +2,59 @@ services:
   pgadmin:
     # image: dpage/pgadmin4:8.9
     build:
-      context: ${COMPOSE_COMMON_PGADMIN_CONTEXT}
-      dockerfile: ${COMPOSE_COMMON_PGADMIN_DOCKERFILE}
-    hostname: ${COMPOSE_COMMON_PGADMIN_HOST}
+      context: ${COMMON_PGADMIN_CONTEXT}
+      dockerfile: ${COMMON_PGADMIN_DOCKERFILE}
+    hostname: ${COMMON_PGADMIN_HOST}
     container_name: pgadmin
     user: pgadmin
-    entrypoint: ["${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_TARGET}"]
+    entrypoint: ["${COMMON_PGADMIN_ENTRYPOINT_TARGET}"]
     command: ["true"]
     ports:
       - name: pgadmin-port
-        target: ${COMPOSE_COMMON_PGADMIN_PORT}
-        published: ${COMPOSE_COMMON_PGADMIN_PUBLIC_PORT}
-        host_ip: ${COMPOSE_COMMON_PGADMIN_HOST_IP}
+        target: ${COMMON_PGADMIN_PORT}
+        published: ${COMMON_PGADMIN_PUBLIC_PORT}
+        host_ip: ${COMMON_PGADMIN_HOST_IP}
         protocol: tcp
         mode: host
     env_file:
-      - path: ${COMPOSE_COMMON_PGADMIN_ENV}
+      - path: ${COMMON_PGADMIN_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_PGADMIN_ENTRYPOINT_FOLDER_TARGET}
+        source: ${COMMON_PGADMIN_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMMON_PGADMIN_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_PGADMIN_TEMPLATE_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_PGADMIN_TEMPLATE_FOLDER_TARGET}
+        source: ${COMMON_PGADMIN_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMMON_PGADMIN_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_PGADMIN_SSL_CRT_SOURCE}
-        target: ${COMPOSE_COMMON_PGADMIN_SSL_CRT_TARGET}
+        source: ${COMMON_PGADMIN_SSL_CRT_SOURCE}
+        target: ${COMMON_PGADMIN_SSL_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_PGADMIN_SSL_KEY_SOURCE}
-        target: ${COMPOSE_COMMON_PGADMIN_SSL_KEY_TARGET}
+        source: ${COMMON_PGADMIN_SSL_KEY_SOURCE}
+        target: ${COMMON_PGADMIN_SSL_KEY_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_PGADMIN_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_COMMON_PGADMIN_SSL_CA_CRT_TARGET}
+        source: ${COMMON_PGADMIN_SSL_CA_CRT_SOURCE}
+        target: ${COMMON_PGADMIN_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -62,7 +62,7 @@ services:
           selinux: Z
       - type: volume
         source: pgadmin-data
-        target: ${COMPOSE_COMMON_PGADMIN_STORAGE_FOLDER_TARGET}
+        target: ${COMMON_PGADMIN_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -72,8 +72,8 @@ services:
           "curl",
           "--silent",
           "--cacert",
-          "${COMPOSE_COMMON_PGADMIN_SSL_CA_CRT_TARGET}",
-          "https://${COMPOSE_COMMON_PGADMIN_HOST}:${COMPOSE_COMMON_PGADMIN_PORT}/misc/ping",
+          "${COMMON_PGADMIN_SSL_CA_CRT_TARGET}",
+          "https://${COMMON_PGADMIN_HOST}:${COMMON_PGADMIN_PORT}/misc/ping",
         ]
       interval: 30s
       timeout: 30s
@@ -87,14 +87,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${COMPOSE_COMMON_PGADMIN_CPUS_LIMIT}
-          memory: ${COMPOSE_COMMON_PGADMIN_MEMORY_LIMIT}
+          cpus: ${COMMON_PGADMIN_CPUS_LIMIT}
+          memory: ${COMMON_PGADMIN_MEMORY_LIMIT}
         reservations:
-          cpus: ${COMPOSE_COMMON_PGADMIN_CPUS_RESERVATION}
-          memory: ${COMPOSE_COMMON_PGADMIN_MEMORY_RESERVATION}
+          cpus: ${COMMON_PGADMIN_CPUS_RESERVATION}
+          memory: ${COMMON_PGADMIN_MEMORY_RESERVATION}
     networks:
       pgadmin-network:
-        ipv4_address: ${COMPOSE_COMMON_PGADMIN_IP_ADDRESS}
+        ipv4_address: ${COMMON_PGADMIN_IP_ADDRESS}
       parser-postgres-network:
     depends_on:
       parser-postgres:
@@ -115,9 +115,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${COMPOSE_COMMON_PGADMIN_NETWORK_SUBNET}
-          ip_range: ${COMPOSE_COMMON_PGADMIN_NETWORK_IP_RANGE}
-          gateway: ${COMPOSE_COMMON_PGADMIN_NETWORK_GATEWAY}
+        - subnet: ${COMMON_PGADMIN_NETWORK_SUBNET}
+          ip_range: ${COMMON_PGADMIN_NETWORK_IP_RANGE}
+          gateway: ${COMMON_PGADMIN_NETWORK_GATEWAY}
   parser-postgres-network:
     external: true
 
@@ -129,7 +129,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_COMMON_PGADMIN_DATA_SIZE},\
-        uid=${COMPOSE_COMMON_PGADMIN_VOLUME_UID},\
-        gid=${COMPOSE_COMMON_PGADMIN_VOLUME_GID}\
+        size=${COMMON_PGADMIN_DATA_SIZE},\
+        uid=${COMMON_PGADMIN_VOLUME_UID},\
+        gid=${COMMON_PGADMIN_VOLUME_GID}\
         "

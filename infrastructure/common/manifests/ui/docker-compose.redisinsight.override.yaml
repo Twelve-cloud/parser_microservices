@@ -2,51 +2,51 @@ services:
   redis-insight:
     #image: redis/redisinsight:2.60.0
     build:
-      context: ${COMPOSE_COMMON_REDIS_INSIGHT_CONTEXT}
-      dockerfile: ${COMPOSE_COMMON_REDIS_INSIGHT_DOCKERFILE}
-    hostname: ${COMPOSE_COMMON_REDIS_INSIGHT_HOST}
+      context: ${COMMON_REDIS_INSIGHT_CONTEXT}
+      dockerfile: ${COMMON_REDIS_INSIGHT_DOCKERFILE}
+    hostname: ${COMMON_REDIS_INSIGHT_HOST}
     container_name: redis-insight
     user: node
-    entrypoint: ["${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_TARGET}"]
+    entrypoint: ["${COMMON_REDIS_INSIGHT_ENTRYPOINT_TARGET}"]
     command: ["node", "redisinsight/api/dist/src/main"]
     ports:
       - name: redis-insight-port
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_PORT}
-        published: ${COMPOSE_COMMON_REDIS_INSIGHT_PUBLIC_PORT}
-        host_ip: ${COMPOSE_COMMON_REDIS_INSIGHT_HOST_IP}
+        target: ${COMMON_REDIS_INSIGHT_PORT}
+        published: ${COMMON_REDIS_INSIGHT_PUBLIC_PORT}
+        host_ip: ${COMMON_REDIS_INSIGHT_HOST_IP}
         protocol: tcp
         mode: host
     env_file:
-      - path: ${COMPOSE_COMMON_REDIS_INSIGHT_ENV}
+      - path: ${COMMON_REDIS_INSIGHT_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_ENTRYPOINT_FOLDER_TARGET}
+        source: ${COMMON_REDIS_INSIGHT_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMMON_REDIS_INSIGHT_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_TEMPLATE_FOLDER_TARGET}
+        source: ${COMMON_REDIS_INSIGHT_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMMON_REDIS_INSIGHT_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CRT_FOLDER_TARGET}
+        source: ${COMMON_REDIS_INSIGHT_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMMON_REDIS_INSIGHT_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CA_CRT_TARGET}
+        source: ${COMMON_REDIS_INSIGHT_SSL_CA_CRT_SOURCE}
+        target: ${COMMON_REDIS_INSIGHT_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -54,7 +54,7 @@ services:
           selinux: Z
       - type: volume
         source: redisinsight-data
-        target: ${COMPOSE_COMMON_REDIS_INSIGHT_STORAGE_FOLDER_TARGET}
+        target: ${COMMON_REDIS_INSIGHT_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -64,8 +64,8 @@ services:
           "curl",
           "--silent",
           "--cacert",
-          "${COMPOSE_COMMON_REDIS_INSIGHT_SSL_CA_CRT_TARGET}",
-          "https://${COMPOSE_COMMON_REDIS_INSIGHT_HOST}:${COMPOSE_COMMON_REDIS_INSIGHT_PORT}/api/health",
+          "${COMMON_REDIS_INSIGHT_SSL_CA_CRT_TARGET}",
+          "https://${COMMON_REDIS_INSIGHT_HOST}:${COMMON_REDIS_INSIGHT_PORT}/api/health",
         ]
       interval: 30s
       timeout: 30s
@@ -79,14 +79,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CPUS_LIMIT}
-          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_MEMORY_LIMIT}
+          cpus: ${COMMON_REDIS_INSIGHT_CPUS_LIMIT}
+          memory: ${COMMON_REDIS_INSIGHT_MEMORY_LIMIT}
         reservations:
-          cpus: ${COMPOSE_COMMON_REDIS_INSIGHT_CPUS_RESERVATION}
-          memory: ${COMPOSE_COMMON_REDIS_INSIGHT_MEMORY_RESERVATION}
+          cpus: ${COMMON_REDIS_INSIGHT_CPUS_RESERVATION}
+          memory: ${COMMON_REDIS_INSIGHT_MEMORY_RESERVATION}
     networks:
       redis-insight-network:
-        ipv4_address: ${COMPOSE_COMMON_REDIS_INSIGHT_IP_ADDRESS}
+        ipv4_address: ${COMMON_REDIS_INSIGHT_IP_ADDRESS}
       parser-redis-network:
     depends_on:
       parser-redis:
@@ -107,9 +107,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${COMPOSE_COMMON_REDIS_INSIGHT_NETWORK_SUBNET}
-          ip_range: ${COMPOSE_COMMON_REDIS_INSIGHT_NETWORK_IP_RANGE}
-          gateway: ${COMPOSE_COMMON_REDIS_INSIGHT_NETWORK_GATEWAY}
+        - subnet: ${COMMON_REDIS_INSIGHT_NETWORK_SUBNET}
+          ip_range: ${COMMON_REDIS_INSIGHT_NETWORK_IP_RANGE}
+          gateway: ${COMMON_REDIS_INSIGHT_NETWORK_GATEWAY}
   parser-redis-network:
     external: true
 
@@ -121,7 +121,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_COMMON_REDIS_INSIGHT_DATA_SIZE},\
-        uid=${COMPOSE_COMMON_REDIS_INSIGHT_VOLUME_UID},\
-        gid=${COMPOSE_COMMON_REDIS_INSIGHT_VOLUME_GID}\
+        size=${COMMON_REDIS_INSIGHT_DATA_SIZE},\
+        uid=${COMMON_REDIS_INSIGHT_VOLUME_UID},\
+        gid=${COMMON_REDIS_INSIGHT_VOLUME_GID}\
         "

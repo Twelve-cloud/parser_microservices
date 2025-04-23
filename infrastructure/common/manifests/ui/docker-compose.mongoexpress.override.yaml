@@ -2,51 +2,51 @@ services:
   mongo-express:
     # image: mongo-express:1.0.2
     build:
-      context: ${COMPOSE_COMMON_MONGO_EXPRESS_CONTEXT}
-      dockerfile: ${COMPOSE_COMMON_MONGO_EXPRESS_DOCKERFILE}
-    hostname: ${COMPOSE_COMMON_MONGO_EXPRESS_HOST}
+      context: ${COMMON_MONGO_EXPRESS_CONTEXT}
+      dockerfile: ${COMMON_MONGO_EXPRESS_DOCKERFILE}
+    hostname: ${COMMON_MONGO_EXPRESS_HOST}
     container_name: mongo-express
     user: node
-    entrypoint: ["${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_TARGET}"]
-    command: ["${COMPOSE_COMMON_MONGO_EXPRESS_HOST}", "${COMPOSE_COMMON_MONGO_EXPRESS_PORT}", "10"]
+    entrypoint: ["${COMMON_MONGO_EXPRESS_ENTRYPOINT_TARGET}"]
+    command: ["${COMMON_MONGO_EXPRESS_HOST}", "${COMMON_MONGO_EXPRESS_PORT}", "10"]
     ports:
       - name: mongo-express-port
-        target: ${COMPOSE_COMMON_MONGO_EXPRESS_PORT}
-        published: ${COMPOSE_COMMON_MONGO_EXPRESS_PUBLIC_PORT}
-        host_ip: ${COMPOSE_COMMON_MONGO_EXPRESS_HOST_IP}
+        target: ${COMMON_MONGO_EXPRESS_PORT}
+        published: ${COMMON_MONGO_EXPRESS_PUBLIC_PORT}
+        host_ip: ${COMMON_MONGO_EXPRESS_HOST_IP}
         protocol: tcp
         mode: host
     env_file:
-      - path: ${COMPOSE_COMMON_MONGO_EXPRESS_ENV}
+      - path: ${COMMON_MONGO_EXPRESS_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_MONGO_EXPRESS_ENTRYPOINT_FOLDER_TARGET}
+        source: ${COMMON_MONGO_EXPRESS_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${COMMON_MONGO_EXPRESS_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_MONGO_EXPRESS_TEMPLATE_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_MONGO_EXPRESS_TEMPLATE_FOLDER_TARGET}
+        source: ${COMMON_MONGO_EXPRESS_TEMPLATE_FOLDER_SOURCE}
+        target: ${COMMON_MONGO_EXPRESS_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CRT_FOLDER_TARGET}
+        source: ${COMMON_MONGO_EXPRESS_SSL_CRT_FOLDER_SOURCE}
+        target: ${COMMON_MONGO_EXPRESS_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CA_CRT_TARGET}
+        source: ${COMMON_MONGO_EXPRESS_SSL_CA_CRT_SOURCE}
+        target: ${COMMON_MONGO_EXPRESS_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -54,7 +54,7 @@ services:
           selinux: Z
       - type: volume
         source: mongoexpress-data
-        target: ${COMPOSE_COMMON_MONGO_EXPRESS_STORAGE_FOLDER_TARGET}
+        target: ${COMMON_MONGO_EXPRESS_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -64,8 +64,8 @@ services:
           "curl",
           "--silent",
           "--cacert",
-          "${COMPOSE_COMMON_MONGO_EXPRESS_SSL_CA_CRT_TARGET}",
-          "https://${COMPOSE_COMMON_MONGO_EXPRESS_HOST}:${COMPOSE_COMMON_MONGO_EXPRESS_PORT}/health",
+          "${COMMON_MONGO_EXPRESS_SSL_CA_CRT_TARGET}",
+          "https://${COMMON_MONGO_EXPRESS_HOST}:${COMMON_MONGO_EXPRESS_PORT}/health",
         ]
       interval: 30s
       timeout: 30s
@@ -79,14 +79,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${COMPOSE_COMMON_MONGO_EXPRESS_CPUS_LIMIT}
-          memory: ${COMPOSE_COMMON_MONGO_EXPRESS_MEMORY_LIMIT}
+          cpus: ${COMMON_MONGO_EXPRESS_CPUS_LIMIT}
+          memory: ${COMMON_MONGO_EXPRESS_MEMORY_LIMIT}
         reservations:
-          cpus: ${COMPOSE_COMMON_MONGO_EXPRESS_CPUS_RESERVATION}
-          memory: ${COMPOSE_COMMON_MONGO_EXPRESS_MEMORY_RESERVATION}
+          cpus: ${COMMON_MONGO_EXPRESS_CPUS_RESERVATION}
+          memory: ${COMMON_MONGO_EXPRESS_MEMORY_RESERVATION}
     networks:
       mongo-express-network:
-        ipv4_address: ${COMPOSE_COMMON_MONGO_EXPRESS_IP_ADDRESS}
+        ipv4_address: ${COMMON_MONGO_EXPRESS_IP_ADDRESS}
       parser-mongo-network:
     depends_on:
       parser-mongo:
@@ -107,9 +107,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${COMPOSE_COMMON_MONGO_EXPRESS_NETWORK_SUBNET}
-          ip_range: ${COMPOSE_COMMON_MONGO_EXPRESS_NETWORK_IP_RANGE}
-          gateway: ${COMPOSE_COMMON_MONGO_EXPRESS_NETWORK_GATEWAY}
+        - subnet: ${COMMON_MONGO_EXPRESS_NETWORK_SUBNET}
+          ip_range: ${COMMON_MONGO_EXPRESS_NETWORK_IP_RANGE}
+          gateway: ${COMMON_MONGO_EXPRESS_NETWORK_GATEWAY}
   parser-mongo-network:
     external: true
 
@@ -121,7 +121,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_COMMON_MONGO_EXPRESS_DATA_SIZE},\
-        uid=${COMPOSE_COMMON_MONGO_EXPRESS_VOLUME_UID},\
-        gid=${COMPOSE_COMMON_MONGO_EXPRESS_VOLUME_GID}\
+        size=${COMMON_MONGO_EXPRESS_DATA_SIZE},\
+        uid=${COMMON_MONGO_EXPRESS_VOLUME_UID},\
+        gid=${COMMON_MONGO_EXPRESS_VOLUME_GID}\
         "

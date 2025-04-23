@@ -2,45 +2,45 @@ services:
   parser-postgres:
     # image: postgres:16.3-alpine3.20
     build:
-      context: ${COMPOSE_TWT_PARSER_POSTGRES_CONTEXT}
-      dockerfile: ${COMPOSE_TWT_PARSER_POSTGRES_DOCKERFILE}
-    hostname: ${COMPOSE_TWT_PARSER_POSTGRES_HOST}
+      context: ${TWT_PARSER_POSTGRES_CONTEXT}
+      dockerfile: ${TWT_PARSER_POSTGRES_DOCKERFILE}
+    hostname: ${TWT_PARSER_POSTGRES_HOST}
     container_name: parser-postgres
     user: postgres
-    entrypoint: ["${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_TARGET}"]
-    command: ["postgres", "-c", "config_file=${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_TARGET}"]
-    expose: ["${COMPOSE_TWT_PARSER_POSTGRES_PORT}/tcp"]
+    entrypoint: ["${TWT_PARSER_POSTGRES_ENTRYPOINT_TARGET}"]
+    command: ["postgres", "-c", "config_file=${TWT_PARSER_POSTGRES_CONFIG_TARGET}"]
+    expose: ["${TWT_PARSER_POSTGRES_PORT}/tcp"]
     env_file:
-      - path: ${COMPOSE_TWT_PARSER_POSTGRES_ENV}
+      - path: ${TWT_PARSER_POSTGRES_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_FOLDER_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_POSTGRES_ENTRYPOINT_FOLDER_TARGET}
+        source: ${TWT_PARSER_POSTGRES_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${TWT_PARSER_POSTGRES_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_POSTGRES_TEMPLATE_FOLDER_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_POSTGRES_TEMPLATE_FOLDER_TARGET}
+        source: ${TWT_PARSER_POSTGRES_TEMPLATE_FOLDER_SOURCE}
+        target: ${TWT_PARSER_POSTGRES_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CRT_FOLDER_TARGET}
+        source: ${TWT_PARSER_POSTGRES_SSL_CRT_FOLDER_SOURCE}
+        target: ${TWT_PARSER_POSTGRES_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
+        source: ${TWT_PARSER_POSTGRES_SSL_CA_CRT_SOURCE}
+        target: ${TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -48,12 +48,12 @@ services:
           selinux: Z
       - type: volume
         source: parser-postgres-data
-        target: ${COMPOSE_TWT_PARSER_POSTGRES_STORAGE_FOLDER_TARGET}
+        target: ${TWT_PARSER_POSTGRES_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
       - type: volume
         source: parser-postgres-config
-        target: ${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_FOLDER_TARGET}
+        target: ${TWT_PARSER_POSTGRES_CONFIG_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -61,15 +61,15 @@ services:
           "CMD",
           "psql",
           "
-          host=${COMPOSE_TWT_PARSER_POSTGRES_HOST}
-          port=${COMPOSE_TWT_PARSER_POSTGRES_PORT}
-          user=${COMPOSE_TWT_PARSER_POSTGRES_USER}
-          password=${COMPOSE_TWT_PARSER_POSTGRES_PASS}
-          dbname=${COMPOSE_TWT_PARSER_POSTGRES_DB}
+          host=${TWT_PARSER_POSTGRES_HOST}
+          port=${TWT_PARSER_POSTGRES_PORT}
+          user=${TWT_PARSER_POSTGRES_USER}
+          password=${TWT_PARSER_POSTGRES_PASS}
+          dbname=${TWT_PARSER_POSTGRES_DB}
           sslmode=verify-full
-          sslcert=${COMPOSE_TWT_PARSER_POSTGRES_SSL_CRT_TARGET}
-          sslkey=${COMPOSE_TWT_PARSER_POSTGRES_SSL_KEY_TARGET}
-          sslrootcert=${COMPOSE_TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
+          sslcert=${TWT_PARSER_POSTGRES_SSL_CRT_TARGET}
+          sslkey=${TWT_PARSER_POSTGRES_SSL_KEY_TARGET}
+          sslrootcert=${TWT_PARSER_POSTGRES_SSL_CA_CRT_TARGET}
           ",
           "-c",
           "SELECT 'OK'",
@@ -86,14 +86,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${COMPOSE_TWT_PARSER_POSTGRES_CPUS_LIMIT}
-          memory: ${COMPOSE_TWT_PARSER_POSTGRES_MEMORY_LIMIT}
+          cpus: ${TWT_PARSER_POSTGRES_CPUS_LIMIT}
+          memory: ${TWT_PARSER_POSTGRES_MEMORY_LIMIT}
         reservations:
-          cpus: ${COMPOSE_TWT_PARSER_POSTGRES_CPUS_RESERVATION}
-          memory: ${COMPOSE_TWT_PARSER_POSTGRES_MEMORY_RESERVATION}
+          cpus: ${TWT_PARSER_POSTGRES_CPUS_RESERVATION}
+          memory: ${TWT_PARSER_POSTGRES_MEMORY_RESERVATION}
     networks:
       parser-postgres-network:
-        ipv4_address: ${COMPOSE_TWT_PARSER_POSTGRES_IP_ADDRESS}
+        ipv4_address: ${TWT_PARSER_POSTGRES_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
@@ -108,9 +108,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${COMPOSE_TWT_PARSER_POSTGRES_NETWORK_SUBNET}
-          ip_range: ${COMPOSE_TWT_PARSER_POSTGRES_NETWORK_IP_RANGE}
-          gateway: ${COMPOSE_TWT_PARSER_POSTGRES_NETWORK_GATEWAY}
+        - subnet: ${TWT_PARSER_POSTGRES_NETWORK_SUBNET}
+          ip_range: ${TWT_PARSER_POSTGRES_NETWORK_IP_RANGE}
+          gateway: ${TWT_PARSER_POSTGRES_NETWORK_GATEWAY}
 
 volumes:
   parser-postgres-data:
@@ -120,9 +120,9 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_TWT_PARSER_POSTGRES_DATA_SIZE},\
-        uid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_UID},\
-        gid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_GID}\
+        size=${TWT_PARSER_POSTGRES_DATA_SIZE},\
+        uid=${TWT_PARSER_POSTGRES_VOLUME_UID},\
+        gid=${TWT_PARSER_POSTGRES_VOLUME_GID}\
         "
 
   parser-postgres-config:
@@ -132,7 +132,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_TWT_PARSER_POSTGRES_CONFIG_SIZE},\
-        uid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_UID},\
-        gid=${COMPOSE_TWT_PARSER_POSTGRES_VOLUME_GID}\
+        size=${TWT_PARSER_POSTGRES_CONFIG_SIZE},\
+        uid=${TWT_PARSER_POSTGRES_VOLUME_UID},\
+        gid=${TWT_PARSER_POSTGRES_VOLUME_GID}\
         "

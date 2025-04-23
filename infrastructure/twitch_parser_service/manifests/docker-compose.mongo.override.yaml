@@ -2,45 +2,45 @@ services:
   parser-mongo:
     # image: mongo:7.0-rc-jammy
     build:
-      context: ${COMPOSE_TWT_PARSER_MONGO_CONTEXT}
-      dockerfile: ${COMPOSE_TWT_PARSER_MONGO_DOCKERFILE}
-    hostname: ${COMPOSE_TWT_PARSER_MONGO_HOST}
+      context: ${TWT_PARSER_MONGO_CONTEXT}
+      dockerfile: ${TWT_PARSER_MONGO_DOCKERFILE}
+    hostname: ${TWT_PARSER_MONGO_HOST}
     container_name: parser-mongo
     user: mongodb
-    entrypoint: ["${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_TARGET}"]
-    command: ["mongod", "--config", "${COMPOSE_TWT_PARSER_MONGO_CONFIG_TARGET}"]
-    expose: ["${COMPOSE_TWT_PARSER_MONGO_PORT}/tcp"]
+    entrypoint: ["${TWT_PARSER_MONGO_ENTRYPOINT_TARGET}"]
+    command: ["mongod", "--config", "${TWT_PARSER_MONGO_CONFIG_TARGET}"]
+    expose: ["${TWT_PARSER_MONGO_PORT}/tcp"]
     env_file:
-      - path: ${COMPOSE_TWT_PARSER_MONGO_ENV}
+      - path: ${TWT_PARSER_MONGO_ENV}
         required: true
     volumes:
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_FOLDER_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_MONGO_ENTRYPOINT_FOLDER_TARGET}
+        source: ${TWT_PARSER_MONGO_ENTRYPOINT_FOLDER_SOURCE}
+        target: ${TWT_PARSER_MONGO_ENTRYPOINT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_MONGO_TEMPLATE_FOLDER_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_MONGO_TEMPLATE_FOLDER_TARGET}
+        source: ${TWT_PARSER_MONGO_TEMPLATE_FOLDER_SOURCE}
+        target: ${TWT_PARSER_MONGO_TEMPLATE_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_MONGO_SSL_CRT_FOLDER_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_MONGO_SSL_CRT_FOLDER_TARGET}
+        source: ${TWT_PARSER_MONGO_SSL_CRT_FOLDER_SOURCE}
+        target: ${TWT_PARSER_MONGO_SSL_CRT_FOLDER_TARGET}
         read_only: true
         bind:
           propagation: rprivate
           create_host_path: true
           selinux: Z
       - type: bind
-        source: ${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_SOURCE}
-        target: ${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}
+        source: ${TWT_PARSER_MONGO_SSL_CA_CRT_SOURCE}
+        target: ${TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}
         read_only: true
         bind:
           propagation: rprivate
@@ -48,12 +48,12 @@ services:
           selinux: Z
       - type: volume
         source: parser-mongo-data
-        target: ${COMPOSE_TWT_PARSER_MONGO_STORAGE_FOLDER_TARGET}
+        target: ${TWT_PARSER_MONGO_STORAGE_FOLDER_TARGET}
         volume:
           nocopy: false
       - type: volume
         source: parser-mongo-config
-        target: ${COMPOSE_TWT_PARSER_MONGO_CONFIG_FOLDER_TARGET}
+        target: ${TWT_PARSER_MONGO_CONFIG_FOLDER_TARGET}
         volume:
           nocopy: false
     healthcheck:
@@ -62,16 +62,16 @@ services:
           "CMD",
           "mongosh",
           "--host",
-          "${COMPOSE_TWT_PARSER_MONGO_HOST}",
+          "${TWT_PARSER_MONGO_HOST}",
           "--username",
-          "${COMPOSE_TWT_PARSER_MONGO_USERNAME}",
+          "${TWT_PARSER_MONGO_USERNAME}",
           "--password",
-          "${COMPOSE_TWT_PARSER_MONGO_PASSWORD}",
+          "${TWT_PARSER_MONGO_PASSWORD}",
           "--tls",
           "--tlsCertificateKeyFile",
-          "${COMPOSE_TWT_PARSER_MONGO_SSL_CRT_KEY_TARGET}",
+          "${TWT_PARSER_MONGO_SSL_CRT_KEY_TARGET}",
           "--tlsCAFile",
-          "${COMPOSE_TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}",
+          "${TWT_PARSER_MONGO_SSL_CA_CRT_TARGET}",
           "--eval",
           "db.adminCommand('ping')",
         ]
@@ -87,14 +87,14 @@ services:
     deploy:
       resources:
         limits:
-          cpus: ${COMPOSE_TWT_PARSER_MONGO_CPUS_LIMIT}
-          memory: ${COMPOSE_TWT_PARSER_MONGO_MEMORY_LIMIT}
+          cpus: ${TWT_PARSER_MONGO_CPUS_LIMIT}
+          memory: ${TWT_PARSER_MONGO_MEMORY_LIMIT}
         reservations:
-          cpus: ${COMPOSE_TWT_PARSER_MONGO_CPUS_RESERVATION}
-          memory: ${COMPOSE_TWT_PARSER_MONGO_MEMORY_RESERVATION}
+          cpus: ${TWT_PARSER_MONGO_CPUS_RESERVATION}
+          memory: ${TWT_PARSER_MONGO_MEMORY_RESERVATION}
     networks:
       parser-mongo-network:
-        ipv4_address: ${COMPOSE_TWT_PARSER_MONGO_IP_ADDRESS}
+        ipv4_address: ${TWT_PARSER_MONGO_IP_ADDRESS}
     pull_policy: missing
     restart: always
 
@@ -109,9 +109,9 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: ${COMPOSE_TWT_PARSER_MONGO_NETWORK_SUBNET}
-          ip_range: ${COMPOSE_TWT_PARSER_MONGO_NETWORK_IP_RANGE}
-          gateway: ${COMPOSE_TWT_PARSER_MONGO_NETWORK_GATEWAY}
+        - subnet: ${TWT_PARSER_MONGO_NETWORK_SUBNET}
+          ip_range: ${TWT_PARSER_MONGO_NETWORK_IP_RANGE}
+          gateway: ${TWT_PARSER_MONGO_NETWORK_GATEWAY}
 
 volumes:
   parser-mongo-data:
@@ -121,9 +121,9 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_TWT_PARSER_MONGO_DATA_SIZE},\
-        uid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_UID},\
-        gid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_GID}\
+        size=${TWT_PARSER_MONGO_DATA_SIZE},\
+        uid=${TWT_PARSER_MONGO_VOLUME_UID},\
+        gid=${TWT_PARSER_MONGO_VOLUME_GID}\
         "
 
   parser-mongo-config:
@@ -133,7 +133,7 @@ volumes:
       type: tmpfs
       device: tmpfs
       o: "\
-        size=${COMPOSE_TWT_PARSER_MONGO_CONFIG_SIZE},\
-        uid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_UID},\
-        gid=${COMPOSE_TWT_PARSER_MONGO_VOLUME_GID}\
+        size=${TWT_PARSER_MONGO_CONFIG_SIZE},\
+        uid=${TWT_PARSER_MONGO_VOLUME_UID},\
+        gid=${TWT_PARSER_MONGO_VOLUME_GID}\
         "
