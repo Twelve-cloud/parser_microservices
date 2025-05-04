@@ -215,7 +215,7 @@ _set_common_scripts_permissions:
     @sudo chmod a+x ${COMMON_SCRIPTS_PATH}
 
 _set_cert_scripts_permissions:
-    @sudo chmod a+x ${CERTIFICATES_SCRIPTS_PATH}
+    @sudo chmod a+x ${CERTIFICATE_SCRIPTS_PATH}
 
 _set_ca_certificate_chain_permissions:
     @sudo chmod a+r ${COMMON_CHAIN_CA_PATH}
