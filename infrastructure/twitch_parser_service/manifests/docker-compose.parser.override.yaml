@@ -9,7 +9,7 @@ services:
     container_name: twitch-parser
     user: twitch-parser
     entrypoint: ["${TWT_PARSER_ENTRYPOINT_TARGET}"]
-    command: ["python", "main.py"]
+    command: ["python", "main.py", "-c", "${TWT_PARSER_CONFIG_TARGET}"]
     expose: ["${TWT_PARSER_PORT}/tcp"]
     env_file:
       - path: ${TWT_PARSER_ENV}
