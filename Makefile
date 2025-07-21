@@ -139,7 +139,7 @@ _generate_kafka_certificate:
     INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
     INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
 
-    @source ${IMPORT_CERTIFICATE_INTO_KEY-TRUST_STORE_PATH}                                                        \
+    @source ${IMPORT_CERTIFICATE_INTO_KEY_TRUST_STORE_PATH}                                                        \
     SERVER_KEY_PATH=${COMMON_KAFKA_KEY_PATH}                                                                       \
     SERVER_CRT_PATH=${COMMON_KAFKA_CRT_PATH}                                                                       \
     SERVER_P12_PATH=${COMMON_KAFKA_P12_PATH}                                                                       \
