@@ -1,7 +1,7 @@
 # TYPE                  DATABASE        USER            ADDRESS                        AUTH METHOD          AUTH OPTIONS
 
-# only ssl              all db          all users       postgres-host                  hash on password     verify cert with ca
-hostssl                 all             all             ${_POSTGRES_NETWORK}           scram-sha-256        clientcert=verify-ca
+# only ssl              all db          all users       postgres-host                  hash on password     verify cert
+hostssl                 all             all             ${_POSTGRES_NETWORK}           scram-sha-256        clientcert=verify-full
 
-# unix socket (psql)    db              user                                           hash on password
-local                   postgres        username                                       scram-sha-256
+# unix socket (psql)    all db          all users                                      hash on password
+local                   all             all                                            scram-sha-256
