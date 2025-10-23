@@ -4,6 +4,9 @@ listen_addresses = ${_POSTGRES_HOST}
 # Postgres port
 port = ${_POSTGRES_PORT}
 
+# Password encryption
+password_encryption = scram-sha-256
+
 # Cache size
 shared_buffers = 4GB
 

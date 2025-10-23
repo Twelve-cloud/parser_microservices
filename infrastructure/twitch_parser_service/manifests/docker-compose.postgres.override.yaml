@@ -72,7 +72,6 @@ services:
           host=${TWT_PARSER_POSTGRES_HOST}
           port=${TWT_PARSER_POSTGRES_PORT}
           user=${TWT_PARSER_POSTGRES_USER}
-          password=${TWT_PARSER_POSTGRES_PASS}
           dbname=${TWT_PARSER_POSTGRES_DB}
           sslmode=verify-full
           sslcert=${TWT_PARSER_POSTGRES_SSL_CRT_TARGET}

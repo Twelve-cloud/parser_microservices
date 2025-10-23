@@ -4,8 +4,8 @@ FROM postgres:17.4-alpine3.20
 # Change user to root
 USER root
 
-# Add envsubst
-RUN apk update && apk add envsubst
+# Add envsubst and locale
+RUN apk update && apk add envsubst musl-locales
 
 # Change user to postgres
 USER postgres
