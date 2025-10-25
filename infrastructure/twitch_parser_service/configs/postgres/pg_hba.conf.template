@@ -2,6 +2,3 @@
 
 # only ssl              all db          all users       postgres-host                  x509 cert auth       check over CA and check if DN is user in DB
 hostssl                 all             all             ${_HBA_POSTGRES_NETWORK}       cert                 clientcert=verify-full clientname=DN map=x509map
-
-# unix socket (psql)    all db          all users                                      hash on password
-local                   all             all                                            scram-sha-256

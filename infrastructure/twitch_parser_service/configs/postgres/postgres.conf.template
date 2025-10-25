@@ -4,6 +4,9 @@ listen_addresses = ${_CONFIG_POSTGRES_HOST}
 # Postgres port
 port = ${_CONFIG_POSTGRES_PORT}
 
+# Disable unix socket
+unix_socket_directories = ''
+
 # Password encryption
 password_encryption = scram-sha-256
 
