@@ -27,16 +27,7 @@ start_temporary_server() {
         --wait                                                                                              \
         --pgdata "${_ENTRYPOINT_POSTGRES_PGDATA}"                                                           \
         -o "                                                                                                \
-            -p ${_CONFIG_POSTGRES_PORT}                                                                     \
-            -c listen_addresses=${_ENTRYPOINT_POSTGRES_HOST}                                                \
-            -c unix_socket_directories=''                                                                   \
-            -c ssl=on                                                                                       \
-            -c ssl_min_protocol_version=TLSv1.3                                                             \
-            -c ssl_key_file=${_ENTRYPOINT_POSTGRES_SSL_KEY_PATH}                                            \
-            -c ssl_cert_file=${_ENTRYPOINT_POSTGRES_SSL_CRT_PATH}                                           \
-            -c ssl_ca_file=${_ENTRYPOINT_POSTGRES_SSL_CA_CRT_PATH}                                          \
-            -c hba_file=${_ENTRYPOINT_POSTGRES_HBA_PATH}                                                    \
-            -c ident_file=${_ENTRYPOINT_POSTGRES_IDENT_PATH}                                                \
+            --config_file=${_ENTRYPOINT_POSTGRES_CONFIG_PATH}                                               \
         "
 
     echo "Temporary server has been started (pg_ctl start)"
