@@ -131,7 +131,7 @@ main() {
     fi
 
     # Run postgres
-    exec "${@}" -D "${_ENTRYPOINT_POSTGRES_PGDATA}"
+    exec "${@}" -D "${_ENTRYPOINT_POSTGRES_PGDATA}" # Bug: without -D does not work, but should
 }
 
 # Run main
