@@ -64,7 +64,11 @@ ssl_ca_file = ${_CONFIG_POSTGRES_SSL_CA_PATH}
 # TLS version
 ssl_min_protocol_version='TLSv1.3'
 
-# Here must be TLS 1.3 ciphersuites, but postgres(17) do not support for TLS 1.3 (only below)
+# TLSv1.3 ciphersuites
+# ECDHE/DHE for key exchange (forward secrecy); AES-256-GCM for symmetric encryption and data authentication; SHA-384 for key derivation and integrity verification (via PRF);
+# ECDHE/DHE for key exchange (forward secrecy); ChaCha20 for symmetric encryption; Poly1305 for data authentication (MAC); SHA-256 for key derivation and integrity verification (via PRF).
+# ECDHE/DHE for key exchange (forward secrecy); AES-128-GCM for symmetric encryption and data authentication; SHA-256 for key derivation and integrity verification (via PRF).
+ssl_tls13_ciphers = 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256'
 
 # When choosing a cipher, use the server's preference instead of the client preference
 ssl_prefer_server_ciphers = on

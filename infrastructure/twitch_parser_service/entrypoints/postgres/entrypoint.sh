@@ -110,13 +110,6 @@ main() {
 
     echo "Template variables have been substituted"
 
-    echo "Setting permissions on PGDATA folder"
-
-    # Set permissions on PGDATA folder
-    chmod 00700 "${_ENTRYPOINT_POSTGRES_PGDATA}"
-
-    echo "Permissions on PGDATA folder have been set"
-
     # If database is not initialized (file PG_VERSION does not exist or empty)
     if [[ ! -s "${_ENTRYPOINT_POSTGRES_PGDATA}/PG_VERSION" ]]; then
 
@@ -138,7 +131,7 @@ main() {
     fi
 
     # Run postgres
-    exec "${@}"
+    exec "${@}" -D "${_ENTRYPOINT_POSTGRES_PGDATA}"
 }
 
 # Run main
