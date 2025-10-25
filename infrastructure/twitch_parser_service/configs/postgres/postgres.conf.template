@@ -1,8 +1,8 @@
 # Addresses that postgres listen
-listen_addresses = ${_POSTGRES_HOST}
+listen_addresses = ${_CONFIG_POSTGRES_HOST}
 
 # Postgres port
-port = ${_POSTGRES_PORT}
+port = ${_CONFIG_POSTGRES_PORT}
 
 # Password encryption
 password_encryption = scram-sha-256
@@ -50,13 +50,13 @@ max_parallel_maintenance_workers = 4
 ssl = on
 
 # Postgres server certificate
-ssl_cert_file = ${_POSTGRES_SSL_CERT_PATH}
+ssl_cert_file = ${_CONFIG_POSTGRES_SSL_CERT_PATH}
 
 # Postgres server private key
-ssl_key_file = ${_POSTGRES_SSL_KEY_PATH}
+ssl_key_file = ${_CONFIG_POSTGRES_SSL_KEY_PATH}
 
 # CA certificate
-ssl_ca_file = ${_POSTGRES_SSL_CA_PATH}
+ssl_ca_file = ${_CONFIG_POSTGRES_SSL_CA_PATH}
 
 # TLS version
 ssl_min_protocol_version='TLSv1.3'
@@ -67,7 +67,10 @@ ssl_min_protocol_version='TLSv1.3'
 ssl_prefer_server_ciphers = on
 
 # Data location for postgresql
-data_directory = ${_POSTGRES_STORAGE_PATH}
+data_directory = ${_CONFIG_POSTGRES_STORAGE_PATH}
 
 # Path to pg_hba file
-hba_file = ${_POSTGRES_HBA_CONFIG_PATH}
+hba_file = ${_CONFIG_POSTGRES_HBA_CONFIG_PATH}
+
+# Path to pg_ident file
+ident_file = ${_CONFIG_POSTGRES_IDENT_CONFIG_PATH}

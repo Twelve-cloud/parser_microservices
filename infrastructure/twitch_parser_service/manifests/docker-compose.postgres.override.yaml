@@ -46,17 +46,14 @@ services:
           propagation: rprivate
           create_host_path: true
           selinux: Z
-      - type: bind
-        source: ${TWT_PARSER_POSTGRES_INIT_FOLDER_SOURCE}
-        target: ${TWT_PARSER_POSTGRES_INIT_FOLDER_TARGET}
-        read_only: true
-        bind:
-          propagation: rprivate
-          create_host_path: true
-          selinux: Z
       - type: volume
         source: parser-postgres-config
         target: ${TWT_PARSER_POSTGRES_CONFIG_FOLDER_TARGET}
+        volume:
+          nocopy: false
+      - type: volume
+        source: parser-postgres-init-sql
+        target: ${TWT_PARSER_POSTGRES_INIT_SQL_FOLDER_TARGET}
         volume:
           nocopy: false
       - type: volume
@@ -128,6 +125,18 @@ volumes:
       device: tmpfs
       o: "\
         size=${TWT_PARSER_POSTGRES_CONFIG_SIZE},\
+        uid=${TWT_PARSER_POSTGRES_VOLUME_UID},\
+        gid=${TWT_PARSER_POSTGRES_VOLUME_GID}\
+        "
+
+  parser-postgres-init-sql:
+    name: parser-postgres-init-sql
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: "\
+        size=${TWT_PARSER_POSTGRES_INIT_SQL_SIZE},\
         uid=${TWT_PARSER_POSTGRES_VOLUME_UID},\
         gid=${TWT_PARSER_POSTGRES_VOLUME_GID}\
         "
