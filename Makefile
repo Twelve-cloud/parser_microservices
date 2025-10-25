@@ -11,16 +11,17 @@ SHELL := bash -O extglob
 # -------------------------------------------------- SHORTCUTS -----------------------------------------------------
 
 MANIFESTS_PATHS :=                                                                                                 \
-    -f ${COMMON_REDPANDA_PATH}                                                                                     \
-    -f ${COMMON_PGADMIN_PATH}                                                                                      \
-    -f ${COMMON_MONGO_EXPRESS_PATH}                                                                                \
-    -f ${COMMON_REDIS_INSIGHT_PATH}                                                                                \
-    -f ${COMMON_BIND_PATH}                                                                                         \
-    -f ${COMMON_KAFKA_PATH}                                                                                        \
     -f ${TWT_PARSER_POSTGRES_PATH}                                                                                 \
-    -f ${TWT_PARSER_MONGO_PATH}                                                                                    \
-    -f ${TWT_PARSER_REDIS_PATH}                                                                                    \
-    -f ${TWT_PARSER_PATH}                                                                                          \
+    # -f ${COMMON_REDPANDA_PATH}                                                                                     \
+    # -f ${COMMON_PGADMIN_PATH}                                                                                      \
+    # -f ${COMMON_MONGO_EXPRESS_PATH}                                                                                \
+    # -f ${COMMON_REDIS_INSIGHT_PATH}                                                                                \
+    # -f ${COMMON_BIND_PATH}                                                                                         \
+    # -f ${COMMON_KAFKA_PATH}                                                                                        \
+    # -f ${TWT_PARSER_POSTGRES_PATH}                                                                                 \
+    # -f ${TWT_PARSER_MONGO_PATH}                                                                                    \
+    # -f ${TWT_PARSER_REDIS_PATH}                                                                                    \
+    # -f ${TWT_PARSER_PATH}                                                                                          \
 
 # ------------------------------------------------------ ENV -------------------------------------------------------
 
