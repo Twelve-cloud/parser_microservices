@@ -3,53 +3,70 @@
 # Exit if any command here fails
 set -e
 
+# Function to log message
+log_message() {
+    # Get message
+    local message="$1"
+
+    # Get timestamp
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S.%3N %Z')
+
+    # Get PID
+    local pid=$$
+
+    # Log message
+    echo "[${timestamp}] [PID ${pid}] LOG: ${message}"
+}
+
 # Function to initialize database
 initialize_database() {
-    echo "Initializing database (running initdb)"
+    log_message "Initializing database (running initdb)"
 
     # Initialize database (create system databases, etc...)
     pg_ctl init                                                                                             \
+        --silent                                                                                            \
         --pgdata "${_ENTRYPOINT_POSTGRES_PGDATA}"                                                           \
         -o "                                                                                                \
             --username=${_ENTRYPOINT_POSTGRES_USER}                                                         \
             --auth=reject                                                                                   \
         "
 
-    echo "Database has been initialized (initdb complete)"
+    log_message "Database has been initialized (initdb complete)"
 }
 
 # Function to start temporary server
 start_temporary_server() {
-    echo "Starting temporary server (pg_ctl start)"
+    log_message "Starting temporary server (pg_ctl start)"
 
     # Start temporary server
     pg_ctl start                                                                                            \
+        --silent                                                                                            \
         --wait                                                                                              \
         --pgdata "${_ENTRYPOINT_POSTGRES_PGDATA}"                                                           \
         -o "                                                                                                \
             --config_file=${_ENTRYPOINT_POSTGRES_CONFIG_PATH}                                               \
         "
 
-    echo "Temporary server has been started (pg_ctl start)"
+    log_message "Temporary server has been started (pg_ctl start)"
 }
 
 # Function to apply init files
 apply_init_files() {
-        echo "Applying init files"
+    log_message "Applying init files"
 
-        # Create variable to store path to init files
-        local init_file
+    # Create variable to store path to init files
+    local init_file
 
-        # Loop through init files
-        for init_file in "${@}"; do
-            # Check if init file is SQL
-            case "${init_file}" in
-                # If init file is SQL run it
-                *.sql) echo "Running SQL file: ${init_file}"; run_sql -f "${init_file}" ;;
-            esac
-        done
+    # Loop through init files
+    for init_file in "${@}"; do
+        # Check if init file is SQL
+        case "${init_file}" in
+            # If init file is SQL run it
+            *.sql) log_message "Running SQL file: ${init_file}"; run_sql -f "${init_file}" ;;
+        esac
+    done
 
-        echo "Init files have been applied"
+    log_message "Init files have been applied"
 }
 
 # Function to run SQL
@@ -58,6 +75,7 @@ run_sql() {
     local query_runner=(
         psql
         --variable ON_ERROR_STOP=1
+        --quiet
         --no-psqlrc
         "                                                                                                   \
             host=${_ENTRYPOINT_POSTGRES_HOST}                                                               \
@@ -77,21 +95,22 @@ run_sql() {
 
 # Function to stop temporary server
 stop_temporary_server() {
-    echo "Stopping temporary server (pg_ctl stop)"
+    log_message "Stopping temporary server (pg_ctl stop)"
 
     # Stop temporary server
     pg_ctl stop                                                                                             \
+        --silent                                                                                            \
         --wait                                                                                              \
         --pgdata "${_ENTRYPOINT_POSTGRES_PGDATA}"                                                           \
         --mode smart
 
-    echo "Temporary server has been stopped (pg_ctl stop)"
+    log_message "Temporary server has been stopped (pg_ctl stop)"
 }
 
 main() {
-    echo "Running postgres entrypoint"
+    log_message "Running postgres entrypoint"
 
-    echo "Substituting template variables"
+    log_message "Substituting template variables"
 
     # Substitute template variables
     envsubst < "${_ENTRYPOINT_POSTGRES_CONFIG_TEMPLATE_PATH}" > "${_ENTRYPOINT_POSTGRES_CONFIG_PATH}"
@@ -99,7 +118,13 @@ main() {
     envsubst < "${_ENTRYPOINT_POSTGRES_IDENT_TEMPLATE_PATH}" > "${_ENTRYPOINT_POSTGRES_IDENT_PATH}"
     envsubst < "${_ENTRYPOINT_POSTGRES_INIT_SQL_TEMPLATE_PATH}" > "${_ENTRYPOINT_POSTGRES_INIT_SQL_PATH}"
 
-    echo "Template variables have been substituted"
+    log_message "Template variables have been substituted"
+
+    log_message "Unsetting PGDATA environment variable"
+
+    unset PGDATA
+
+    log_message "PGDATA environment variable has been unset"
 
     # If database is not initialized (file PG_VERSION does not exist or empty)
     if [[ ! -s "${_ENTRYPOINT_POSTGRES_PGDATA}/PG_VERSION" ]]; then
@@ -116,13 +141,13 @@ main() {
         # Stop temporary server
         stop_temporary_server
 
-        echo "PostgreSQL init process complete; Ready for start up"
+        log_message "PostgreSQL init process complete; Ready for start up"
     else
-        echo "PostgreSQL Database directory contain a database; Skipping initialization"
+        log_message "PostgreSQL Database directory contain a database; Skipping initialization"
     fi
 
     # Run postgres
-    exec "${@}" -D "${_ENTRYPOINT_POSTGRES_PGDATA}" # Bug: without -D does not work, but should
+    exec "${@}"
 }
 
 # Run main

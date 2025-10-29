@@ -73,6 +73,36 @@ ssl_tls13_ciphers = 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES
 # When choosing a cipher, use the server's preference instead of the client preference
 ssl_prefer_server_ciphers = on
 
+# Log in stderr
+log_destination = stderr
+
+# Log from WARNING severity
+log_min_messages = WARNING
+
+# Log statements from ERROR severity
+log_min_error_statement = ERROR
+
+# Log all statements if longer than
+log_min_duration_statement = 250ms
+
+# Log autovacuum of longer than
+log_autovacuum_min_duration = 250ms
+
+# Log checkpoints
+log_checkpoints = on
+
+# Do not log connections (authentication, authorization, etc...)
+log_connections = ''
+
+# Do not log disconnections
+log_disconnections = off
+
+# Timezone of the logs
+log_timezone = 'UTC'
+
+# Format of the logs
+log_line_prefix = '[%m] [PID %p] '
+
 # Data location for postgresql
 data_directory = ${_CONFIG_POSTGRES_STORAGE_PATH}
 
