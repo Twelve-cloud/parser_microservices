@@ -107,6 +107,7 @@ stop_temporary_server() {
     log_message "Temporary server has been stopped (pg_ctl stop)"
 }
 
+# Function to run main
 main() {
     log_message "Running postgres entrypoint"
 
