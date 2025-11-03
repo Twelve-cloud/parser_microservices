@@ -11,17 +11,17 @@ SHELL := bash -O extglob
 # -------------------------------------------------- SHORTCUTS -----------------------------------------------------
 
 MANIFESTS_PATHS :=                                                                                                 \
-    -f ${TWT_PARSER_POSTGRES_PATH}                                                                                 \
-    # -f ${COMMON_REDPANDA_PATH}                                                                                     \
-    # -f ${COMMON_PGADMIN_PATH}                                                                                      \
-    # -f ${COMMON_MONGO_EXPRESS_PATH}                                                                                \
-    # -f ${COMMON_REDIS_INSIGHT_PATH}                                                                                \
-    # -f ${COMMON_BIND_PATH}                                                                                         \
-    # -f ${COMMON_KAFKA_PATH}                                                                                        \
-    # -f ${TWT_PARSER_POSTGRES_PATH}                                                                                 \
-    # -f ${TWT_PARSER_MONGO_PATH}                                                                                    \
-    # -f ${TWT_PARSER_REDIS_PATH}                                                                                    \
-    # -f ${TWT_PARSER_PATH}                                                                                          \
+    -f ${TWT_PARSER_POSTGRES_MANIFEST_PATH}                                                                        \
+    # -f ${COMMON_REDPANDA_MANIFEST_PATH}                                                                          \
+    # -f ${COMMON_PGADMIN_MANIFEST_PATH}                                                                           \
+    # -f ${COMMON_MONGO_EXPRESS_MANIFEST_PATH}                                                                     \
+    # -f ${COMMON_REDIS_INSIGHT_MANIFEST_PATH}                                                                     \
+    # -f ${COMMON_BIND_MANIFEST_PATH}                                                                              \
+    # -f ${COMMON_KAFKA_MANIFEST_PATH}                                                                             \
+    # -f ${TWT_PARSER_POSTGRES_MANIFEST_PATH}                                                                      \
+    # -f ${TWT_PARSER_MONGO_MANIFEST_PATH}                                                                         \
+    # -f ${TWT_PARSER_REDIS_MANIFEST_PATH}                                                                         \
+    # -f ${TWT_PARSER_MANIFEST_PATH}                                                                               \
 
 # ------------------------------------------------------ ENV -------------------------------------------------------
 
@@ -29,7 +29,7 @@ _copy_root_env:
     @cp .env.example .env
 
 _clean_root_env:
-    @rm .env
+    @rm -f .env
 
 _copy_env:
     @cp ${COMMON_REDPANDA_ENV_EXAMPLE_PATH}         ${COMMON_REDPANDA_ENV_PATH}
@@ -61,89 +61,89 @@ _create_ca_certificate_chain:
     @cat ${COMMON_INTERMEDIATE_CA_CRT_PATH} ${COMMON_ROOT_CA_CRT_PATH} > ${COMMON_CHAIN_CA_PATH}
 
 _generate_root_ca_certificate:
-    @source ${GENERATE_ROOT_CA_CERTIFICATE_PATH}                                                                   \
-    ROOT_CA_DIR_PATH=${COMMON_ROOT_CA_DIR_PATH}                                                                    \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_ROOT_CA_PATH}                                                           \
     ROOT_CA_KEY_PATH=${COMMON_ROOT_CA_KEY_PATH}                                                                    \
     ROOT_CA_CSR_PATH=${COMMON_ROOT_CA_CSR_PATH}                                                                    \
     ROOT_CA_CRT_PATH=${COMMON_ROOT_CA_CRT_PATH}                                                                    \
     ROOT_CA_PEM_PATH=${COMMON_ROOT_CA_PEM_PATH}                                                                    \
-    ROOT_CA_CONFIG_PATH=${COMMON_ROOT_CA_OPENSSL_CONFIG_PATH}                                                      \
+    CONFIG_ROOT_CA_CSR_PATH=${COMMON_ROOT_CA_CONFIG_CSR_PATH}                                                      \
+    CONFIG_ROOT_CA_DIR_PATH=${COMMON_ROOT_CA_DIR_PATH}                                                             \
+    CONFIG_ROOT_CA_ROOT_SIGN_PATH=${COMMON_ROOT_CA_CONFIG_ROOT_SIGN_PATH}                                          \
 
 _generate_intermediate_ca_certificate:
-    @source ${GENERATE_INTERMEDIATE_CA_CERTIFICATE_PATH}                                                           \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_INTERMEDIATE_CA_PATH}                                                   \
     INTERMEDIATE_CA_KEY_PATH=${COMMON_INTERMEDIATE_CA_KEY_PATH}                                                    \
     INTERMEDIATE_CA_CSR_PATH=${COMMON_INTERMEDIATE_CA_CSR_PATH}                                                    \
     INTERMEDIATE_CA_CRT_PATH=${COMMON_INTERMEDIATE_CA_CRT_PATH}                                                    \
     INTERMEDIATE_CA_PEM_PATH=${COMMON_INTERMEDIATE_CA_PEM_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
-    ROOT_CA_DIR_PATH=${COMMON_ROOT_CA_DIR_PATH}                                                                    \
-    ROOT_CA_CONFIG_PATH=${COMMON_ROOT_CA_OPENSSL_CONFIG_PATH}                                                      \
+    CONFIG_INTERMEDIATE_CA_CSR_PATH=${COMMON_INTERMEDIATE_CA_CONFIG_CSR_PATH}                                      \
+    CONFIG_ROOT_CA_DIR_PATH={COMMON_ROOT_CA_DIR_PATH}                                                              \
+    CONFIG_ROOT_CA_INTERMEDIATE_SIGN_PATH={COMMON_ROOT_CA_CONFIG_INTERMEDIATE_SIGN_PATH}                           \
 
 _generate_redpanda_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${COMMON_REDPANDA_KEY_PATH}                                                                    \
-    SERVER_CSR_PATH=${COMMON_REDPANDA_CSR_PATH}                                                                    \
-    SERVER_CRT_PATH=${COMMON_REDPANDA_CRT_PATH}                                                                    \
-    SERVER_PEM_PATH=${COMMON_REDPANDA_PEM_PATH}                                                                    \
-    SERVER_CONFIG_PATH=${COMMON_REDPANDA_OPENSSL_CONFIG_PATH}                                                      \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${COMMON_REDPANDA_KEY_PATH}                                                                      \
+    LEAF_CSR_PATH=${COMMON_REDPANDA_CSR_PATH}                                                                      \
+    LEAF_CRT_PATH=${COMMON_REDPANDA_CRT_PATH}                                                                      \
+    LEAF_PEM_PATH=${COMMON_REDPANDA_PEM_PATH}                                                                      \
+    CONFIG_LEAF_CSR_PATH={COMMON_REDPANDA_CONFIG_CSR_PATH}                                                         \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_pgadmin_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${COMMON_PGADMIN_KEY_PATH}                                                                     \
-    SERVER_CSR_PATH=${COMMON_PGADMIN_CSR_PATH}                                                                     \
-    SERVER_CRT_PATH=${COMMON_PGADMIN_CRT_PATH}                                                                     \
-    SERVER_PEM_PATH=${COMMON_PGADMIN_PEM_PATH}                                                                     \
-    SERVER_CONFIG_PATH=${COMMON_PGADMIN_OPENSSL_CONFIG_PATH}                                                       \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${COMMON_PGADMIN_KEY_PATH}                                                                       \
+    LEAF_CSR_PATH=${COMMON_PGADMIN_CSR_PATH}                                                                       \
+    LEAF_CRT_PATH=${COMMON_PGADMIN_CRT_PATH}                                                                       \
+    LEAF_PEM_PATH=${COMMON_PGADMIN_PEM_PATH}                                                                       \
+    CONFIG_LEAF_CSR_PATH={COMMON_PGADMIN_CONFIG_CSR_PATH}                                                          \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_mongo_express_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${COMMON_MONGO_EXPRESS_KEY_PATH}                                                               \
-    SERVER_CSR_PATH=${COMMON_MONGO_EXPRESS_CSR_PATH}                                                               \
-    SERVER_CRT_PATH=${COMMON_MONGO_EXPRESS_CRT_PATH}                                                               \
-    SERVER_PEM_PATH=${COMMON_MONGO_EXPRESS_PEM_PATH}                                                               \
-    SERVER_CONFIG_PATH=${COMMON_MONGO_EXPRESS_OPENSSL_CONFIG_PATH}                                                 \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${COMMON_MONGO_EXPRESS_KEY_PATH}                                                                 \
+    LEAF_CSR_PATH=${COMMON_MONGO_EXPRESS_CSR_PATH}                                                                 \
+    LEAF_CRT_PATH=${COMMON_MONGO_EXPRESS_CRT_PATH}                                                                 \
+    LEAF_PEM_PATH=${COMMON_MONGO_EXPRESS_PEM_PATH}                                                                 \
+    CONFIG_LEAF_CSR_PATH={COMMON_MONGO_EXPRESS_CONFIG_CSR_PATH}                                                    \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_redis_insight_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${COMMON_REDIS_INSIGHT_KEY_PATH}                                                               \
-    SERVER_CSR_PATH=${COMMON_REDIS_INSIGHT_CSR_PATH}                                                               \
-    SERVER_CRT_PATH=${COMMON_REDIS_INSIGHT_CRT_PATH}                                                               \
-    SERVER_PEM_PATH=${COMMON_REDIS_INSIGHT_PEM_PATH}                                                               \
-    SERVER_CONFIG_PATH=${COMMON_REDIS_INSIGHT_OPENSSL_CONFIG_PATH}                                                 \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${COMMON_REDIS_INSIGHT_KEY_PATH}                                                                 \
+    LEAF_CSR_PATH=${COMMON_REDIS_INSIGHT_CSR_PATH}                                                                 \
+    LEAF_CRT_PATH=${COMMON_REDIS_INSIGHT_CRT_PATH}                                                                 \
+    LEAF_PEM_PATH=${COMMON_REDIS_INSIGHT_PEM_PATH}                                                                 \
+    CONFIG_LEAF_CSR_PATH={COMMON_REDIS_INSIGHT_CONFIG_CSR_PATH}                                                    \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_bind_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${COMMON_BIND_KEY_PATH}                                                                        \
-    SERVER_CSR_PATH=${COMMON_BIND_CSR_PATH}                                                                        \
-    SERVER_CRT_PATH=${COMMON_BIND_CRT_PATH}                                                                        \
-    SERVER_PEM_PATH=${COMMON_BIND_PEM_PATH}                                                                        \
-    SERVER_CONFIG_PATH=${COMMON_BIND_OPENSSL_CONFIG_PATH}                                                          \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${COMMON_BIND_KEY_PATH}                                                                          \
+    LEAF_CSR_PATH=${COMMON_BIND_CSR_PATH}                                                                          \
+    LEAF_CRT_PATH=${COMMON_BIND_CRT_PATH}                                                                          \
+    LEAF_PEM_PATH=${COMMON_BIND_PEM_PATH}                                                                          \
+    CONFIG_LEAF_CSR_PATH={COMMON_BIND_CONFIG_CSR_PATH}                                                             \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_kafka_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${COMMON_KAFKA_KEY_PATH}                                                                       \
-    SERVER_CSR_PATH=${COMMON_KAFKA_CSR_PATH}                                                                       \
-    SERVER_CRT_PATH=${COMMON_KAFKA_CRT_PATH}                                                                       \
-    SERVER_PEM_PATH=${COMMON_KAFKA_PEM_PATH}                                                                       \
-    SERVER_CONFIG_PATH=${COMMON_KAFKA_OPENSSL_CONFIG_PATH}                                                         \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${COMMON_KAFKA_KEY_PATH}                                                                         \
+    LEAF_CSR_PATH=${COMMON_KAFKA_CSR_PATH}                                                                         \
+    LEAF_CRT_PATH=${COMMON_KAFKA_CRT_PATH}                                                                         \
+    LEAF_PEM_PATH=${COMMON_KAFKA_PEM_PATH}                                                                         \
+    CONFIG_LEAF_CSR_PATH={COMMON_KAFKA_CONFIG_CSR_PATH}                                                            \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
-    @source ${IMPORT_CERTIFICATE_INTO_KEY_TRUST_STORE_PATH}                                                        \
-    SERVER_KEY_PATH=${COMMON_KAFKA_KEY_PATH}                                                                       \
-    SERVER_CRT_PATH=${COMMON_KAFKA_CRT_PATH}                                                                       \
-    SERVER_P12_PATH=${COMMON_KAFKA_P12_PATH}                                                                       \
+    @source ${SCRIPTS_CERTIFICATE_IMPORT_INTO_KEY_TRUST_STORE_PATH}                                                \
+    LEAF_KEY_PATH=${COMMON_KAFKA_KEY_PATH}                                                                         \
+    LEAF_CRT_PATH=${COMMON_KAFKA_CRT_PATH}                                                                         \
+    LEAF_P12_PATH=${COMMON_KAFKA_P12_PATH}                                                                         \
     CHAIN_CA_PATH=${COMMON_CHAIN_CA_PATH}                                                                          \
     KEYSTORE_PATH=${COMMON_KAFKA_KEYSTORE_PATH}                                                                    \
     TRUSTSTORE_PATH=${COMMON_KAFKA_TRUSTSTORE_PATH}                                                                \
@@ -152,53 +152,53 @@ _generate_kafka_certificate:
     TRUSTSTORE_PASSWORD=${COMMON_KAFKA_TRUSTSTORE_PASSWORD}                                                        \
 
 _generate_twt_parser_postgres_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${TWT_PARSER_POSTGRES_KEY_PATH}                                                                \
-    SERVER_CSR_PATH=${TWT_PARSER_POSTGRES_CSR_PATH}                                                                \
-    SERVER_CRT_PATH=${TWT_PARSER_POSTGRES_CRT_PATH}                                                                \
-    SERVER_PEM_PATH=${TWT_PARSER_POSTGRES_PEM_PATH}                                                                \
-    SERVER_CONFIG_PATH=${TWT_PARSER_POSTGRES_OPENSSL_CONFIG_PATH}                                                  \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${TWT_PARSER_POSTGRES_KEY_PATH}                                                                  \
+    LEAF_CSR_PATH=${TWT_PARSER_POSTGRES_CSR_PATH}                                                                  \
+    LEAF_CRT_PATH=${TWT_PARSER_POSTGRES_CRT_PATH}                                                                  \
+    LEAF_PEM_PATH=${TWT_PARSER_POSTGRES_PEM_PATH}                                                                  \
+    CONFIG_LEAF_CSR_PATH={TWT_PARSER_POSTGRES_CONFIG_CSR_PATH}                                                     \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_twt_parser_mongo_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${TWT_PARSER_MONGO_KEY_PATH}                                                                   \
-    SERVER_CSR_PATH=${TWT_PARSER_MONGO_CSR_PATH}                                                                   \
-    SERVER_CRT_PATH=${TWT_PARSER_MONGO_CRT_PATH}                                                                   \
-    SERVER_PEM_PATH=${TWT_PARSER_MONGO_PEM_PATH}                                                                   \
-    SERVER_CONFIG_PATH=${TWT_PARSER_MONGO_OPENSSL_CONFIG_PATH}                                                     \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${TWT_PARSER_MONGO_KEY_PATH}                                                                     \
+    LEAF_CSR_PATH=${TWT_PARSER_MONGO_CSR_PATH}                                                                     \
+    LEAF_CRT_PATH=${TWT_PARSER_MONGO_CRT_PATH}                                                                     \
+    LEAF_PEM_PATH=${TWT_PARSER_MONGO_PEM_PATH}                                                                     \
+    CONFIG_LEAF_CSR_PATH={TWT_PARSER_MONGO_CONFIG_CSR_PATH}                                                        \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_twt_parser_redis_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${TWT_PARSER_REDIS_KEY_PATH}                                                                   \
-    SERVER_CSR_PATH=${TWT_PARSER_REDIS_CSR_PATH}                                                                   \
-    SERVER_CRT_PATH=${TWT_PARSER_REDIS_CRT_PATH}                                                                   \
-    SERVER_PEM_PATH=${TWT_PARSER_REDIS_PEM_PATH}                                                                   \
-    SERVER_CONFIG_PATH=${TWT_PARSER_REDIS_OPENSSL_CONFIG_PATH}                                                     \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${TWT_PARSER_REDIS_KEY_PATH}                                                                     \
+    LEAF_CSR_PATH=${TWT_PARSER_REDIS_CSR_PATH}                                                                     \
+    LEAF_CRT_PATH=${TWT_PARSER_REDIS_CRT_PATH}                                                                     \
+    LEAF_PEM_PATH=${TWT_PARSER_REDIS_PEM_PATH}                                                                     \
+    CONFIG_LEAF_CSR_PATH={TWT_PARSER_REDIS_CONFIG_CSR_PATH}                                                        \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _generate_twt_parser_certificate:
-    @source ${GENERATE_SERVER_CERTIFICATE_PATH}                                                                    \
-    SERVER_KEY_PATH=${TWT_PARSER_KEY_PATH}                                                                         \
-    SERVER_CSR_PATH=${TWT_PARSER_CSR_PATH}                                                                         \
-    SERVER_CRT_PATH=${TWT_PARSER_CRT_PATH}                                                                         \
-    SERVER_PEM_PATH=${TWT_PARSER_PEM_PATH}                                                                         \
-    SERVER_CONFIG_PATH=${TWT_PARSER_OPENSSL_CONFIG_PATH}                                                           \
-    INTERMEDIATE_CA_DIR_PATH=${COMMON_INTERMEDIATE_CA_DIR_PATH}                                                    \
-    INTERMEDIATE_CA_CONFIG_PATH=${COMMON_INTERMEDIATE_CA_OPENSSL_CONFIG_PATH}                                      \
+    @source ${SCRIPTS_CERTIFICATE_GENERATE_LEAF_PATH}                                                              \
+    LEAF_KEY_PATH=${TWT_PARSER_KEY_PATH}                                                                           \
+    LEAF_CSR_PATH=${TWT_PARSER_CSR_PATH}                                                                           \
+    LEAF_CRT_PATH=${TWT_PARSER_CRT_PATH}                                                                           \
+    LEAF_PEM_PATH=${TWT_PARSER_PEM_PATH}                                                                           \
+    CONFIG_LEAF_CSR_PATH={TWT_PARSER_CONFIG_CSR_PATH}                                                              \
+    CONFIG_INTERMEDIATE_CA_DIR_PATH={COMMON_INTERMEDIATE_CA_DIR_PATH}                                              \
+    CONFIG_INTERMEDIATE_CA_LEAF_SIGN_PATH={COMMON_INTERMEDIATE_CA_CONFIG_LEAF_SIGN_PATH}                           \
 
 _clean_certs:
+    @sudo rm -f ${COMMON_ROOT_CA_DATABASE_CERTS_PATH}
+    @sudo rm -f ${COMMON_ROOT_CA_ISSUED_CERTS_PATH}
+    @sudo rm -f ${COMMON_INTERMEDIATE_CA_DATABASE_CERTS_PATH}
+    @sudo rm -f ${COMMON_INTERMEDIATE_CA_ISSUED_CERTS_PATH}
     @sudo rm -f ${COMMON_CHAIN_CA_PATH}
     @sudo rm -f ${COMMON_ROOT_CA_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMMON_ROOT_CA_DATABASE_DATA_PATH}
-    @sudo rm -f ${COMMON_ROOT_CA_ISSUED_DATA_PATH}
     @sudo rm -f ${COMMON_INTERMEDIATE_CA_CURRENT_CERTS_PATH}
-    @sudo rm -f ${COMMON_INTERMEDIATE_CA_DATABASE_DATA_PATH}
-    @sudo rm -f ${COMMON_INTERMEDIATE_CA_ISSUED_DATA_PATH}
     @sudo rm -f ${COMMON_REDPANDA_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMMON_PGADMIN_CURRENT_CERTS_PATH}
     @sudo rm -f ${COMMON_MONGO_EXPRESS_CURRENT_CERTS_PATH}
@@ -213,10 +213,10 @@ _clean_certs:
 # ------------------------------------------------- PERMISSIONS ----------------------------------------------------
 
 _set_common_scripts_permissions:
-    @sudo chmod a+x ${COMMON_SCRIPTS_PATH}
+    @sudo chmod a+x ${SCRIPTS_COMMON_PATH}
 
 _set_cert_scripts_permissions:
-    @sudo chmod a+x ${CERTIFICATE_SCRIPTS_PATH}
+    @sudo chmod a+x ${SCRIPTS_CERTIFICATE_PATH}
 
 _set_ca_certificate_chain_permissions:
     @sudo chmod a+r ${COMMON_CHAIN_CA_PATH}

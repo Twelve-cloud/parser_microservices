@@ -11,9 +11,9 @@ function parse_named_parameters() {
 
         # Check if the current argument is a named parameter
         case ${argument} in
-            SERVER_KEY_PATH=*)          SERVER_KEY_PATH=${argument#*=} ;;
-            SERVER_CRT_PATH=*)          SERVER_CRT_PATH=${argument#*=} ;;
-            SERVER_P12_PATH=*)          SERVER_P12_PATH=${argument#*=} ;;
+            LEAF_KEY_PATH=*)            LEAF_KEY_PATH=${argument#*=} ;;
+            LEAF_CRT_PATH=*)            LEAF_CRT_PATH=${argument#*=} ;;
+            LEAF_P12_PATH=*)            LEAF_P12_PATH=${argument#*=} ;;
             CHAIN_CA_PATH=*)            CHAIN_CA_PATH=${argument#*=} ;;
             KEYSTORE_PATH=*)            KEYSTORE_PATH=${argument#*=} ;;
             TRUSTSTORE_PATH=*)          TRUSTSTORE_PATH=${argument#*=} ;;
@@ -33,15 +33,15 @@ parse_named_parameters "$@"
 
 # Check if the parsing was successful
 if [[ $? -ne 0 ]]; then
-    echo "Usage: generate_certificate.sh CN=value CSR_PATH=value KEY_PATH=value CRT_PATH=value PEM_PATH=value CA_CRT_PATH=value CA_KEY_PATH=value"
+    echo "Usage: generate_ca_certificate.sh param=value, param=value, ..."
     exit 1
 fi
 
 # Generate PKCS#12 file with server certificate and private key
-source scripts/common/execute_command.sh openssl pkcs12 -export -in ${SERVER_CRT_PATH} -inkey ${SERVER_KEY_PATH} -out ${SERVER_P12_PATH} -passout pass:${P12_PASSWORD} -name server
+source scripts/common/execute_command.sh openssl pkcs12 -export -in ${LEAF_CRT_PATH} -inkey ${LEAF_KEY_PATH} -out ${LEAF_P12_PATH} -passout pass:${P12_PASSWORD} -name server
 
 # Import PKCS#12 file into keystore
-source scripts/common/execute_command.sh keytool -importkeystore -srckeystore ${SERVER_P12_PATH} -srcstoretype PKCS12 -srcstorepass ${P12_PASSWORD} -destkeystore ${KEYSTORE_PATH} -deststoretype JKS -deststorepass ${KEYSTORE_PASSWORD}
+source scripts/common/execute_command.sh keytool -importkeystore -srckeystore ${LEAF_P12_PATH} -srcstoretype PKCS12 -srcstorepass ${P12_PASSWORD} -destkeystore ${KEYSTORE_PATH} -deststoretype JKS -deststorepass ${KEYSTORE_PASSWORD}
 
 # Import intermediate ca certificate into truststore
 source scripts/common/execute_command.sh keytool -import -trustcacerts -file ${CHAIN_CA_PATH} -keystore ${TRUSTSTORE_PATH} -storepass ${TRUSTSTORE_PASSWORD} -alias ca -noprompt
