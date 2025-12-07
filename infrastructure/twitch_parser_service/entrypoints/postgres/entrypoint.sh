@@ -128,9 +128,9 @@ main() {
 
         stop_temporary_server
 
-        log_message "PostgreSQL init process complete; Ready for start up"
+        log_message "PostgreSQL has been initialized; Ready for start up"
     else
-        log_message "PostgreSQL Database directory contain a database; Skipping initialization"
+        log_message "PostgreSQL is initialized; Skipping initialization"
     fi
 
     exec "${@}"
