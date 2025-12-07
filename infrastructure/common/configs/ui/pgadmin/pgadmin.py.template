@@ -5,7 +5,7 @@ SERVER_MODE = False
 WEB_SERVER = 'Python'
 
 # Hosts that can access pgadmin
-ALLOWED_HOSTS = ${_PGADMIN_ALLOWED_HOSTS}
+ALLOWED_HOSTS = ${_CONFIG_PGADMIN_ALLOWED_HOSTS}
 
 # WTF CSRF check default
 WTF_CSRF_CHECK_DEFAULT = 0
@@ -16,5 +16,8 @@ WTF_CSRF_ENABLED = 0
 # Allow save password
 ALLOW_SAVE_PASSWORD = True
 
+# Does not require password to enter pgadmin
+MASTER_PASSWORD_REQUIRED = False
+
 # Data location for pgadmin
-DATA_DIR = ${_PGADMIN_STORAGE_PATH}
+DATA_DIR = ${_CONFIG_PGADMIN_STORAGE_PATH}
