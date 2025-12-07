@@ -29,7 +29,7 @@ checkpoint_completion_target = 0.9
 wal_writer_delay = 400ms
 
 # Transaction considered as commited before flush WAL buffer
-synchronous_commit = off
+synchronous_commit = on
 
 # How often the autovacuum daemon checks for tables that require vacuuming or analyzing
 autovacuum_naptime = 5min
