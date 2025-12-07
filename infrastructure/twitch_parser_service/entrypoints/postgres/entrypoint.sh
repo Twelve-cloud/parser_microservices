@@ -129,7 +129,6 @@ main() {
 
     # If database is not initialized (file PG_VERSION does not exist or empty)
     if [[ ! -s "${_ENTRYPOINT_POSTGRES_PGDATA}/PG_VERSION" ]]; then
-
         # Initialize database
         initialize_database
 
