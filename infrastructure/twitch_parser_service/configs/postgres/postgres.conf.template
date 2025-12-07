@@ -14,13 +14,16 @@ password_encryption = scram-sha-256
 shared_buffers = 4GB
 
 # WAL buffer size
-wal_buffers = 1GB
+wal_buffers = 128MB
 
 # WAL file max size
 max_wal_size = 4GB
 
 # WAL file min size
 min_wal_size = 1GB
+
+# Time spent flushing dirty buffers during checkpoint
+checkpoint_completion_target = 0.9
 
 # How often to write WAL data from buffer
 wal_writer_delay = 400ms
