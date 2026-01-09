@@ -12,8 +12,8 @@ SHELL := bash -O extglob
 
 MANIFESTS_PATHS :=                                                                                                 \
     -f ${TWT_PARSER_POSTGRES_MANIFEST_PATH}                                                                        \
+    -f ${COMMON_PGADMIN_MANIFEST_PATH}                                                                             \
     # -f ${COMMON_REDPANDA_MANIFEST_PATH}                                                                          \
-    # -f ${COMMON_PGADMIN_MANIFEST_PATH}                                                                           \
     # -f ${COMMON_MONGO_EXPRESS_MANIFEST_PATH}                                                                     \
     # -f ${COMMON_REDIS_INSIGHT_MANIFEST_PATH}                                                                     \
     # -f ${COMMON_BIND_MANIFEST_PATH}                                                                              \
