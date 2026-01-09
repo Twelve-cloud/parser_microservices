@@ -1,11 +1,8 @@
 # Base image
-FROM dpage/pgadmin4:8.9
+FROM dpage/pgadmin4:9.11
 
 # Change user to root
 USER root
-
-# Change ownership to pgadmin user
-RUN chown -R 5050:5050 /pgadmin4
 
 # Update index and install all dependencies
 RUN                                             \
@@ -16,7 +13,9 @@ RUN                                             \
     # Install envsubst
     envsubst                                    \
     # Install curl
-    curl
+    curl                                        \
+    # Install bash
+    bash
 
 # Change user to pgadmin
 USER pgadmin
